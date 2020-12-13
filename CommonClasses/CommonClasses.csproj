@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Enums\DamageType.cs" />
     <Compile Include="Enums\PlayerClassType.cs" />
+    <Compile Include="PlayerClassDefaultValues.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
