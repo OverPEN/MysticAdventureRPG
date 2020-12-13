@@ -11,7 +11,7 @@ namespace CommonClasses.BaseClasses
     {
         public int HitPoints { get; set; }
         public int BaseDamage { get; set; }
-        public DamageType BaseDamageType { get; set; }
+        public WeaponDamageType BaseDamageType { get; set; }
         public float Speed { get; set; }
         public int Gold { get; set; }
 
@@ -22,7 +22,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassType.Guerriero:
                     HitPoints = 35;
                     BaseDamage = 7;
-                    BaseDamageType = DamageType.Taglio;
+                    BaseDamageType = WeaponDamageType.Taglio;
                     Speed = 1.0f;
                     Gold = 200;
                 break;
@@ -30,7 +30,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassType.Mago:
                     HitPoints = 20;
                     BaseDamage = 7;
-                    BaseDamageType = DamageType.Magico;
+                    BaseDamageType = WeaponDamageType.Magico;
                     Speed = 1.5f;
                     Gold = 150;
                 break;
@@ -38,7 +38,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassType.Tank:
                     HitPoints = 50;
                     BaseDamage = 10;
-                    BaseDamageType = DamageType.Schianto;
+                    BaseDamageType = WeaponDamageType.Schianto;
                     Speed = 0.5f;
                     Gold = 250;
                 break;
@@ -46,7 +46,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassType.Ladro:
                     HitPoints = 25;
                     BaseDamage = 5;
-                    BaseDamageType = DamageType.Penetrante;
+                    BaseDamageType = WeaponDamageType.Penetrante;
                     Speed = 2.0f;
                     Gold = 100;
                 break;

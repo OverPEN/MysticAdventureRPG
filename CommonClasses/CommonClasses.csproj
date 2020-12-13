@@ -43,7 +43,8 @@
   <ItemGroup>
     <Compile Include="BaseClasses\BaseCommand.cs" />
     <Compile Include="BaseClasses\BaseNotifyPropertyChanged.cs" />
-    <Compile Include="Enums\DamageType.cs" />
+    <Compile Include="Enums\WeaponDamageType.cs" />
+    <Compile Include="Enums\ItemType.cs" />
     <Compile Include="Enums\PlayerClassType.cs" />
     <Compile Include="BaseClasses\PlayerClassBaseValues.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

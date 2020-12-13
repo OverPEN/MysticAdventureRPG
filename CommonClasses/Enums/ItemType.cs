@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CommonClasses.Enums
 {
-    public enum DamageType : byte
+    public enum ItemType : byte
     {
-        Taglio = 0,
-        Magico = 1,
-        Schianto = 2,
-        Penetrante = 3
+        Arma = 0,
+        Armatura = 1,
+        Pozione = 3,
+        Munizione = 4
     }
 }

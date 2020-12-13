@@ -16,7 +16,7 @@ namespace Engine.Models
         private PlayerClassType _class { get; set; }
         private int _hitPoints { get; set; }
         private int _baseDamage { get; set; }
-        private DamageType _baseDamageType { get; set; }
+        private WeaponDamageType _baseDamageType { get; set; }
         private float _speed { get; set; }
         private Byte _level { get; set; }
         private int _experience { get; set; }
@@ -98,7 +98,7 @@ namespace Engine.Models
                 OnPropertyChanged(nameof(BaseDamage));
             }
         }
-        public DamageType BaseDamageType
+        public WeaponDamageType BaseDamageType
         {
             get { return _baseDamageType; }
             set
