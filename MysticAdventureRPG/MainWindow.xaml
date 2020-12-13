@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MysticAdventureRPG"
         mc:Ignorable="d"
-        Title="Game Main Window" Height="450" Width="800">
+        Title="Game Main Window" Height="800" Width="800">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -17,7 +20,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Menu" Background="AliceBlue"/>
-        <Grid Grid.Row="1" Grid.Column="0" Background="Aquamarine">
+        <Grid Name="PLayerStats" Grid.Row="1" Grid.Column="0" Background="Aquamarine">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -44,7 +47,7 @@
             <Label Grid.Row="5" Grid.Column="0" Content="Lv:"/>
             <Label Grid.Row="5" Grid.Column="1" Content="{Binding CurrentPlayer.Level}"/>
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="1" Background="Beige">
+        <Grid Name="LocationStats" Grid.Row="1" Grid.Column="1" Background="Beige">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -61,13 +64,38 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding CurrentLocation.Name}"/>
-                    <Image Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding CurrentLocation.ImageName}"/>
-                    <TextBlock Grid.Row="2" HorizontalAlignment="Center" Text="{Binding CurrentLocation.Description}"/>
+                    <Image Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="400" Source="{Binding CurrentLocation.ImageName}" Stretch="UniformToFill"/>
+                    <TextBlock Grid.Row="2" HorizontalAlignment="Center" Text="{Binding CurrentLocation.Description}" TextWrapping="Wrap"/>
                 </Grid>
             </Border>
         </Grid>
         
         <Label Grid.Row="2" Grid.Column="0" Content="Inventory/Quests" Background="BurlyWood"/>
-        <Label Grid.Row="2" Grid.Column="1" Content="Combat/Movement Controls" Background="Lavender"/>
+        
+        <Grid Name="Movements" Grid.Row="2" Grid.Column="1" Background="Lavender">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="255" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Name="bt_Avanti" Grid.Row="0" Grid.Column="1" Height="25" Width="65" Margin="10" Content="Avanti" Click="Bt_Avanti_Click" Visibility="{Binding CanMoveForward, Converter={StaticResource BooleanToVisibility}}"/>
+                <Button Name="bt_Sinistra" Grid.Row="1" Grid.Column="0" Height="25" Width="65" Margin="10" Content="Sinistra" Click="Bt_Sinistra_Click" Visibility="{Binding CanMoveLeft, Converter={StaticResource BooleanToVisibility}}"/>
+                <Button Name="bt_Destra" Grid.Row="1" Grid.Column="2" Height="25" Width="65" Margin="10" Content="Destra" Click="Bt_Destra_Click" Visibility="{Binding CanMoveRight, Converter={StaticResource BooleanToVisibility}}"/>
+                <Button Name="bt_Indietro" Grid.Row="2" Grid.Column="1" Height="25" Width="65" Margin="10" Content="Indietro" Click="Bt_Indietro_Click" Visibility="{Binding CanMoveBackwards, Converter={StaticResource BooleanToVisibility}}"/>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

@@ -31,5 +31,25 @@ namespace MysticAdventureRPG
 
             DataContext = _gameSession;
         }
+
+        private void Bt_Avanti_Click(object sender, RoutedEventArgs e)
+        {
+            _gameSession.MoveForward();
+        }
+
+        private void Bt_Sinistra_Click(object sender, RoutedEventArgs e)
+        {
+            _gameSession.MoveLeft();
+        }
+
+        private void Bt_Destra_Click(object sender, RoutedEventArgs e)
+        {
+            _gameSession.MoveRight();
+        }
+
+        private void Bt_Indietro_Click(object sender, RoutedEventArgs e)
+        {
+            _gameSession.MoveBackwords();
+        }
     }
 }

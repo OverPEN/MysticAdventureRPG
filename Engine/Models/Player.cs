@@ -22,6 +22,9 @@ namespace Engine.Models
         private Byte _level { get; set; }
         private int _experience { get; set; }
         private int _gold { get; set; }
+        private int _worldID { get; set; }
+        private int _xCoordinate { get; set; }
+        private int _yCoordinate { get; set; }
 
         public Player(string chosenName, string chosenSurname, PlayerClassType chosenClass)
         {
@@ -37,6 +40,9 @@ namespace Engine.Models
             Speed = defaultValues.Speed;
             HitPoints = defaultValues.HitPoints;
             Gold = defaultValues.Gold;
+            XCoordinate = 0;
+            YCoordinate = 0;
+            WorldID = 0;
         }
 
         public string Name
@@ -127,6 +133,33 @@ namespace Engine.Models
             {
                 _gold = value;
                 OnPropertyChanged("Gold");
+            }
+        }
+        public int XCoordinate
+        {
+            get { return _xCoordinate; }
+            set
+            {
+                _xCoordinate = value;
+                OnPropertyChanged("_xCoordinate");
+            }
+        }
+        public int YCoordinate
+        {
+            get { return _yCoordinate; }
+            set
+            {
+                _yCoordinate = value;
+                OnPropertyChanged("YCoordinate");
+            }
+        }
+        public int WorldID
+        {
+            get { return _worldID; }
+            set
+            {
+                _worldID = value;
+                OnPropertyChanged("WorldID");
             }
         }
 
