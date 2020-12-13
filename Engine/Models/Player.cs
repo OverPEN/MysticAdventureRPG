@@ -2,6 +2,7 @@
 using CommonClasses.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,8 @@ namespace Engine.Models
         private int _worldID { get; set; }
         private int _xCoordinate { get; set; }
         private int _yCoordinate { get; set; }
+        public ObservableCollection<Item> Inventory { get; set; }
+        public ObservableCollection<Quest> Quests { get; set; }
 
         public Player(string chosenName, string chosenSurname, PlayerClassType chosenClass)
         {
@@ -42,6 +45,8 @@ namespace Engine.Models
             XCoordinate = 0;
             YCoordinate = 0;
             WorldID = 0;
+            Inventory = new ObservableCollection<Item>();
+            Quests = new ObservableCollection<Quest>();
         }
 
         public string Name

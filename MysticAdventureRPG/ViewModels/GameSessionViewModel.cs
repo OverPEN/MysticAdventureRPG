@@ -27,6 +27,7 @@ namespace MysticAdventureRPG.ViewModels
                 OnPropertyChanged(nameof(CanMoveRight));
                 OnPropertyChanged(nameof(CanMoveBackwards));
                 OnPropertyChanged(nameof(CanMoveLeft));
+                GivePlayerQuestsAtLocation();
             }
         }
         public ICommand MoveForwardCommand { get; set; }
@@ -48,6 +49,11 @@ namespace MysticAdventureRPG.ViewModels
             CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
             if(CurrentLocation.Name == "Home")
                 CurrentLocation.ImageName = $"/Engine;component/Resources/LocationsImages/Home/Home_{CurrentPlayer.Class.ToString()}.jpg";
+            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1001));
+            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1001));
+            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1002));
+            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1003));
+            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1004));
         }
 
         public void MoveForward(object obj)
@@ -120,6 +126,22 @@ namespace MysticAdventureRPG.ViewModels
             get
             {
                 return CurrentWorld.LocationAt(CurrentLocation.XCoordinate - 1, CurrentLocation.YCoordinate) != null;
+            }
+        }
+
+        private void GivePlayerQuestsAtLocation()
+        {
+            foreach (Quest quest in CurrentLocation.QuestsAvailableHere)
+            {
+                if (!CurrentPlayer.Quests.Any(q => q.QuestID == quest.QuestID))
+                {
+                    if(quest.Status == QuestStatus.Nuova)
+                    {
+                        quest.Status = QuestStatus.Iniziata;
+                        CurrentPlayer.Quests.Add(quest);
+                    }
+                        
+                }
             }
         }
     }

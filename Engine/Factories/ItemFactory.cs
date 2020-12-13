@@ -16,6 +16,7 @@ namespace Engine.Factories
         {
             _standardItems = new List<Item>();
 
+            _standardItems.Add(new Item(1, "Denti di serpente", 1, ItemType.Varie));
             _standardItems.Add(new Weapon(1001, "Spada Smussata", 5, 9, 9, WeaponDamageType.Taglio));
             _standardItems.Add(new Weapon(1002, "Bastone da mago scheggiato", 5, 9, 9, WeaponDamageType.Magico));
             _standardItems.Add(new Weapon(1003, "Arco da caccia storto", 5, 9, 9, WeaponDamageType.Penetrante));
@@ -24,13 +25,18 @@ namespace Engine.Factories
 
         public static Item CreateItem(int itemID)
         {
-            Item standardItem = _standardItems.FirstOrDefault(item => item.ItemID == itemID);
+            Item standardItem = GetItemByID(itemID);
 
             if (standardItem != null)
             {
                 return standardItem.Clone();
             }
             return null;
+        }
+
+        internal static Item GetItemByID(int id)
+        {
+            return _standardItems.FirstOrDefault(item => item.ItemID == id);
         }
     }
 }

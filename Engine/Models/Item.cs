@@ -13,18 +13,20 @@ namespace Engine.Models
         public string Name { get; set; }
         public int Price { get; set; }
         public ItemType Type { get; set; }
+        public byte Quantity { get; set; }
 
-        public Item(int itemID, string name, int price, ItemType type)
+        public Item(int itemID, string name, int price, ItemType type, byte quantity = 1)
         {
             ItemID = itemID;
             Name = name;
             Price = price;
             Type = type;
+            Quantity = quantity;
         }
 
-        public Item Clone()
+        public Item Clone(byte quantity = 1)
         {
-            return new Item(ItemID, Name, Price, Type);
+            return new Item(ItemID, Name, Price, Type, Quantity = quantity);
         }
     }
 }
