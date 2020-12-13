@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,15 @@ namespace MysticAdventureRPG
     /// </summary>
     public partial class MainWindow : Window
     {
+        private GameSession _gameSession;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _gameSession = new GameSession();
+
+            DataContext = _gameSession;
         }
     }
 }
