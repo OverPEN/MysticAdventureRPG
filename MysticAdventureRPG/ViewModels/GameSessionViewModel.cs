@@ -12,10 +12,8 @@ using System.Windows.Input;
 
 namespace MysticAdventureRPG.ViewModels
 {
-    public class GameSessionViewModel : INotifyPropertyChanged
+    public class GameSessionViewModel : BaseNotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private Location _currentLocation;
         public Location CurrentLocation
         {
@@ -24,11 +22,11 @@ namespace MysticAdventureRPG.ViewModels
             {
                 _currentLocation = value;
 
-                OnPropertyChanged("CurrentLocation");
-                OnPropertyChanged("CanMoveForward");
-                OnPropertyChanged("CanMoveRight");
-                OnPropertyChanged("CanMoveBackwards");
-                OnPropertyChanged("CanMoveLeft");
+                OnPropertyChanged(nameof(CurrentLocation));
+                OnPropertyChanged(nameof(CanMoveForward));
+                OnPropertyChanged(nameof(CanMoveRight));
+                OnPropertyChanged(nameof(CanMoveBackwards));
+                OnPropertyChanged(nameof(CanMoveLeft));
             }
         }
         public ICommand MoveForwardCommand { get; set; }
@@ -46,8 +44,7 @@ namespace MysticAdventureRPG.ViewModels
             MoveLeftCommand = new BaseCommand(MoveLeft);
 
             CurrentPlayer = new Player("Giuseppe","Penna",PlayerClassType.Mago);
-            WorldFactory factory = new WorldFactory();
-            CurrentWorld = factory.CreateWorld();
+            CurrentWorld = WorldFactory.CreateWorld();
             CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
             if(CurrentLocation.Name == "Home")
                 CurrentLocation.ImageName = $"/Engine;component/Resources/LocationsImages/Home/Home_{CurrentPlayer.Class.ToString()}.jpg";
@@ -55,26 +52,38 @@ namespace MysticAdventureRPG.ViewModels
 
         public void MoveForward(object obj)
         {
-            CurrentPlayer.YCoordinate++;
-            RefreshLocation();
+            if (CanMoveForward)
+            {
+                CurrentPlayer.YCoordinate++;
+                RefreshLocation();
+            }       
         }
 
         public void MoveRight(object obj)
         {
-            CurrentPlayer.XCoordinate++;
-            RefreshLocation();
+            if (CanMoveRight)
+            {
+                CurrentPlayer.XCoordinate++;
+                RefreshLocation();
+            }
         }
 
         public void MoveBackwards(object obj)
         {
-            CurrentPlayer.YCoordinate--;
-            RefreshLocation();
+            if (CanMoveBackwards)
+            {
+                CurrentPlayer.YCoordinate--;
+                RefreshLocation();
+            }
         }
 
         public void MoveLeft(object obj)
         {
-            CurrentPlayer.XCoordinate--;
-            RefreshLocation();
+            if (CanMoveLeft)
+            {
+                CurrentPlayer.XCoordinate--;
+                RefreshLocation();
+            }
         }
 
         private void RefreshLocation()
@@ -112,11 +121,6 @@ namespace MysticAdventureRPG.ViewModels
             {
                 return CurrentWorld.LocationAt(CurrentLocation.XCoordinate - 1, CurrentLocation.YCoordinate) != null;
             }
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

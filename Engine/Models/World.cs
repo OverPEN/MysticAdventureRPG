@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonClasses.BaseClasses;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace Engine.Models
 {
-    public class World : INotifyPropertyChanged
+    public class World : BaseNotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _worldID { get; set; }
         private List<Location> _locations = new List<Location>();
 
@@ -20,7 +19,7 @@ namespace Engine.Models
             set
             {
                 _worldID = value;
-                OnPropertyChanged("WorldID");
+                OnPropertyChanged(nameof(WorldID));
             }
         }
 
@@ -41,11 +40,6 @@ namespace Engine.Models
             Location loc = _locations.FirstOrDefault(f => f.XCoordinate == xCoord && f.YCoordinate == yCoord);
 
             return loc;
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

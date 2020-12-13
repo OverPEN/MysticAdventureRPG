@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace Engine.Models
 {
-    public class Player : INotifyPropertyChanged
+    public class Player : BaseNotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private String _name { get; set; }
         private String _surname { get; set; }
         private PlayerClassType _class { get; set; }
@@ -52,7 +50,7 @@ namespace Engine.Models
             set
             {
                 _name = value;
-                OnPropertyChanged("Name");
+                OnPropertyChanged(nameof(Name));
             }
         }
         public string Surname
@@ -61,7 +59,7 @@ namespace Engine.Models
             set
             {
                 _surname = value;
-                OnPropertyChanged("Surname");
+                OnPropertyChanged(nameof(Surname));
             }
         }
         public PlayerClassType Class
@@ -70,7 +68,7 @@ namespace Engine.Models
             set
             {
                 _class = value;
-                OnPropertyChanged("Class");
+                OnPropertyChanged(nameof(Class));
             }
         }
         public byte Level
@@ -79,7 +77,7 @@ namespace Engine.Models
             set
             {
                 _level = value;
-                OnPropertyChanged("Level");
+                OnPropertyChanged(nameof(Level));
             }
         }
         public int Experience
@@ -88,7 +86,7 @@ namespace Engine.Models
             set
             {
                 _experience = value;
-                OnPropertyChanged("Experience");
+                OnPropertyChanged(nameof(Experience));
             }
         }
         public int BaseDamage
@@ -97,7 +95,7 @@ namespace Engine.Models
             set
             {
                 _baseDamage = value;
-                OnPropertyChanged("BaseDamage");
+                OnPropertyChanged(nameof(BaseDamage));
             }
         }
         public DamageType BaseDamageType
@@ -106,7 +104,7 @@ namespace Engine.Models
             set
             {
                 _baseDamageType = value;
-                OnPropertyChanged("BaseDamageType");
+                OnPropertyChanged(nameof(BaseDamageType));
             }
         }
         public float Speed
@@ -115,7 +113,7 @@ namespace Engine.Models
             set
             {
                 _speed = value;
-                OnPropertyChanged("Speed");
+                OnPropertyChanged(nameof(Speed));
             }
         }
         public int HitPoints
@@ -124,7 +122,7 @@ namespace Engine.Models
             set
             {
                 _hitPoints = value;
-                OnPropertyChanged("HitPoints");
+                OnPropertyChanged(nameof(HitPoints));
             }
         }
         public int Gold
@@ -133,7 +131,7 @@ namespace Engine.Models
             set
             {
                 _gold = value;
-                OnPropertyChanged("Gold");
+                OnPropertyChanged(nameof(Gold));
             }
         }
         public int XCoordinate
@@ -142,7 +140,7 @@ namespace Engine.Models
             set
             {
                 _xCoordinate = value;
-                OnPropertyChanged("_xCoordinate");
+                OnPropertyChanged(nameof(XCoordinate));
             }
         }
         public int YCoordinate
@@ -151,7 +149,7 @@ namespace Engine.Models
             set
             {
                 _yCoordinate = value;
-                OnPropertyChanged("YCoordinate");
+                OnPropertyChanged(nameof(YCoordinate));
             }
         }
         public int WorldID
@@ -160,13 +158,8 @@ namespace Engine.Models
             set
             {
                 _worldID = value;
-                OnPropertyChanged("WorldID");
+                OnPropertyChanged(nameof(WorldID));
             }
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
