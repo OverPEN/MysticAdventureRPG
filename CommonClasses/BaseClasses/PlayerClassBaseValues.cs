@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine.Models
+namespace CommonClasses.BaseClasses
 {
-    public class PlayerClassDefaultValues
+    public class PlayerClassBaseValues
     {
         public int HitPoints { get; set; }
         public int BaseDamage { get; set; }
@@ -15,7 +15,7 @@ namespace Engine.Models
         public float Speed { get; set; }
         public int Gold { get; set; }
 
-        public PlayerClassDefaultValues(PlayerClassType _classType)
+        public PlayerClassBaseValues(PlayerClassType _classType)
         {
             switch(_classType)
             {

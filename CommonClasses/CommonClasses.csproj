@@ -41,9 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseClasses\BaseCommand.cs" />
     <Compile Include="Enums\DamageType.cs" />
     <Compile Include="Enums\PlayerClassType.cs" />
-    <Compile Include="PlayerClassDefaultValues.cs" />
+    <Compile Include="BaseClasses\PlayerClassBaseValues.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

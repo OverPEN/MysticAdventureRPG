@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\GameSessionViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -95,6 +96,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonClasses\CommonClasses.csproj">
+      <Project>{D799EC3A-903B-46FB-8F09-449EA578CDF3}</Project>
+      <Name>CommonClasses</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Engine.csproj">
       <Project>{698c2f2e-0c7c-44ab-a9e3-873804d6f431}</Project>
       <Name>Engine</Name>

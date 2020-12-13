@@ -1,4 +1,5 @@
-﻿using CommonClasses.Enums;
+﻿using CommonClasses.BaseClasses;
+using CommonClasses.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,7 +29,7 @@ namespace Engine.Models
 
         public Player(string chosenName, string chosenSurname, PlayerClassType chosenClass)
         {
-            PlayerClassDefaultValues defaultValues = new PlayerClassDefaultValues(chosenClass);
+            PlayerClassBaseValues defaultValues = new PlayerClassBaseValues(chosenClass);
 
             Name = chosenName;
             Surname = chosenSurname;
