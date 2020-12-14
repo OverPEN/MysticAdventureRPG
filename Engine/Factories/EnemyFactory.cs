@@ -10,16 +10,17 @@ namespace Engine.Factories
 {
     public static class EnemyFactory
     {
-        public static Enemy GetEnemy(int enemyID)
+        public static Enemy GetEnemyByID(int enemyID)
         {
             switch (enemyID)
             {
                 case 1:
                     Enemy snake =
-                        new Enemy("Snake", "Snake.png", 4, 4, 5, 1, 2.0f,40);
+                        new Enemy(1,"Serpente", "Serpente.png", 4, 4, 5, 1, 2.0f,100);
 
-                    AddLootItem(snake, 9001, 25);
-                    AddLootItem(snake, 9002, 75);
+                    AddLootItem(snake, 1, 25);
+                    AddLootItem(snake, 2, 50);
+                    AddLootItem(snake, 3, 25);
 
                     return snake;
 

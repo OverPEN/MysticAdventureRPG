@@ -11,7 +11,7 @@ namespace Engine.Models
     public class Enemy : BaseNotifyPropertyChanged
     {
         private int _currentHitPoints;
-
+        public int EnemyID { get; set; }
         public string Name { get; private set; }
         public string ImageName { get; set; }
         public int MaximumHitPoints { get; private set; }
@@ -30,8 +30,9 @@ namespace Engine.Models
         public int EncounterRate { get; set; }
         public ObservableCollection<Item> Inventory { get; set; }
 
-        public Enemy(string name, string imageName, int maximumHitPoints, int currentHitPoints, int rewardExperiencePoints, int rewardGold, float speed, int encRate)
+        public Enemy(int enemyID, string name, string imageName, int maximumHitPoints, int currentHitPoints, int rewardExperiencePoints, int rewardGold, float speed, int encRate)
         {
+            EnemyID = enemyID;
             Name = name;
             ImageName = string.Format("/Engine;component/Images/Monsters/{0}", name);
             MaximumHitPoints = maximumHitPoints;

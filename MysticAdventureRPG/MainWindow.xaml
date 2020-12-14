@@ -23,7 +23,9 @@
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <!-- Menu -->
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Menu" Background="AliceBlue"/>
+        <!-- PlayerStats -->
         <Grid Name="PLayerStats" Grid.Row="1" Grid.Column="0" Background="Aquamarine">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -64,7 +66,7 @@
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}Salute: {0} / {1}">
                                 <Binding Path="CurrentPlayer.CurrentHitPoints" />
-                                <Binding Path="CurrentPlayer.HitPoints" />
+                                <Binding Path="CurrentPlayer.MaximumHitPoints" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -91,7 +93,8 @@
                 </Label.Content>
             </Label>
         </Grid>
-        <Grid Name="LocationStats" Grid.Row="1" Grid.Column="1" Background="Beige">
+        <!-- Location and Enemy Stats -->
+        <Grid Name="LocationEnemyStats" Grid.Row="1" Grid.Column="1" Background="Beige">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -100,6 +103,7 @@
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
+            <!-- Location -->
             <Border Grid.Row="0" Grid.Column="1" BorderBrush="Gainsboro" BorderThickness="1">
                 <Grid Margin="3">
                     <Grid.RowDefinitions>
@@ -112,7 +116,32 @@
                     <TextBlock Grid.Row="2" HorizontalAlignment="Center" Text="{Binding CurrentLocation.Description}" TextWrapping="Wrap"/>
                 </Grid>
             </Border>
+            <!-- Enemy -->
+            <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gainsboro" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" HorizontalAlignment="Center" Height="Auto" Content="{Binding CurrentEnemy.Name}" />
+                    <Image Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="125" Width="125" Source="{Binding CurrentEnemy.ImageName}" />
+                    <Label Name="EnemyHitPoints" Grid.Row="2" Visibility="{Binding HasEnemy, Converter={StaticResource BooleanToVisibility}}" HorizontalAlignment="Center">
+                        <Label.Content>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}Salute: {0} / {1}">
+                                        <Binding Path="CurrentEnemy.CurrentHitPoints" />
+                                        <Binding Path="CurrentEnemy.MaximumHitPoints" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Label.Content>
+                    </Label>
+                </Grid>
+            </Border>
         </Grid>
+        <!-- Inventory and Quests -->
         <Grid Name="InventoryQuests" Grid.Row="2" Grid.Column="0" Background="BurlyWood">
             <TabControl>
                 <TabItem Header="Inventario">
@@ -134,6 +163,7 @@
                 </TabItem>
             </TabControl>
         </Grid>
+        <!-- Movements -->
         <Grid Name="Movements" Grid.Row="2" Grid.Column="1" Background="Lavender">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />

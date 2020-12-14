@@ -16,7 +16,8 @@ namespace Engine.Factories
             NewWorld.WorldID = 0;
             NewWorld.AddLocation(0, 0, "Home", "Casa Dolce Casa");
             NewWorld.AddLocation(0, 1, "Prato", "Un prato con erba alta");
-            NewWorld.LocationAt(0, 1).QuestsAvailableHere.Add(QuestFactory.GetQuestByID(1));
+            NewWorld.LocationAt(0, 1).AddQuestToLocation(1);
+            NewWorld.LocationAt(0, 1).AddEnemyToLocation(1);
             NewWorld.AddLocation(1, 0, "Location", "Default");
             NewWorld.AddLocation(1, 1, "Location", "Default");
 

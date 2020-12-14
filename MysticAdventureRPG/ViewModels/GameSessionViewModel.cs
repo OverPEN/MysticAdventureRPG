@@ -15,6 +15,8 @@ namespace MysticAdventureRPG.ViewModels
     public class GameSessionViewModel : BaseNotifyPropertyChanged
     {
         private Location _currentLocation;
+        private Enemy _currentEnemy;
+
         public Location CurrentLocation
         {
             get { return _currentLocation; }
@@ -28,14 +30,29 @@ namespace MysticAdventureRPG.ViewModels
                 OnPropertyChanged(nameof(CanMoveBackwards));
                 OnPropertyChanged(nameof(CanMoveLeft));
                 GivePlayerQuestsAtLocation();
+                GetEnemyAtLocation();
             }
         }
+        public Enemy CurrentEnemy
+        {
+            get { return _currentEnemy; }
+            set
+            {
+                _currentEnemy = value;
+
+                OnPropertyChanged(nameof(CurrentEnemy));
+                OnPropertyChanged(nameof(HasEnemy));
+            }
+        }
+        public Player CurrentPlayer { get; set; }
+        public World CurrentWorld { get; set; }
+
+        #region Commands
         public ICommand MoveForwardCommand { get; set; }
         public ICommand MoveBackwardsCommand { get; set; }
         public ICommand MoveRightCommand { get; set; }
         public ICommand MoveLeftCommand { get; set; }
-        public Player CurrentPlayer { get; set; }
-        public World CurrentWorld { get; set; }
+        #endregion
 
         public GameSessionViewModel()
         {
@@ -56,13 +73,22 @@ namespace MysticAdventureRPG.ViewModels
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(4,5));
         }
 
+        #region Boolean Controls
+        public bool CanMoveForward => CurrentWorld.LocationAt(CurrentLocation.XCoordinate, CurrentLocation.YCoordinate + 1) != null;
+        public bool CanMoveRight => CurrentWorld.LocationAt(CurrentLocation.XCoordinate + 1, CurrentLocation.YCoordinate) != null;
+        public bool CanMoveBackwards => CurrentWorld.LocationAt(CurrentLocation.XCoordinate, CurrentLocation.YCoordinate - 1) != null;
+        public bool CanMoveLeft => CurrentWorld.LocationAt(CurrentLocation.XCoordinate - 1, CurrentLocation.YCoordinate) != null;
+        public bool HasEnemy => CurrentEnemy != null;
+        #endregion
+
+        #region Functions
         public void MoveForward(object obj)
         {
             if (CanMoveForward)
             {
                 CurrentPlayer.YCoordinate++;
                 RefreshLocation();
-            }       
+            }
         }
 
         public void MoveRight(object obj)
@@ -97,38 +123,6 @@ namespace MysticAdventureRPG.ViewModels
             CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
         }
 
-        public bool CanMoveForward
-        {
-            get
-            {
-                return CurrentWorld.LocationAt(CurrentLocation.XCoordinate, CurrentLocation.YCoordinate + 1) != null;
-            }
-        }
-
-        public bool CanMoveRight
-        {
-            get
-            {
-                return CurrentWorld.LocationAt(CurrentLocation.XCoordinate + 1, CurrentLocation.YCoordinate) != null;
-            }
-        }
-
-        public bool CanMoveBackwards
-        {
-            get
-            {
-                return CurrentWorld.LocationAt(CurrentLocation.XCoordinate, CurrentLocation.YCoordinate - 1) != null;
-            }
-        }
-
-        public bool CanMoveLeft
-        {
-            get
-            {
-                return CurrentWorld.LocationAt(CurrentLocation.XCoordinate - 1, CurrentLocation.YCoordinate) != null;
-            }
-        }
-
         private void GivePlayerQuestsAtLocation()
         {
             foreach (Quest quest in CurrentLocation.QuestsAvailableHere)
@@ -144,5 +138,11 @@ namespace MysticAdventureRPG.ViewModels
                 }
             }
         }
+
+        private void GetEnemyAtLocation()
+        {
+            CurrentEnemy = CurrentLocation.GetEnemy();
+        }
+        #endregion
     }
 }
