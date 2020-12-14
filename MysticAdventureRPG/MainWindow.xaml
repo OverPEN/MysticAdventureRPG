@@ -37,18 +37,59 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Content="Nome:"/>
-            <Label Grid.Row="0" Grid.Column="1" Content="{Binding CurrentPlayer.Name}"/>
-            <Label Grid.Row="1" Grid.Column="0" Content="Classe:"/>
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentPlayer.Class}"/>
-            <Label Grid.Row="2" Grid.Column="0" Content="Salute:"/>
-            <Label Grid.Row="2" Grid.Column="1" Content="{Binding CurrentPlayer.HitPoints}"/>
-            <Label Grid.Row="3" Grid.Column="0" Content="Oro:"/>
-            <Label Grid.Row="3" Grid.Column="1" Content="{Binding CurrentPlayer.Gold}"/>
+            <Label Name="PlayerName" Grid.Row="0" Grid.Column="0">
+                <Label.Content>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}Nome: {0} {1}">
+                                <Binding Path="CurrentPlayer.Name" />
+                                <Binding Path="CurrentPlayer.Surname" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Name="PlayerClass" Grid.Row="1" Grid.Column="0">
+                <Label.Content>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <Binding Path="CurrentPlayer.Class" StringFormat="{}Classe: {0}"/>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Name="PlayerHitPoints" Grid.Row="2" Grid.Column="0">
+                <Label.Content>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}Salute: {0} / {1}">
+                                <Binding Path="CurrentPlayer.CurrentHitPoints" />
+                                <Binding Path="CurrentPlayer.HitPoints" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Name="PlayerGold" Grid.Row="3" Grid.Column="0">
+                <Label.Content>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <Binding Path="CurrentPlayer.Gold" StringFormat="{}Oro: {0}"/>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
             <Label Grid.Row="4" Grid.Column="0" Content="XP:"/>
             <Label Grid.Row="4" Grid.Column="1" Content="{Binding CurrentPlayer.Experience}"/>
-            <Label Grid.Row="5" Grid.Column="0" Content="Lv:"/>
-            <Label Grid.Row="5" Grid.Column="1" Content="{Binding CurrentPlayer.Level}"/>
+            <Label Grid.Row="5" Grid.Column="0">
+                <Label.Content>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <Binding Path="CurrentPlayer.Level" StringFormat="{}LV: {0}"/>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
         </Grid>
         <Grid Name="LocationStats" Grid.Row="1" Grid.Column="1" Background="Beige">
             <Grid.RowDefinitions>
@@ -72,14 +113,14 @@
                 </Grid>
             </Border>
         </Grid>
-
-        <Grid Grid.Row="2" Grid.Column="0" Background="BurlyWood">
+        <Grid Name="InventoryQuests" Grid.Row="2" Grid.Column="0" Background="BurlyWood">
             <TabControl>
                 <TabItem Header="Inventario">
                     <DataGrid ItemsSource="{Binding CurrentPlayer.Inventory}" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Oggetto:" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
                             <DataGridTextColumn Header="Valore:" Binding="{Binding Price}" Width="Auto" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Quantità:" Binding="{Binding Quantity}" Width="Auto" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>

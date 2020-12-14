@@ -50,10 +50,10 @@ namespace MysticAdventureRPG.ViewModels
             if(CurrentLocation.Name == "Home")
                 CurrentLocation.ImageName = $"/Engine;component/Resources/LocationsImages/Home/Home_{CurrentPlayer.Class.ToString()}.jpg";
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1001));
-            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1001));
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1002));
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1003));
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1004));
+            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(4,5));
         }
 
         public void MoveForward(object obj)

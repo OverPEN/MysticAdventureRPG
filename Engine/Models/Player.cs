@@ -16,6 +16,7 @@ namespace Engine.Models
         private String _surname { get; set; }
         private PlayerClassType _class { get; set; }
         private int _hitPoints { get; set; }
+        private int _currentHitPoints { get; set; }
         private int _baseDamage { get; set; }
         private WeaponDamageType _baseDamageType { get; set; }
         private float _speed { get; set; }
@@ -41,6 +42,7 @@ namespace Engine.Models
             BaseDamageType = defaultValues.BaseDamageType;
             Speed = defaultValues.Speed;
             HitPoints = defaultValues.HitPoints;
+            CurrentHitPoints = defaultValues.HitPoints;
             Gold = defaultValues.Gold;
             XCoordinate = 0;
             YCoordinate = 0;
@@ -128,6 +130,15 @@ namespace Engine.Models
             {
                 _hitPoints = value;
                 OnPropertyChanged(nameof(HitPoints));
+            }
+        }
+        public int CurrentHitPoints
+        {
+            get { return _currentHitPoints; }
+            set
+            {
+                _currentHitPoints = value;
+                OnPropertyChanged(nameof(CurrentHitPoints));
             }
         }
         public int Gold

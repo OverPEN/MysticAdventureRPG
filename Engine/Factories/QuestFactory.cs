@@ -18,8 +18,8 @@ namespace Engine.Factories
             List<Item> itemsToComplete = new List<Item>();
             List<Item> rewardItems = new List<Item>();
 
-            itemsToComplete.Add(ItemFactory.GetItemByID(1).Clone(5));
-            rewardItems.Add(ItemFactory.GetItemByID(1001).Clone());
+            itemsToComplete.Add(ItemFactory.CreateItem(1,5));
+            rewardItems.Add(ItemFactory.CreateItem(1001));
 
             // Create the quest
             _quests.Add(new Quest(1, "Ripulisci il Prato", "Sconfiggi i serpenti nel prato", itemsToComplete, 25, 10, rewardItems, QuestStatus.Nuova));
