@@ -9,11 +9,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommonClasses.EventArgs;
 
 namespace MysticAdventureRPG.ViewModels
 {
     public class GameSessionViewModel : BaseNotifyPropertyChanged
     {
+        public event EventHandler<GameMessageEventArgs> OnMessageRaised;
+
+        #region Properties
         private Location _currentLocation;
         private Enemy _currentEnemy;
 
@@ -42,10 +46,16 @@ namespace MysticAdventureRPG.ViewModels
 
                 OnPropertyChanged(nameof(CurrentEnemy));
                 OnPropertyChanged(nameof(HasEnemy));
+
+                if (CurrentEnemy != null)
+                {
+                    RaiseMessage($"Ti imbatti in un {CurrentEnemy.Name}!", GameMessageType.Encounter);
+                }
             }
         }
         public Player CurrentPlayer { get; set; }
         public World CurrentWorld { get; set; }
+        #endregion
 
         #region Commands
         public ICommand MoveForwardCommand { get; set; }
@@ -56,21 +66,26 @@ namespace MysticAdventureRPG.ViewModels
 
         public GameSessionViewModel()
         {
+            #region Inizializzazione Comandi
             MoveForwardCommand = new BaseCommand(MoveForward);
             MoveBackwardsCommand = new BaseCommand(MoveBackwards);
             MoveRightCommand = new BaseCommand(MoveRight);
             MoveLeftCommand = new BaseCommand(MoveLeft);
+            #endregion
 
             CurrentPlayer = new Player("Giuseppe","Penna",PlayerClassType.Mago);
             CurrentWorld = WorldFactory.CreateWorld();
             CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
             if(CurrentLocation.Name == "Home")
                 CurrentLocation.ImageName = $"/Engine;component/Resources/LocationsImages/Home/Home_{CurrentPlayer.Class.ToString()}.jpg";
+
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1001));
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1002));
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1003));
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1004));
             CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(4,5));
+
+            
         }
 
         #region Boolean Controls
@@ -142,6 +157,11 @@ namespace MysticAdventureRPG.ViewModels
         private void GetEnemyAtLocation()
         {
             CurrentEnemy = CurrentLocation.GetEnemy();
+        }
+
+        private void RaiseMessage(string message, GameMessageType type)
+        {
+            OnMessageRaised?.Invoke(this, new GameMessageEventArgs(message, type));
         }
         #endregion
     }

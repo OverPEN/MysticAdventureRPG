@@ -71,7 +71,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\EnemyImages\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\LocationsImages\Home\Home_Tank.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

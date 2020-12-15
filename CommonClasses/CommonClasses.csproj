@@ -44,11 +44,13 @@
     <Compile Include="BaseClasses\BaseCommand.cs" />
     <Compile Include="BaseClasses\BaseNotifyPropertyChanged.cs" />
     <Compile Include="BaseClasses\BaseRandomNumberGenerator.cs" />
+    <Compile Include="Enums\GameMessageType.cs" />
     <Compile Include="Enums\QuestStatus.cs" />
     <Compile Include="Enums\WeaponDamageType.cs" />
     <Compile Include="Enums\ItemType.cs" />
     <Compile Include="Enums\PlayerClassType.cs" />
     <Compile Include="BaseClasses\PlayerClassBaseValues.cs" />
+    <Compile Include="EventArgs\GameMessageEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
