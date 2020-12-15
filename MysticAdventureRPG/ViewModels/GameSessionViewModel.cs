@@ -17,10 +17,13 @@ namespace MysticAdventureRPG.ViewModels
     {
         public event EventHandler<GameMessageEventArgs> OnMessageRaised;
 
-        #region Properties
+        #region Private Properties
         private Location _currentLocation;
         private Enemy _currentEnemy;
+        public Weapon _currentWeapon;
+        #endregion
 
+        #region Public Properties
         public Location CurrentLocation
         {
             get { return _currentLocation; }
@@ -49,12 +52,22 @@ namespace MysticAdventureRPG.ViewModels
 
                 if (CurrentEnemy != null)
                 {
-                    RaiseMessage($"Ti imbatti in un {CurrentEnemy.Name}!", GameMessageType.Encounter);
+                    RaiseMessage($"Ti imbatti in un {CurrentEnemy.Name}!", GameMessageType.BattleInfo);
                 }
             }
         }
         public Player CurrentPlayer { get; set; }
         public World CurrentWorld { get; set; }
+        public Weapon CurrentWeapon
+        {
+            get { return _currentWeapon; }
+            set
+            {
+                _currentWeapon = value;
+
+                OnPropertyChanged(nameof(CurrentWeapon));
+            }
+        }
         #endregion
 
         #region Commands
@@ -62,6 +75,7 @@ namespace MysticAdventureRPG.ViewModels
         public ICommand MoveBackwardsCommand { get; set; }
         public ICommand MoveRightCommand { get; set; }
         public ICommand MoveLeftCommand { get; set; }
+        public ICommand AttackEnemyCommand { get; set; }
         #endregion
 
         public GameSessionViewModel()
@@ -71,21 +85,22 @@ namespace MysticAdventureRPG.ViewModels
             MoveBackwardsCommand = new BaseCommand(MoveBackwards);
             MoveRightCommand = new BaseCommand(MoveRight);
             MoveLeftCommand = new BaseCommand(MoveLeft);
+            AttackEnemyCommand = new BaseCommand(EvaluateBattleTurn);
             #endregion
 
-            CurrentPlayer = new Player("Giuseppe","Penna",PlayerClassType.Mago);
+            CurrentPlayer = new Player("Giuseppe", "Penna", PlayerClassType.Mago);
             CurrentWorld = WorldFactory.CreateWorld();
             CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
-            if(CurrentLocation.Name == "Home")
+            if (CurrentLocation.Name == "Home")
                 CurrentLocation.ImageName = $"/Engine;component/Resources/LocationsImages/Home/Home_{CurrentPlayer.Class.ToString()}.jpg";
 
-            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1001));
-            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1002));
-            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1003));
-            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(1004));
-            CurrentPlayer.Inventory.Add(ItemFactory.CreateItem(4,5));
+            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1001));
+            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1002));
+            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1003));
+            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1004));
+            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(4, 5));
 
-            
+
         }
 
         #region Boolean Controls
@@ -144,12 +159,12 @@ namespace MysticAdventureRPG.ViewModels
             {
                 if (!CurrentPlayer.Quests.Any(q => q.QuestID == quest.QuestID))
                 {
-                    if(quest.Status == QuestStatus.Nuova)
+                    if (quest.Status == QuestStatus.Nuova)
                     {
                         quest.Status = QuestStatus.Iniziata;
                         CurrentPlayer.Quests.Add(quest);
                     }
-                        
+
                 }
             }
         }
@@ -163,6 +178,133 @@ namespace MysticAdventureRPG.ViewModels
         {
             OnMessageRaised?.Invoke(this, new GameMessageEventArgs(message, type));
         }
+
+        public void EvaluateBattleTurn(object obj)
+        {
+            if((CurrentPlayer.Speed + CurrentWeapon?.WeaponSpeed) >= CurrentEnemy.Speed)
+            {
+                EvaluatePlayerTurn();
+                if (CurrentEnemy.CurrentHitPoints <= 0)
+                {
+                    GetLoot();
+                    return;
+                }
+                else
+                {
+                    EvaluateEnemyTurn();
+                    if (CurrentPlayer.CurrentHitPoints <= 0)
+                    {
+                        PlayerKilled();
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                EvaluateEnemyTurn();
+                if (CurrentPlayer.CurrentHitPoints <= 0)
+                {
+                    PlayerKilled();
+                    return;
+                }
+                else
+                {
+                    EvaluatePlayerTurn();
+                    if (CurrentEnemy.CurrentHitPoints <= 0)
+                    {
+                        GetLoot();
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void EvaluatePlayerTurn()
+        {
+            int damageToEnemy;
+
+            // Determino il danno inflitto dal PLayer
+            if (CurrentWeapon == null)
+            {
+                RaiseMessage("Non avendo equipaggiato un'arma ti scagli sul nemico a mani nude.", GameMessageType.BattleInfo);
+                damageToEnemy = CurrentPlayer.BaseDamage;
+                CurrentEnemy.CurrentHitPoints -= damageToEnemy;
+                RaiseMessage($"Hai colpito {CurrentEnemy.Name} causando {damageToEnemy} danni!", GameMessageType.BattlePositive);
+            }
+            else
+            {
+                RaiseMessage($"Attacchi il nemico con {CurrentWeapon.Name}.", GameMessageType.BattleInfo);
+                if (CurrentWeapon.MissRate > BaseRandomNumberGenerator.NumberBetween(0, 100))
+                {
+                    RaiseMessage($"Hai mancato {CurrentEnemy.Name}!", GameMessageType.BattleNegative);
+                }
+                else
+                {
+                    damageToEnemy = BaseRandomNumberGenerator.NumberBetween(CurrentWeapon.MinimumDamage, CurrentWeapon.MaximumDamage);
+                    CurrentEnemy.CurrentHitPoints -= damageToEnemy;
+                    RaiseMessage($"Hai colpito {CurrentEnemy.Name} causando {damageToEnemy} danni!", GameMessageType.BattlePositive);
+                }
+            }
+        }
+
+        private void GetLoot()
+        {
+            // Se il nemico è sconfitto ottengo il loot
+            if (CurrentEnemy.CurrentHitPoints <= 0)
+            {
+                RaiseMessage("", GameMessageType.Info);
+                RaiseMessage($"Hai sconfitto {CurrentEnemy.Name}!", GameMessageType.BattleInfo);
+
+                CurrentPlayer.Experience += CurrentEnemy.RewardExperiencePoints;
+                RaiseMessage($"Ricevi {CurrentEnemy.RewardExperiencePoints} punti esperienza!", GameMessageType.BattleInfo);
+
+                CurrentPlayer.Gold += CurrentEnemy.RewardGold;
+                RaiseMessage($"Ricevi {CurrentEnemy.RewardGold} oro!", GameMessageType.BattleInfo);
+
+                foreach (Item drop in CurrentEnemy.Inventory)
+                {
+                    Item item = ItemFactory.CreateItem(drop.ItemID, drop.Quantity);
+                    CurrentPlayer.AddItemToInventory(item);
+                    RaiseMessage($"Ricevi {item.Quantity} {item.Name}!", GameMessageType.BattleInfo);
+                }
+
+                // Spawno un altro nemico
+                //GetEnemyAtLocation();
+            }
+        }
+
+        private void EvaluateEnemyTurn()
+        {
+            //Determino il danno inflitto dal nemico
+
+            if (CurrentEnemy.BaseMissRate > BaseRandomNumberGenerator.NumberBetween(0, 100))
+            {
+                RaiseMessage($"{CurrentEnemy.Name} ti attacca... ma schivi l'attacco!", GameMessageType.BattlePositive);
+            }
+            else
+            {
+                int damageToPlayer = BaseRandomNumberGenerator.NumberBetween(CurrentEnemy.MinimumDamage, CurrentEnemy.MaximumDamage);
+                CurrentPlayer.CurrentHitPoints -= damageToPlayer;
+                RaiseMessage($"Il {CurrentEnemy.Name} ti colpisce infliggendoti {damageToPlayer} danni!", GameMessageType.BattleNegative);
+            }
+
+        }
+
+        private void PlayerKilled()
+        {
+            // Se il player è sconfitto lo porto al checkpoint e lo curo
+            if (CurrentPlayer.CurrentHitPoints <= 0)
+            {
+                RaiseMessage("", GameMessageType.Info);
+                RaiseMessage($"The {CurrentEnemy.Name} killed you.", GameMessageType.BattleNegative);
+
+                CurrentLocation = CurrentWorld.LocationAt(0, -1); // Player's home
+                CurrentPlayer.CurrentHitPoints = CurrentPlayer.MaximumHitPoints;
+                //CurrentPlayer.CurrentHitPoints = CurrentPlayer.Level * 10; // Completely heal the player
+            }
+            
+        }
         #endregion
     }
 }
+

@@ -12,13 +12,13 @@ namespace Engine.Models
 {
     public class Player : BaseNotifyPropertyChanged
     {
+        #region Private Properties
         private String _name { get; set; }
         private String _surname { get; set; }
         private PlayerClassType _class { get; set; }
         private int _maximumHitPoints { get; set; }
         private int _currentHitPoints { get; set; }
         private int _baseDamage { get; set; }
-        private WeaponDamageType _baseDamageType { get; set; }
         private float _speed { get; set; }
         private Byte _level { get; set; }
         private int _experience { get; set; }
@@ -26,31 +26,9 @@ namespace Engine.Models
         private int _worldID { get; set; }
         private int _xCoordinate { get; set; }
         private int _yCoordinate { get; set; }
-        public ObservableCollection<Item> Inventory { get; set; }
-        public ObservableCollection<Quest> Quests { get; set; }
+        #endregion
 
-        public Player(string chosenName, string chosenSurname, PlayerClassType chosenClass)
-        {
-            PlayerClassBaseValues defaultValues = new PlayerClassBaseValues(chosenClass);
-
-            Name = chosenName;
-            Surname = chosenSurname;
-            Class = chosenClass;
-            Level = 1;
-            Experience = 0;
-            BaseDamage = defaultValues.BaseDamage;
-            BaseDamageType = defaultValues.BaseDamageType;
-            Speed = defaultValues.Speed;
-            MaximumHitPoints = defaultValues.HitPoints;
-            CurrentHitPoints = defaultValues.HitPoints;
-            Gold = defaultValues.Gold;
-            XCoordinate = 0;
-            YCoordinate = 0;
-            WorldID = 0;
-            Inventory = new ObservableCollection<Item>();
-            Quests = new ObservableCollection<Quest>();
-        }
-
+        #region Public Properties
         public string Name
         {
             get { return _name; }
@@ -105,15 +83,7 @@ namespace Engine.Models
                 OnPropertyChanged(nameof(BaseDamage));
             }
         }
-        public WeaponDamageType BaseDamageType
-        {
-            get { return _baseDamageType; }
-            set
-            {
-                _baseDamageType = value;
-                OnPropertyChanged(nameof(BaseDamageType));
-            }
-        }
+        public WeaponDamageType BaseDamageType { get; set; } 
         public float Speed
         {
             get { return _speed; }
@@ -176,6 +146,41 @@ namespace Engine.Models
                 _worldID = value;
                 OnPropertyChanged(nameof(WorldID));
             }
+        }
+        public ObservableCollection<Item> Inventory { get; set; }
+        public ObservableCollection<Quest> Quests { get; set; }
+        public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
+        #endregion
+
+        public Player(string chosenName, string chosenSurname, PlayerClassType chosenClass)
+        {
+            PlayerClassBaseValues defaultValues = new PlayerClassBaseValues(chosenClass);
+
+            Name = chosenName;
+            Surname = chosenSurname;
+            Class = chosenClass;
+            Level = 1;
+            Experience = 0;
+            BaseDamage = defaultValues.BaseDamage;
+            BaseDamageType = defaultValues.BaseDamageType;
+            Speed = defaultValues.Speed;
+            MaximumHitPoints = defaultValues.HitPoints;
+            CurrentHitPoints = defaultValues.HitPoints;
+            Gold = defaultValues.Gold;
+            XCoordinate = 0;
+            YCoordinate = 0;
+            WorldID = 0;
+            Inventory = new ObservableCollection<Item>();
+            Quests = new ObservableCollection<Quest>();
+        }
+
+        
+
+        public void AddItemToInventory(Item item)
+        {
+            Inventory.Add(item);
+
+            OnPropertyChanged(nameof(Weapons));
         }
     }
 }

@@ -9,8 +9,8 @@ namespace CommonClasses.Enums
     public enum GameMessageType : byte
     {
         Info = 0,
-        Encounter = 1,
-        DamageSuffer = 2,
-        DamageDeal = 3
+        BattleNegative = 1,
+        BattlePositive = 2,
+        BattleInfo = 3
     }
 }

@@ -22,7 +22,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassType.Guerriero:
                     HitPoints = 35;
                     BaseDamage = 7;
-                    BaseDamageType = WeaponDamageType.Taglio;
+                    BaseDamageType = WeaponDamageType.Schianto;
                     Speed = 1.0f;
                     Gold = 200;
                 break;
@@ -30,7 +30,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassType.Mago:
                     HitPoints = 20;
                     BaseDamage = 7;
-                    BaseDamageType = WeaponDamageType.Magico;
+                    BaseDamageType = WeaponDamageType.Schianto;
                     Speed = 1.5f;
                     Gold = 150;
                 break;
@@ -46,7 +46,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassType.Ladro:
                     HitPoints = 25;
                     BaseDamage = 5;
-                    BaseDamageType = WeaponDamageType.Penetrante;
+                    BaseDamageType = WeaponDamageType.Schianto;
                     Speed = 2.0f;
                     Gold = 100;
                 break;

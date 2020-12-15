@@ -23,14 +23,14 @@ namespace Engine.Models
             }
         }
 
-        internal void AddLocation(int xCoordinate, int yCoordinate, string name, string description, string imageName = null)
+        internal void AddLocation(int xCoordinate, int yCoordinate, string name, string description)
         {
             Location loc = new Location();
             loc.XCoordinate = xCoordinate;
             loc.YCoordinate = yCoordinate;
-            loc.Name = name;
+            loc.Name = name.Replace('_', ' ');
             loc.Description = description;
-            loc.ImageName = imageName;
+            loc.ImageName = $"/Engine;component/Resources/LocationsImages/Home/Home_{name}.jpg";
 
             _locations.Add(loc);
         }

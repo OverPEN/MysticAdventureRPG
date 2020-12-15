@@ -41,32 +41,28 @@ namespace MysticAdventureRPG
                     par.Foreground = Brushes.Black;
                     par.FontWeight = FontWeights.Normal;
                     par.FontFamily = new FontFamily("Tahoma");
-                    par.FontSize = 18f;
-                    GameMessages.Document.Blocks.Add(par);
+                    par.FontSize = 14f;
                     break;
-                case GameMessageType.Encounter:
-                    par.Foreground = Brushes.OrangeRed;
-                    par.FontWeight = FontWeights.Bold;
+                case GameMessageType.BattleInfo:
+                    par.Foreground = Brushes.Black;
+                    par.FontWeight = FontWeights.SemiBold;
                     par.FontFamily = new FontFamily("Tahoma");
-                    par.FontSize = 18f;
-                    GameMessages.Document.Blocks.Add(par);
+                    par.FontSize = 15f;
                     break;
-                case GameMessageType.DamageSuffer:
+                case GameMessageType.BattleNegative:
                     par.Foreground = Brushes.Red;
-                    par.FontWeight = FontWeights.Bold;
+                    par.FontWeight = FontWeights.SemiBold;
                     par.FontFamily = new FontFamily("Tahoma");
-                    par.FontSize = 18f;
-                    GameMessages.Document.Blocks.Add(par);
+                    par.FontSize = 15f;
                     break;
-                case GameMessageType.DamageDeal:
-                    par.Foreground = Brushes.DarkGreen;
-                    par.FontWeight = FontWeights.Medium;
+                case GameMessageType.BattlePositive:
+                    par.Foreground = Brushes.ForestGreen;
+                    par.FontWeight = FontWeights.SemiBold;
                     par.FontFamily = new FontFamily("Tahoma");
-                    par.FontSize = 18f;
-                    GameMessages.Document.Blocks.Add(par);
+                    par.FontSize = 15f;
                     break;
             }
-            
+            GameMessages.Document.Blocks.Add(par);
             GameMessages.ScrollToEnd();
         }
     }
