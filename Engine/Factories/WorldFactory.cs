@@ -14,12 +14,14 @@ namespace Engine.Factories
             World NewWorld = new World();
 
             NewWorld.WorldID = 0;
-            NewWorld.AddLocation(1,0, 0, "Home", "Casa Dolce Casa");
-            NewWorld.AddLocation(2,0, 1, "Prato", "Un prato con erba alta");
-            NewWorld.LocationAt(0, 1).AddQuestToLocation(1);
+            NewWorld.AddLocation(1, 0, 0, "Home", "Casa Dolce Casa");
+            NewWorld.AddLocation(2, 0, 1, "Prato", "Un prato con erba alta");
+            NewWorld.LocationAt(0, 1).AddQuestToLocation(2);
             NewWorld.LocationAt(0, 1).AddEnemyToLocation(1);
-            NewWorld.AddLocation(3,1, 0, "Location", "Default");
-            NewWorld.AddLocation(4,1, 1, "Location", "Default");
+            NewWorld.AddLocation(3, 1, 0, "Trader", "TraderLocation");
+            NewWorld.LocationAt(1, 0).AddQuestToLocation(1);
+            NewWorld.LocationAt(1, 0).TraderHere = TraderFactory.GetTraderByID(1);
+            NewWorld.AddLocation(4, 1, 1, "Location", "Default");
 
             return NewWorld;
         }

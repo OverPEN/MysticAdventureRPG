@@ -176,7 +176,6 @@ namespace Engine.Models
 
         public void AddItemToInventory(Item item)
         {
-            //Item itm = Inventory.FirstOrDefault(i => i.ItemID == item.ItemID);
             if(Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) == null)
             { 
             Inventory.Add(item);
@@ -190,7 +189,17 @@ namespace Engine.Models
 
         public void RemoveItemFromInventory(Item item)
         {
-            Inventory.Remove(item);
+            if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) != null)
+            {
+                if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity <= item.Quantity)
+                {
+                    Inventory.Remove(item);
+                }
+                else
+                {
+                    Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity -= item.Quantity;
+                }
+            }
 
             OnPropertyChanged(nameof(Weapons));
         }

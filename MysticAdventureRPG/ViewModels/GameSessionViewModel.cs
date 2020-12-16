@@ -21,6 +21,7 @@ namespace MysticAdventureRPG.ViewModels
         private Location _currentLocation;
         private Enemy _currentEnemy;
         public Weapon _currentWeapon;
+        private Trader _currentTrader;
         #endregion
 
         #region Public Properties
@@ -37,10 +38,17 @@ namespace MysticAdventureRPG.ViewModels
                 OnPropertyChanged(nameof(CanMoveBackwards));
                 OnPropertyChanged(nameof(CanMoveLeft));
 
-                RaiseMessage($"Sei giunto a {CurrentLocation.Name}.", GameMessageType.BattleInfo);
+                RaiseMessage("", GameMessageType.Info);
+                RaiseMessage($"Sei giunto a {CurrentLocation.Name}.", GameMessageType.Info);
                 GivePlayerQuestsAtLocation();
                 CompleteQuestsAtLocation();
                 GetEnemyAtLocation();
+
+                CurrentTrader = CurrentLocation.TraderHere;
+                if (HasTrader)
+                {
+                    RaiseMessage($"Nella zona puoi commerciare con {CurrentTrader.Name}.", GameMessageType.Info);
+                }            
             }
         }
         public Enemy CurrentEnemy
@@ -55,6 +63,7 @@ namespace MysticAdventureRPG.ViewModels
 
                 if (CurrentEnemy != null)
                 {
+                    RaiseMessage("", GameMessageType.Info);
                     RaiseMessage($"Ti imbatti in un {CurrentEnemy.Name}!", GameMessageType.BattleInfo);
                 }
             }
@@ -69,6 +78,17 @@ namespace MysticAdventureRPG.ViewModels
                 _currentWeapon = value;
 
                 OnPropertyChanged(nameof(CurrentWeapon));
+            }
+        }
+        public Trader CurrentTrader
+        {
+            get { return _currentTrader; }
+            set
+            {
+                _currentTrader = value;
+
+                OnPropertyChanged(nameof(CurrentTrader));
+                OnPropertyChanged(nameof(HasTrader));
             }
         }
         #endregion
@@ -112,6 +132,7 @@ namespace MysticAdventureRPG.ViewModels
         public bool CanMoveBackwards => CurrentWorld.LocationAt(CurrentLocation.XCoordinate, CurrentLocation.YCoordinate - 1) != null;
         public bool CanMoveLeft => CurrentWorld.LocationAt(CurrentLocation.XCoordinate - 1, CurrentLocation.YCoordinate) != null;
         public bool HasEnemy => CurrentEnemy != null;
+        public bool HasTrader => CurrentTrader != null;
         #endregion
 
         #region Functions

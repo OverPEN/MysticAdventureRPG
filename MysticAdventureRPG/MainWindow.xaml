@@ -209,6 +209,7 @@
                 </Grid.ColumnDefinitions>
                 <Button Name="bt_Avanti" Grid.Row="0" Grid.Column="1" Height="25" Width="65" Margin="10" Content="Avanti" Command="{Binding MoveForwardCommand}" Visibility="{Binding CanMoveForward, Converter={StaticResource BooleanToVisibility}}"/>
                 <Button Name="bt_Sinistra" Grid.Row="1" Grid.Column="0" Height="25" Width="65" Margin="10" Content="Sinistra" Command="{Binding MoveLeftCommand}" Visibility="{Binding CanMoveLeft, Converter={StaticResource BooleanToVisibility}}"/>
+                <Button Grid.Row="1" Grid.Column="1" Height="25" Width="65" Margin="10" Visibility="{Binding HasTrader, Converter={StaticResource BooleanToVisibility}}" Content="Commercia"/>
                 <Button Name="bt_Destra" Grid.Row="1" Grid.Column="2" Height="25" Width="65" Margin="10" Content="Destra" Command="{Binding MoveRightCommand}" Visibility="{Binding CanMoveRight, Converter={StaticResource BooleanToVisibility}}"/>
                 <Button Name="bt_Indietro" Grid.Row="2" Grid.Column="1" Height="25" Width="65" Margin="10" Content="Indietro" Command="{Binding MoveBackwardsCommand}" Visibility="{Binding CanMoveBackwards, Converter={StaticResource BooleanToVisibility}}"/>
             </Grid>

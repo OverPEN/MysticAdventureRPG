@@ -18,6 +18,7 @@ namespace Engine.Models
         public string ImageName { get; set; }
         public List<Quest> QuestsAvailableHere { get; set; } = new List<Quest>();
         public List<Enemy> EnemiesHere { get; set; } = new List<Enemy>();
+        public Trader TraderHere { get; set; }
 
         public void AddQuestToLocation(int questID)
         {
