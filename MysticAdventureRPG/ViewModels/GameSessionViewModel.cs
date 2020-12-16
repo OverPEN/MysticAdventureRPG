@@ -36,7 +36,10 @@ namespace MysticAdventureRPG.ViewModels
                 OnPropertyChanged(nameof(CanMoveRight));
                 OnPropertyChanged(nameof(CanMoveBackwards));
                 OnPropertyChanged(nameof(CanMoveLeft));
+
+                RaiseMessage($"Sei giunto a {CurrentLocation.Name}.", GameMessageType.BattleInfo);
                 GivePlayerQuestsAtLocation();
+                CompleteQuestsAtLocation();
                 GetEnemyAtLocation();
             }
         }
@@ -163,6 +166,24 @@ namespace MysticAdventureRPG.ViewModels
                     {
                         quest.Status = QuestStatus.Iniziata;
                         CurrentPlayer.Quests.Add(quest);
+
+                        RaiseMessage("", GameMessageType.Info);
+                        RaiseMessage($"Quest attivata: '{quest.Name}'", GameMessageType.Info);
+                        RaiseMessage(quest.Description, GameMessageType.Info);
+
+                        RaiseMessage("Consegna:", GameMessageType.Info);
+                        foreach (Item item in quest.ItemsToComplete)
+                        {
+                            RaiseMessage($"   {item.Quantity} {ItemFactory.CreateItem(item.ItemID).Name}", GameMessageType.Info);
+                        }
+
+                        RaiseMessage("Ricompensa:", GameMessageType.Info);
+                        RaiseMessage($"   {quest.RewardExperiencePoints} XP", GameMessageType.Info);
+                        RaiseMessage($"   {quest.RewardGold} Oro", GameMessageType.Info);
+                        foreach (Item item in quest.RewardItems)
+                        {
+                            RaiseMessage($"   {item.Quantity} {ItemFactory.CreateItem(item.ItemID).Name}", GameMessageType.Info);
+                        }
                     }
 
                 }
@@ -265,11 +286,12 @@ namespace MysticAdventureRPG.ViewModels
                 {
                     Item item = ItemFactory.CreateItem(drop.ItemID, drop.Quantity);
                     CurrentPlayer.AddItemToInventory(item);
+                    OnPropertyChanged(nameof(CurrentPlayer.Inventory));
                     RaiseMessage($"Ricevi {item.Quantity} {item.Name}!", GameMessageType.BattleInfo);
                 }
 
                 // Spawno un altro nemico
-                //GetEnemyAtLocation();
+                GetEnemyAtLocation();
             }
         }
 
@@ -298,11 +320,53 @@ namespace MysticAdventureRPG.ViewModels
                 RaiseMessage("", GameMessageType.Info);
                 RaiseMessage($"The {CurrentEnemy.Name} killed you.", GameMessageType.BattleNegative);
 
-                CurrentLocation = CurrentWorld.LocationAt(0, -1); // Player's home
+                CurrentLocation = CurrentWorld.LocationAt(0, 0); // Player's home
                 CurrentPlayer.CurrentHitPoints = CurrentPlayer.MaximumHitPoints;
                 //CurrentPlayer.CurrentHitPoints = CurrentPlayer.Level * 10; // Completely heal the player
             }
             
+        }
+
+        private void CompleteQuestsAtLocation()
+        {
+            foreach (Quest quest in CurrentLocation.QuestsAvailableHere)
+            {
+                Quest questToComplete = CurrentPlayer.Quests.FirstOrDefault(q => q.QuestID == quest.QuestID && quest.Status == QuestStatus.Iniziata);
+
+                if (questToComplete != null)
+                {
+                    if (CurrentPlayer.HasAllTheseItems(quest.ItemsToComplete))
+                    {
+                        // Remove the quest completion items from the player's inventory
+                        foreach (Item item in quest.ItemsToComplete)
+                        {
+                                CurrentPlayer.RemoveItemFromInventory(CurrentPlayer.Inventory.First(i => i.ItemID == item.ItemID));
+                        }
+
+                        RaiseMessage("", GameMessageType.Info);
+                        RaiseMessage($"Hai completato la Quest: '{quest.Name}'", GameMessageType.Info);
+
+                        // Give the player the quest rewards
+                        CurrentPlayer.Experience += quest.RewardExperiencePoints;
+                        RaiseMessage($"Hai ricevuto {quest.RewardExperiencePoints} XP", GameMessageType.Info);
+
+                        CurrentPlayer.Gold += quest.RewardGold;
+                        RaiseMessage($"Hai ricevuto {quest.RewardGold} Oro", GameMessageType.Info);
+
+                        foreach (Item item in quest.RewardItems)
+                        {
+                            Item rewardItem = ItemFactory.CreateItem(item.ItemID);
+
+                            CurrentPlayer.AddItemToInventory(rewardItem);
+                            RaiseMessage($"Hai ricevuto {rewardItem.Quantity} {rewardItem.Name}", GameMessageType.Info);
+                        }
+
+                        // Mark the Quest as completed
+                        quest.Status = QuestStatus.Completata;
+                        CurrentPlayer.Quests.Remove(questToComplete);
+                    }
+                }
+            }
         }
         #endregion
     }

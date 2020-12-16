@@ -23,9 +23,10 @@ namespace Engine.Models
             }
         }
 
-        internal void AddLocation(int xCoordinate, int yCoordinate, string name, string description)
+        internal void AddLocation(int id, int xCoordinate, int yCoordinate, string name, string description)
         {
             Location loc = new Location();
+            loc.LocationID = id;
             loc.XCoordinate = xCoordinate;
             loc.YCoordinate = yCoordinate;
             loc.Name = name.Replace('_', ' ');

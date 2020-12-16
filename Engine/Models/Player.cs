@@ -174,13 +174,44 @@ namespace Engine.Models
             Quests = new ObservableCollection<Quest>();
         }
 
-        
-
         public void AddItemToInventory(Item item)
         {
+            //Item itm = Inventory.FirstOrDefault(i => i.ItemID == item.ItemID);
+            if(Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) == null)
+            { 
             Inventory.Add(item);
+            }
+            else
+            {
+                Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity += item.Quantity;
+            }
+            OnPropertyChanged(nameof(Weapons));
+        }
+
+        public void RemoveItemFromInventory(Item item)
+        {
+            Inventory.Remove(item);
 
             OnPropertyChanged(nameof(Weapons));
+        }
+
+        public bool HasAllTheseItems(List<Item> items)
+        {
+            foreach (Item item in items)
+            {
+                if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) != null)
+                {
+                    if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity < item.Quantity)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }             
+            }
+            return true;
         }
     }
 }
