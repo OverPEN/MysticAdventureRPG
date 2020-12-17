@@ -305,8 +305,8 @@ namespace MysticAdventureRPG.ViewModels
                 CurrentPlayer.Experience += CurrentEnemy.RewardExperiencePoints;
                 RaiseMessage($"Ricevi {CurrentEnemy.RewardExperiencePoints} punti esperienza!", GameMessageType.BattleInfo);
 
-                CurrentPlayer.Gold += CurrentEnemy.RewardGold;
-                RaiseMessage($"Ricevi {CurrentEnemy.RewardGold} oro!", GameMessageType.BattleInfo);
+                CurrentPlayer.Gold += CurrentEnemy.Gold;
+                RaiseMessage($"Ricevi {CurrentEnemy.Gold} oro!", GameMessageType.BattleInfo);
 
                 foreach (Item drop in CurrentEnemy.Inventory)
                 {
