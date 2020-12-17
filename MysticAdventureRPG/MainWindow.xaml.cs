@@ -1,6 +1,7 @@
 ﻿using CommonClasses.Enums;
 using CommonClasses.EventArgs;
 using MysticAdventureRPG.ViewModels;
+using MysticAdventureRPG.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -65,6 +66,6 @@ namespace MysticAdventureRPG
             }
             GameMessages.Document.Blocks.Add(par);
             GameMessages.ScrollToEnd();
-        }
+        }       
     }
 }

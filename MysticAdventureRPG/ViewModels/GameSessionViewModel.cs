@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommonClasses.EventArgs;
+using MysticAdventureRPG.Views;
 
 namespace MysticAdventureRPG.ViewModels
 {
@@ -99,6 +100,9 @@ namespace MysticAdventureRPG.ViewModels
         public ICommand MoveRightCommand { get; set; }
         public ICommand MoveLeftCommand { get; set; }
         public ICommand AttackEnemyCommand { get; set; }
+        public ICommand ShowTraderScreenCommand { get; set; }
+        public ICommand BuyFromTraderCommand { get; set; }
+        public ICommand SellToTraderCommand { get; set; }
         #endregion
 
         public GameSessionViewModel()
@@ -109,6 +113,9 @@ namespace MysticAdventureRPG.ViewModels
             MoveRightCommand = new BaseCommand(MoveRight);
             MoveLeftCommand = new BaseCommand(MoveLeft);
             AttackEnemyCommand = new BaseCommand(EvaluateBattleTurn);
+            ShowTraderScreenCommand = new BaseCommand(ShowTraderScreen);
+            BuyFromTraderCommand = new BaseCommand(BuyFromTrader);
+            SellToTraderCommand = new BaseCommand(SellToTrader);
             #endregion
 
             CurrentPlayer = new Player("Giuseppe", "Penna", PlayerClassType.Mago);
@@ -122,8 +129,6 @@ namespace MysticAdventureRPG.ViewModels
             CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1003));
             CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1004));
             CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(4, 5));
-
-
         }
 
         #region Boolean Controls
@@ -135,7 +140,7 @@ namespace MysticAdventureRPG.ViewModels
         public bool HasTrader => CurrentTrader != null;
         #endregion
 
-        #region Functions
+        #region Game Session Functions
         public void MoveForward(object obj)
         {
             if (CanMoveForward)
@@ -388,6 +393,23 @@ namespace MysticAdventureRPG.ViewModels
                     }
                 }
             }
+        }
+
+        private void ShowTraderScreen(object obj)
+        {
+            TradeScreen tradeScreen = new TradeScreen();
+            tradeScreen.DataContext = this;
+            tradeScreen.ShowDialog();
+        }
+
+        private void BuyFromTrader(object obj)
+        {
+
+        }
+
+        private void SellToTrader(object obj)
+        {
+
         }
         #endregion
     }

@@ -193,7 +193,7 @@ namespace Engine.Models
             {
                 if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity <= item.Quantity)
                 {
-                    Inventory.Remove(item);
+                    Inventory.Remove(Inventory.FirstOrDefault(i => i.ItemID == item.ItemID));
                 }
                 else
                 {

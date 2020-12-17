@@ -10,9 +10,11 @@ namespace Engine.Models
 {
     public class Trader : BaseNotifyPropertyChanged
     {
+        #region Public Properties
         public int TraderID { get; set; }
         public string Name { get; set; }
         public ObservableCollection<Item> Inventory { get; set; }
+        #endregion
 
         public Trader(int id, string name)
         {
@@ -21,6 +23,7 @@ namespace Engine.Models
             Inventory = new ObservableCollection<Item>();
         }
 
+        #region Functions
         public void AddItemToInventory(Item item)
         {
             if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) == null)
@@ -39,7 +42,7 @@ namespace Engine.Models
             {
                 if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity <= item.Quantity)
                 {
-                    Inventory.Remove(item);
+                    Inventory.Remove(Inventory.FirstOrDefault(i => i.ItemID == item.ItemID));
                 }
                 else
                 {
@@ -47,5 +50,6 @@ namespace Engine.Models
                 }
             }
         }
+        #endregion
     }
 }
