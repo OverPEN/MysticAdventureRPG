@@ -39,8 +39,8 @@ namespace MysticAdventureRPG.ViewModels
                 OnPropertyChanged(nameof(CanMoveBackwards));
                 OnPropertyChanged(nameof(CanMoveLeft));
 
-                RaiseMessage("", GameMessageType.Info);
-                RaiseMessage($"Sei giunto a {CurrentLocation.Name}.", GameMessageType.Info);
+                //RaiseMessage("", GameMessageType.Info);
+                RaiseMessage($"Sei giunto a {CurrentLocation.Name}.", GameMessageType.ImportantInfo);
                 GivePlayerQuestsAtLocation();
                 CompleteQuestsAtLocation();
                 GetEnemyAtLocation();
@@ -64,7 +64,7 @@ namespace MysticAdventureRPG.ViewModels
 
                 if (CurrentEnemy != null)
                 {
-                    RaiseMessage("", GameMessageType.Info);
+                    //RaiseMessage("", GameMessageType.Info);
                     RaiseMessage($"Ti imbatti in un {CurrentEnemy.Name}!", GameMessageType.BattleInfo);
                 }
             }
@@ -101,8 +101,6 @@ namespace MysticAdventureRPG.ViewModels
         public ICommand MoveLeftCommand { get; set; }
         public ICommand AttackEnemyCommand { get; set; }
         public ICommand ShowTraderScreenCommand { get; set; }
-        public ICommand BuyFromTraderCommand { get; set; }
-        public ICommand SellToTraderCommand { get; set; }
         #endregion
 
         public GameSessionViewModel()
@@ -114,16 +112,11 @@ namespace MysticAdventureRPG.ViewModels
             MoveLeftCommand = new BaseCommand(MoveLeft);
             AttackEnemyCommand = new BaseCommand(EvaluateBattleTurn);
             ShowTraderScreenCommand = new BaseCommand(ShowTraderScreen);
-            BuyFromTraderCommand = new BaseCommand(BuyFromTrader);
-            SellToTraderCommand = new BaseCommand(SellToTrader);
             #endregion
 
             CurrentPlayer = new Player("Giuseppe", "Penna", PlayerClassType.Mago);
             CurrentWorld = WorldFactory.CreateWorld();
             CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
-            if (CurrentLocation.Name == "Home")
-                CurrentLocation.ImageName = $"/Engine;component/Resources/LocationsImages/Home/Home_{CurrentPlayer.Class.ToString()}.jpg";
-
             CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1001));
             CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1002));
             CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1003));
@@ -193,7 +186,7 @@ namespace MysticAdventureRPG.ViewModels
                         quest.Status = QuestStatus.Iniziata;
                         CurrentPlayer.Quests.Add(quest);
 
-                        RaiseMessage("", GameMessageType.Info);
+                        //RaiseMessage("", GameMessageType.Info);
                         RaiseMessage($"Quest attivata: '{quest.Name}'", GameMessageType.Info);
                         RaiseMessage(quest.Description, GameMessageType.Info);
 
@@ -299,7 +292,7 @@ namespace MysticAdventureRPG.ViewModels
             // Se il nemico è sconfitto ottengo il loot
             if (CurrentEnemy.CurrentHitPoints <= 0)
             {
-                RaiseMessage("", GameMessageType.Info);
+                //RaiseMessage("", GameMessageType.Info);
                 RaiseMessage($"Hai sconfitto {CurrentEnemy.Name}!", GameMessageType.BattleInfo);
 
                 CurrentPlayer.Experience += CurrentEnemy.RewardExperiencePoints;
@@ -343,10 +336,12 @@ namespace MysticAdventureRPG.ViewModels
             // Se il player è sconfitto lo porto al checkpoint e lo curo
             if (CurrentPlayer.CurrentHitPoints <= 0)
             {
-                RaiseMessage("", GameMessageType.Info);
-                RaiseMessage($"The {CurrentEnemy.Name} killed you.", GameMessageType.BattleNegative);
+                //RaiseMessage("", GameMessageType.Info);
+                RaiseMessage($"Sei stato ucciso da {CurrentEnemy.Name}.", GameMessageType.BattleNegative);
 
-                CurrentLocation = CurrentWorld.LocationAt(0, 0); // Player's home
+                CurrentLocation = CurrentWorld.GetLocationByID(1); // Player's home
+                CurrentPlayer.XCoordinate = CurrentLocation.XCoordinate;
+                CurrentPlayer.YCoordinate = CurrentLocation.YCoordinate;
                 CurrentPlayer.CurrentHitPoints = CurrentPlayer.MaximumHitPoints;
                 //CurrentPlayer.CurrentHitPoints = CurrentPlayer.Level * 10; // Completely heal the player
             }
@@ -363,16 +358,16 @@ namespace MysticAdventureRPG.ViewModels
                 {
                     if (CurrentPlayer.HasAllTheseItems(quest.ItemsToComplete))
                     {
-                        // Remove the quest completion items from the player's inventory
+                        // Rimuovo gli oggetti della quest dall'inventario del giocatore
                         foreach (Item item in quest.ItemsToComplete)
                         {
                                 CurrentPlayer.RemoveItemFromInventory(CurrentPlayer.Inventory.First(i => i.ItemID == item.ItemID));
                         }
 
-                        RaiseMessage("", GameMessageType.Info);
-                        RaiseMessage($"Hai completato la Quest: '{quest.Name}'", GameMessageType.Info);
+                        //RaiseMessage("", GameMessageType.Info);
+                        RaiseMessage($"Hai completato la Quest: '{quest.Name}'", GameMessageType.ImportantInfo);
 
-                        // Give the player the quest rewards
+                        // Aggiungo le ricompense della queste al giocatore
                         CurrentPlayer.Experience += quest.RewardExperiencePoints;
                         RaiseMessage($"Hai ricevuto {quest.RewardExperiencePoints} XP", GameMessageType.Info);
 
@@ -381,13 +376,13 @@ namespace MysticAdventureRPG.ViewModels
 
                         foreach (Item item in quest.RewardItems)
                         {
-                            Item rewardItem = ItemFactory.CreateItem(item.ItemID);
+                            Item rewardItem = ItemFactory.CreateItem(item.ItemID,item.Quantity);
 
                             CurrentPlayer.AddItemToInventory(rewardItem);
-                            RaiseMessage($"Hai ricevuto {rewardItem.Quantity} {rewardItem.Name}", GameMessageType.Info);
+                            RaiseMessage($"Hai ricevuto {item.Quantity} {rewardItem.Name}", GameMessageType.Info);
                         }
 
-                        // Mark the Quest as completed
+                        // Segno la Quest come completata
                         quest.Status = QuestStatus.Completata;
                         CurrentPlayer.Quests.Remove(questToComplete);
                     }
@@ -400,16 +395,6 @@ namespace MysticAdventureRPG.ViewModels
             TradeScreen tradeScreen = new TradeScreen();
             tradeScreen.DataContext = this;
             tradeScreen.ShowDialog();
-        }
-
-        private void BuyFromTrader(object obj)
-        {
-
-        }
-
-        private void SellToTrader(object obj)
-        {
-
         }
         #endregion
     }

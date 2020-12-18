@@ -79,7 +79,6 @@ namespace Engine.Models
             XCoordinate = 0;
             YCoordinate = 0;
             WorldID = 0;
-            //Inventory = new ObservableCollection<Item>();
             Quests = new ObservableCollection<Quest>();
         }
 

@@ -38,8 +38,9 @@ namespace Engine.Models
                 OnPropertyChanged(nameof(SelectedQuantity));
             }
         }
+        public bool IsUnique { get; set; }
 
-        public Item(int itemID, string name, int price, ItemType type, byte quantity = 1, byte selectedQuantity = 1)
+        public Item(int itemID, string name, int price, ItemType type, byte quantity = 1, byte selectedQuantity = 1, bool isUnique = false)
         {
             ItemID = itemID;
             Name = name;
@@ -47,11 +48,12 @@ namespace Engine.Models
             Type = type;
             Quantity = quantity;
             SelectedQuantity = selectedQuantity;
+            IsUnique = isUnique;
         }
 
         public Item Clone(byte quantity = 1)
         {
-            return new Item(ItemID, Name, Price, Type, Quantity = quantity);
+            return new Item(ItemID, Name, Price, Type, Quantity = quantity, 1, IsUnique);
         }
     }
 }

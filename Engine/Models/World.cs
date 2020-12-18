@@ -31,7 +31,7 @@ namespace Engine.Models
             loc.YCoordinate = yCoordinate;
             loc.Name = name.Replace('_', ' ');
             loc.Description = description;
-            loc.ImageName = $"/Engine;component/Resources/LocationsImages/Home/Home_{name}.jpg";
+            loc.ImageName = $"/Engine;component/Resources/LocationsImages/{name}.jpg";
 
             _locations.Add(loc);
         }
@@ -39,6 +39,13 @@ namespace Engine.Models
         public Location LocationAt(int xCoord, int yCoord)
         {
             Location loc = _locations.FirstOrDefault(f => f.XCoordinate == xCoord && f.YCoordinate == yCoord);
+
+            return loc;
+        }
+
+        public Location GetLocationByID(int id)
+        {
+            Location loc = _locations.FirstOrDefault(f => f.LocationID == id);
 
             return loc;
         }

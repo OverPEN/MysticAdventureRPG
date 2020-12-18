@@ -116,9 +116,17 @@ namespace Engine.Models
         #region Functions
         public void AddItemToInventory(Item item)
         {
-            if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) == null)
+            if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) == null || item.IsUnique)
             {
-                Inventory.Add(item);
+                if (item.IsUnique)
+                {
+                    byte itemQuantity = item.Quantity;
+                    item.Quantity = 1;
+                    for (byte i = 0; i < itemQuantity; i++)
+                        Inventory.Add(item);
+                }
+                else
+                    Inventory.Add(item);
             }
             else
             {

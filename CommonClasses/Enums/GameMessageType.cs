@@ -11,6 +11,7 @@ namespace CommonClasses.Enums
         Info = 0,
         BattleNegative = 1,
         BattlePositive = 2,
-        BattleInfo = 3
+        BattleInfo = 3,
+        ImportantInfo = 4
     }
 }

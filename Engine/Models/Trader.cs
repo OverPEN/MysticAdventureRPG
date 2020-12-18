@@ -18,7 +18,6 @@ namespace Engine.Models
         {
             TraderID = id;
             Name = name;
-            //Inventory = new ObservableCollection<Item>();
         }
 
     }

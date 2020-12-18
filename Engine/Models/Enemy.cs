@@ -25,7 +25,7 @@ namespace Engine.Models
         {
             EnemyID = enemyID;
             Name = name.Replace('_', ' ');
-            ImageName = $"/Engine;component/Images/Monsters/{name}";
+            ImageName = $"/Engine;component/Resources/EnemyImages/{name}";
             MaximumHitPoints = maximumHitPoints;
             CurrentHitPoints = currentHitPoints;
             MinimumDamage = minDamage;
@@ -35,7 +35,6 @@ namespace Engine.Models
             Speed = speed;
             EncounterRate = encRate;
             BaseMissRate = missRate;
-            //Inventory = new ObservableCollection<Item>();
         }
     }
 }

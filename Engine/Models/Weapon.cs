@@ -15,8 +15,8 @@ namespace Engine.Models
         public float WeaponSpeed { get; set; }
         public int MissRate { get; set; }
 
-        public Weapon(int itemID, string name, int price, int minDamage, int maxDamage, WeaponDamageType damageType, float weaponSpeed, int missRate, ItemType type = ItemType.Arma)
-            : base(itemID, name, price, type = ItemType.Arma)
+        public Weapon(int itemID, string name, int price, int minDamage, int maxDamage, WeaponDamageType damageType, float weaponSpeed, int missRate, ItemType type = ItemType.Arma, byte quantity = 1)
+            : base(itemID, name, price, type = ItemType.Arma, quantity,1, true)
         {
             MinimumDamage = minDamage;
             MaximumDamage = maxDamage;
@@ -25,9 +25,9 @@ namespace Engine.Models
             MissRate = missRate;
         }
 
-        public new Weapon Clone()
+        public new Weapon Clone(byte quantity = 1)
         {
-            return new Weapon(ItemID, Name, Price, MinimumDamage, MaximumDamage, DamageType, WeaponSpeed, MissRate);
+            return new Weapon(ItemID, Name, Price, MinimumDamage, MaximumDamage, DamageType, WeaponSpeed, MissRate, ItemType.Arma, quantity);
         }
     }
 }

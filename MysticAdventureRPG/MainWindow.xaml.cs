@@ -36,34 +36,44 @@ namespace MysticAdventureRPG
 
         private void OnGameMessageRaised(object sender, GameMessageEventArgs e)
         {
+            Paragraph separator = new Paragraph(new Run(""));
+            separator.FontSize = 2.5f;
             Paragraph par = new Paragraph(new Run(e.Message));
             switch (e.Type)
             {
                 case GameMessageType.Info:                  
-                    par.Foreground = Brushes.Black;
+                    par.Foreground = Brushes.DimGray;
                     par.FontWeight = FontWeights.Normal;
                     par.FontFamily = new FontFamily("Tahoma");
-                    par.FontSize = 14f;
+                    par.FontStyle = FontStyles.Italic;
+                    par.FontSize = 12f;                   
+                    break;
+                case GameMessageType.ImportantInfo:
+                    par.Foreground = Brushes.Black;
+                    par.FontWeight = FontWeights.SemiBold;
+                    par.FontFamily = new FontFamily("Tahoma");
+                    par.FontSize = 12f;
                     break;
                 case GameMessageType.BattleInfo:
                     par.Foreground = Brushes.Black;
                     par.FontWeight = FontWeights.SemiBold;
                     par.FontFamily = new FontFamily("Tahoma");
-                    par.FontSize = 15f;
+                    par.FontSize = 13f;
                     break;
                 case GameMessageType.BattleNegative:
                     par.Foreground = Brushes.Red;
                     par.FontWeight = FontWeights.SemiBold;
                     par.FontFamily = new FontFamily("Tahoma");
-                    par.FontSize = 15f;
+                    par.FontSize = 13f;
                     break;
                 case GameMessageType.BattlePositive:
                     par.Foreground = Brushes.ForestGreen;
                     par.FontWeight = FontWeights.SemiBold;
                     par.FontFamily = new FontFamily("Tahoma");
-                    par.FontSize = 15f;
+                    par.FontSize = 13f;
                     break;
             }
+            GameMessages.Document.Blocks.Add(separator);
             GameMessages.Document.Blocks.Add(par);
             GameMessages.ScrollToEnd();
         }       
