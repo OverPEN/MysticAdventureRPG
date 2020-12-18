@@ -1,5 +1,6 @@
 ﻿using CommonClasses.BaseClasses;
 using CommonClasses.Enums;
+using Engine.Factories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,22 +14,15 @@ namespace Engine.Models
     public class Player : LivingEntity
     {
         #region Private Properties
-        private PlayerClassType _class { get; set; }
         private Byte _level { get; set; }
         private int _experience { get; set; }
-        private int _baseDamage { get; set; }      
+        private int _baseDamage { get; set; }
+        private int _worldID { get; set; }
+        private int _xCoordinate { get; set; }
+        private int _yCoordinate { get; set; }
         #endregion
 
         #region Public Properties
-        public PlayerClassType Class
-        {
-            get { return _class; }
-            set
-            {
-                _class = value;
-                OnPropertyChanged(nameof(Class));
-            }
-        }
         public byte Level
         {
             get { return _level; }
@@ -56,29 +50,63 @@ namespace Engine.Models
                 OnPropertyChanged(nameof(BaseDamage));
             }
         }
+        public int WorldID
+        {
+            get { return _worldID; }
+            set
+            {
+                _worldID = value;
+                OnPropertyChanged(nameof(WorldID));
+            }
+        }
+        public int XCoordinate
+        {
+            get { return _xCoordinate; }
+            set
+            {
+                _xCoordinate = value;
+                OnPropertyChanged(nameof(XCoordinate));
+            }
+        }
+        public int YCoordinate
+        {
+            get { return _yCoordinate; }
+            set
+            {
+                _yCoordinate = value;
+                OnPropertyChanged(nameof(YCoordinate));
+            }
+        }
         public WeaponDamageType BaseDamageType { get; set; } 
         public ObservableCollection<Quest> Quests { get; set; }
 
         #endregion
 
-        public Player(string chosenName, string chosenSurname, PlayerClassType chosenClass)
+        public Player(string name, int maxHitPoints, int currHitPoints, float speed, int gold, int worldID, int xCoord, int yCoord, PlayerClassType chosenClass, byte level, int experience) : base(name, maxHitPoints, currHitPoints, speed, gold, chosenClass )
         {
-            PlayerClassBaseValues defaultValues = new PlayerClassBaseValues(chosenClass);
+            ClassBaseValues defaultValues = new ClassBaseValues(chosenClass);
 
-            Name = chosenName;
-            Surname = chosenSurname;
-            Class = chosenClass;
+            Level = level;
+            Experience = experience;
+            BaseDamage = defaultValues.BaseDamage;
+            BaseDamageType = defaultValues.BaseDamageType;
+            WorldID = worldID;
+            XCoordinate = xCoord;
+            YCoordinate = yCoord;
+            Quests = new ObservableCollection<Quest>();
+      
+        }
+
+        public Player(string name, PlayerClassType chosenClass) : base(name, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).Speed, new ClassBaseValues(chosenClass).Gold, chosenClass)
+        {
+            ClassBaseValues defaultValues = new ClassBaseValues(chosenClass);
             Level = 1;
             Experience = 0;
             BaseDamage = defaultValues.BaseDamage;
             BaseDamageType = defaultValues.BaseDamageType;
-            Speed = defaultValues.Speed;
-            MaximumHitPoints = defaultValues.HitPoints;
-            CurrentHitPoints = defaultValues.HitPoints;
-            Gold = defaultValues.Gold;
+            WorldID = 0;
             XCoordinate = 0;
             YCoordinate = 0;
-            WorldID = 0;
             Quests = new ObservableCollection<Quest>();
         }
 

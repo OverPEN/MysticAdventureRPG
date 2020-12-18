@@ -8,9 +8,12 @@ namespace CommonClasses.Enums
 {
     public enum PlayerClassType : byte
     {
-        Guerriero = 0,
-        Mago = 1,
-        Tank = 2,
-        Ladro = 3
+        Trader = 0,
+        Enemy = 1,
+        Guerriero = 2,
+        Mago = 3,
+        Tank = 4,
+        Ladro = 5
+        
     }
 }

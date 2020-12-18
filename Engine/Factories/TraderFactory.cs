@@ -36,7 +36,7 @@ namespace Engine.Factories
         {
             if (_traders.Any(t => t.TraderID == trader.TraderID))
             {
-                throw new ArgumentException($"There is already a trader named '{trader.Name}'");
+                throw new ArgumentException($"C'è già un commerciante chiamato '{trader.Name}' con lo stesso ID");
             }
 
             _traders.Add(trader);

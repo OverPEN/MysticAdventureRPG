@@ -40,7 +40,7 @@ namespace MysticAdventureRPG.Views
                 ContentPresenter Cell = PlayerInventory.Columns[3].GetCellContent(PlayerInventory.SelectedItem) as ContentPresenter;
                 IntegerUpDown QuantityToSell = (IntegerUpDown)Cell.ContentTemplate.FindName("SellQuantitySelector", Cell);
 
-                Session.CurrentPlayer.Gold += item.Price * QuantityToSell.Value.GetValueOrDefault();
+                Session.CurrentPlayer.ReceiveGold(item.Price * QuantityToSell.Value.GetValueOrDefault());
                 item.Quantity = (byte)QuantityToSell.Value.GetValueOrDefault();
                 Session.CurrentTrader.AddItemToInventory(item);
                 Session.CurrentPlayer.RemoveItemFromInventory(item);
@@ -58,7 +58,7 @@ namespace MysticAdventureRPG.Views
 
                 if (Session.CurrentPlayer.Gold >= item.Price * QuantityToBuy.Value.GetValueOrDefault())
                 {
-                    Session.CurrentPlayer.Gold -= item.Price * QuantityToBuy.Value.GetValueOrDefault();
+                    Session.CurrentPlayer.SpendGold(item.Price * QuantityToBuy.Value.GetValueOrDefault());
                     item.Quantity = (byte)QuantityToBuy.Value.GetValueOrDefault();
                     Session.CurrentTrader.RemoveItemFromInventory(item);
                     Session.CurrentPlayer.AddItemToInventory(item);

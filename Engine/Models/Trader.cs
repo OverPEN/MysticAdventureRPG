@@ -1,4 +1,5 @@
 ﻿using CommonClasses.BaseClasses;
+using CommonClasses.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,10 +15,9 @@ namespace Engine.Models
         public int TraderID { get; set; }
         #endregion
 
-        public Trader(int id, string name)
+        public Trader(int id, string name) : base(name,int.MaxValue,int.MaxValue,1f, int.MaxValue, PlayerClassType.Trader)
         {
             TraderID = id;
-            Name = name;
         }
 
     }

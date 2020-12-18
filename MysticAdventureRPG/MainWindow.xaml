@@ -43,10 +43,7 @@
                 <Label.Content>
                     <TextBlock>
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}Nome: {0} {1}">
-                                <Binding Path="CurrentPlayer.Name" />
-                                <Binding Path="CurrentPlayer.Surname" />
-                            </MultiBinding>
+                            <Binding Path="CurrentPlayer.Name" StringFormat="Nome: {0}"/>
                         </TextBlock.Text>
                     </TextBlock>
                 </Label.Content>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CommonClasses.BaseClasses
 {
-    public class PlayerClassBaseValues
+    public class ClassBaseValues
     {
         public int HitPoints { get; set; }
         public int BaseDamage { get; set; }
@@ -15,10 +15,18 @@ namespace CommonClasses.BaseClasses
         public float Speed { get; set; }
         public int Gold { get; set; }
 
-        public PlayerClassBaseValues(PlayerClassType _classType)
+        public ClassBaseValues(PlayerClassType _classType)
         {
             switch(_classType)
             {
+                case PlayerClassType.Trader:
+                    HitPoints = int.MaxValue;
+                    BaseDamage = 0;
+                    BaseDamageType = WeaponDamageType.Schianto;
+                    Speed = 1.0f;
+                    Gold = int.MaxValue;
+                    break;
+
                 case PlayerClassType.Guerriero:
                     HitPoints = 35;
                     BaseDamage = 7;

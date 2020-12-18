@@ -1,4 +1,5 @@
 ﻿using CommonClasses.BaseClasses;
+using CommonClasses.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,18 +22,13 @@ namespace Engine.Models
         public int BaseMissRate { get; set; }
         #endregion
         
-        public Enemy(int enemyID, string name, int maximumHitPoints, int currentHitPoints, int minDamage, int maxDamage, int rewardExperiencePoints, int rewardGold, float speed, int encRate, int missRate)
+        public Enemy(int enemyID, string name, int maximumHitPoints, int currentHitPoints, int minDamage, int maxDamage, int rewardExperiencePoints, int rewardGold, float speed, int encRate, int missRate) : base(name.Replace('_', ' '),maximumHitPoints, currentHitPoints, speed, rewardGold, PlayerClassType.Enemy)
         {
             EnemyID = enemyID;
-            Name = name.Replace('_', ' ');
             ImageName = $"/Engine;component/Resources/EnemyImages/{name}";
-            MaximumHitPoints = maximumHitPoints;
-            CurrentHitPoints = currentHitPoints;
             MinimumDamage = minDamage;
             MaximumDamage = maxDamage;
             RewardExperiencePoints = rewardExperiencePoints;
-            Gold = rewardGold;
-            Speed = speed;
             EncounterRate = encRate;
             BaseMissRate = missRate;
         }

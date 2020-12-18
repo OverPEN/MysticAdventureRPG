@@ -73,7 +73,7 @@
     <Resource Include="Resources\LocationsImages\Negozio.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\LocationsImages\Sala Reale.jpg">
+    <Resource Include="Resources\LocationsImages\Sala_Reale.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\LocationsImages\Taverna.jpg">
