@@ -128,6 +128,7 @@ namespace MysticAdventureRPG.ViewModels
             CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1003));
             CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1004));
             CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(4, 5));
+            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1001));
         }
 
         #region Boolean Controls
@@ -190,8 +191,7 @@ namespace MysticAdventureRPG.ViewModels
                     if (quest.Status == QuestStatus.Nuova)
                     {
                         quest.Status = QuestStatus.Iniziata;
-                        CurrentPlayer.Quests.Add(quest);
-
+                        
                         RaiseMessage($"Quest attivata: '{quest.Name}'", GameMessageType.ImportantInfo);
                         RaiseMessage(quest.Description, GameMessageType.Info);
 
@@ -208,6 +208,8 @@ namespace MysticAdventureRPG.ViewModels
                         {
                             RaiseMessage($"   {item.Quantity} {ItemFactory.CreateItem(item.ItemID).Name}", GameMessageType.Info);
                         }
+
+                        CurrentPlayer.Quests.Add(quest);
                     }
 
                 }
@@ -273,8 +275,8 @@ namespace MysticAdventureRPG.ViewModels
             {
                 RaiseMessage("Non avendo equipaggiato un'arma ti scagli sul nemico a mani nude.", GameMessageType.BattleInfo);
                 damageToEnemy = CurrentPlayer.BaseDamage;
-                CurrentEnemy.TakeDamage(damageToEnemy);
                 RaiseMessage($"Hai colpito {CurrentEnemy.Name} causando {damageToEnemy} danni!", GameMessageType.BattlePositive);
+                CurrentEnemy.TakeDamage(damageToEnemy);
             }
             else
             {
@@ -286,8 +288,8 @@ namespace MysticAdventureRPG.ViewModels
                 else
                 {
                     damageToEnemy = BaseRandomNumberGenerator.NumberBetween(CurrentWeapon.MinimumDamage, CurrentWeapon.MaximumDamage);
-                    CurrentEnemy.TakeDamage(damageToEnemy);
                     RaiseMessage($"Hai colpito {CurrentEnemy.Name} causando {damageToEnemy} danni!", GameMessageType.BattlePositive);
+                    CurrentEnemy.TakeDamage(damageToEnemy);
                 }
             }
         }
@@ -297,21 +299,21 @@ namespace MysticAdventureRPG.ViewModels
             // Se il nemico è sconfitto ottengo il loot
             if (CurrentEnemy.CurrentHitPoints <= 0)
             {
-                //RaiseMessage("", GameMessageType.Info);
                 RaiseMessage($"Hai sconfitto {CurrentEnemy.Name}!", GameMessageType.BattleInfo);
 
-                CurrentPlayer.Experience += CurrentEnemy.RewardExperiencePoints;
                 RaiseMessage($"Ricevi {CurrentEnemy.RewardExperiencePoints} punti esperienza!", GameMessageType.BattleInfo);
+                CurrentPlayer.Experience += CurrentEnemy.RewardExperiencePoints;
 
-                CurrentPlayer.Gold += CurrentEnemy.Gold;
                 RaiseMessage($"Ricevi {CurrentEnemy.Gold} oro!", GameMessageType.BattleInfo);
+                CurrentPlayer.ReceiveGold(CurrentEnemy.Gold);
 
                 foreach (Item drop in CurrentEnemy.Inventory)
                 {
                     Item item = ItemFactory.CreateItem(drop.ItemID, drop.Quantity);
+                    RaiseMessage($"Ricevi {item.Quantity} {item.Name}!", GameMessageType.BattleInfo);
                     CurrentPlayer.AddItemToInventory(item);
                     OnPropertyChanged(nameof(CurrentPlayer.Inventory));
-                    RaiseMessage($"Ricevi {item.Quantity} {item.Name}!", GameMessageType.BattleInfo);
+                    
                 }
 
                 // Spawno un altro nemico
@@ -330,8 +332,8 @@ namespace MysticAdventureRPG.ViewModels
             else
             {
                 int damageToPlayer = BaseRandomNumberGenerator.NumberBetween(CurrentEnemy.MinimumDamage, CurrentEnemy.MaximumDamage);
-                CurrentPlayer.CurrentHitPoints -= damageToPlayer;
                 RaiseMessage($"Il {CurrentEnemy.Name} ti colpisce infliggendoti {damageToPlayer} danni!", GameMessageType.BattleNegative);
+                CurrentPlayer.TakeDamage(damageToPlayer);             
             }
 
         }
@@ -362,27 +364,27 @@ namespace MysticAdventureRPG.ViewModels
                 {
                     if (CurrentPlayer.HasAllTheseItems(quest.ItemsToComplete))
                     {
+                        RaiseMessage($"Hai completato la Quest: '{quest.Name}'", GameMessageType.ImportantInfo);
+
                         // Rimuovo gli oggetti della quest dall'inventario del giocatore
                         foreach (Item item in quest.ItemsToComplete)
                         {
                                 CurrentPlayer.RemoveItemFromInventory(CurrentPlayer.Inventory.First(i => i.ItemID == item.ItemID));
                         }
 
-                        RaiseMessage($"Hai completato la Quest: '{quest.Name}'", GameMessageType.ImportantInfo);
-
                         // Aggiungo le ricompense della queste al giocatore
-                        CurrentPlayer.Experience += quest.RewardExperiencePoints;
                         RaiseMessage($"Hai ricevuto {quest.RewardExperiencePoints} XP", GameMessageType.Info);
+                        CurrentPlayer.Experience += quest.RewardExperiencePoints;
 
-                        CurrentPlayer.ReceiveGold(quest.RewardGold);
                         RaiseMessage($"Hai ricevuto {quest.RewardGold} Oro", GameMessageType.Info);
+                        CurrentPlayer.ReceiveGold(quest.RewardGold);
 
                         foreach (Item item in quest.RewardItems)
                         {
                             Item rewardItem = ItemFactory.CreateItem(item.ItemID,item.Quantity);
 
-                            CurrentPlayer.AddItemToInventory(rewardItem);
                             RaiseMessage($"Hai ricevuto {item.Quantity} {rewardItem.Name}", GameMessageType.Info);
+                            CurrentPlayer.AddItemToInventory(rewardItem);
                         }
 
                         // Segno la Quest come completata

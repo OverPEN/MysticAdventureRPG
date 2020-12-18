@@ -41,7 +41,7 @@ namespace Engine.Models
         public int CurrentHitPoints
         {
             get { return _currentHitPoints; }
-            set
+            private set
             {
                 _currentHitPoints = value;
                 OnPropertyChanged(nameof(CurrentHitPoints));
@@ -59,7 +59,7 @@ namespace Engine.Models
         public int Gold
         {
             get { return _gold; }
-            set
+            private set
             {
                 _gold = value;
                 OnPropertyChanged(nameof(Gold));
@@ -110,10 +110,7 @@ namespace Engine.Models
             {
                 if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity <= item.Quantity || item.IsUnique)
                 {
-                    if (item.IsUnique)
-                        Inventory.Remove(item);
-                    else
-                        Inventory.Remove(Inventory.FirstOrDefault(i => i.ItemID == item.ItemID));
+                    Inventory.Remove(Inventory.FirstOrDefault(i => i.ItemID == item.ItemID));
                 }
                 else
                 {
