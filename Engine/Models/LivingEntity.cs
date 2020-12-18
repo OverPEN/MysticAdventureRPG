@@ -108,9 +108,12 @@ namespace Engine.Models
         {
             if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) != null)
             {
-                if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity <= item.Quantity)
+                if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity <= item.Quantity || item.IsUnique)
                 {
-                    Inventory.Remove(Inventory.FirstOrDefault(i => i.ItemID == item.ItemID));
+                    if (item.IsUnique)
+                        Inventory.Remove(item);
+                    else
+                        Inventory.Remove(Inventory.FirstOrDefault(i => i.ItemID == item.ItemID));
                 }
                 else
                 {
