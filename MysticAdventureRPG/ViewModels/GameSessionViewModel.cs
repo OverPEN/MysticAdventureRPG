@@ -309,11 +309,9 @@ namespace MysticAdventureRPG.ViewModels
                 }
             }
             else
-            {
-                EvaluateEnemyTurn();
-                if (CurrentPlayer.IsDead)
-                {
-                    CurrentPlayer.CompletelyHeal();
+            {  
+                if (EvaluateEnemyTurn())
+                {   
                     return;
                 }
                 else
@@ -376,30 +374,33 @@ namespace MysticAdventureRPG.ViewModels
                 }
         }
 
-        private void EvaluateEnemyTurn()
+        private bool EvaluateEnemyTurn()
         {
             //Determino il danno inflitto dal nemico
 
             if (CurrentEnemy.BaseMissRate > BaseRandomNumberGenerator.NumberBetween(0, 100))
             {
                 RaiseMessage($"{CurrentEnemy.Name} ti attacca... ma schivi l'attacco!", GameMessageType.BattlePositive);
+                return false;
             }
             else
             {
                 int damageToPlayer = BaseRandomNumberGenerator.NumberBetween(CurrentEnemy.MinimumDamage, CurrentEnemy.MaximumDamage);
                 RaiseMessage($"Il {CurrentEnemy.Name} ti colpisce infliggendoti {damageToPlayer} danni!", GameMessageType.BattleNegative);
-                CurrentPlayer.TakeDamage(damageToPlayer);             
+                return  CurrentPlayer.TakeDamage(damageToPlayer);
             }
         }
 
         private void OnCurrentPlayerKilled(object sender, EventArgs eventArgs)
         {
             // Se il player è sconfitto lo porto al checkpoint e lo curo
-                RaiseMessage($"Sei stato ucciso da {CurrentEnemy.Name}.", GameMessageType.BattleNegative);
+                //RaiseMessage($"Sei stato ucciso da {CurrentEnemy.Name}.", GameMessageType.BattleNegative);
+                RaiseMessage($"Sei stato ucciso.", GameMessageType.BattleNegative);
 
                 CurrentLocation = CurrentWorld.GetLocationByID(1); // Player's home
                 CurrentPlayer.XCoordinate = CurrentLocation.XCoordinate;
-                CurrentPlayer.YCoordinate = CurrentLocation.YCoordinate;   
+                CurrentPlayer.YCoordinate = CurrentLocation.YCoordinate;
+                CurrentPlayer.CompletelyHeal();
         }
 
         private void CompleteQuestsAtLocation()

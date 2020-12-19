@@ -165,7 +165,7 @@ namespace Engine.Models
             Gold -= amountOfGold;
         }
 
-        public void TakeDamage(int hitPointsOfDamage)
+        public bool TakeDamage(int hitPointsOfDamage)
         {
             CurrentHitPoints -= hitPointsOfDamage;
 
@@ -173,8 +173,9 @@ namespace Engine.Models
             {
                 CurrentHitPoints = 0;
                 RaiseOnKilledEvent();
-
+                return true;
             }
+            return false;
         }
 
         private void RaiseOnKilledEvent()
