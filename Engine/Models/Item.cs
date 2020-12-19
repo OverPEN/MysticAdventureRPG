@@ -11,21 +11,24 @@ namespace Engine.Models
 {
     public class Item : BaseNotifyPropertyChanged
     {
+        #region Private Properties
         private byte _quantity;
         [XmlIgnore]
         private  byte _selectedQuantity;
+        #endregion
 
-        public int ItemID { get; set; }
-        public string Name { get; set; }
-        public int Price { get; set; }
-        public ItemType Type { get; set; }
+        #region Public Properties
+        public int ItemID { get; }
+        public string Name { get; }
+        public int Price { get; }
+        public ItemType Type { get; }
         public byte Quantity
         {
             get { return _quantity; }
             set
             {
                 _quantity = value;
-                OnPropertyChanged(nameof(Quantity));
+                OnPropertyChanged();
             }
         }
         [XmlIgnore]
@@ -35,10 +38,11 @@ namespace Engine.Models
             set
             {
                 _selectedQuantity = value;
-                OnPropertyChanged(nameof(SelectedQuantity));
+                OnPropertyChanged();
             }
         }
-        public bool IsUnique { get; set; }
+        public bool IsUnique { get; }
+        #endregion
 
         public Item(int itemID, string name, int price, ItemType type, byte quantity = 1, byte selectedQuantity = 1, bool isUnique = false)
         {

@@ -10,16 +10,27 @@ namespace Engine.Models
 {
     public class Location
     {
-        public int LocationID { get; set; }
-        public int XCoordinate { get; set; }
-        public int YCoordinate { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string ImageName { get; set; }
-        public List<Quest> QuestsAvailableHere { get; set; } = new List<Quest>();
-        public List<Enemy> EnemiesHere { get; set; } = new List<Enemy>();
+        public int LocationID { get; }
+        public int XCoordinate { get; }
+        public int YCoordinate { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public string ImageName { get; }
+        public List<Quest> QuestsAvailableHere { get; } = new List<Quest>();
+        public List<Enemy> EnemiesHere { get; } = new List<Enemy>();
         public Trader TraderHere { get; set; }
 
+        public Location(int id, int xCoord, int yCoord, string name, string description)
+        {
+            LocationID = id;
+            XCoordinate = xCoord;
+            YCoordinate = yCoord;
+            Name = name;
+            Description = description;
+            ImageName = $"/Engine;component/Resources/LocationsImages/{name}.jpg";
+        }
+
+        #region Functions
         public void AddQuestToLocation(int questID)
         {
             if (QuestsAvailableHere.Exists(m => m.QuestID == questID))
@@ -74,5 +85,6 @@ namespace Engine.Models
             // In caso di problemi ritorno il primo Enemy della lista.
             return EnemyFactory.GetEnemyByID(EnemiesHere.First().EnemyID);
         }
+        #endregion
     }
 }

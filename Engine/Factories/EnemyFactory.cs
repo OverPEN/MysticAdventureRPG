@@ -16,7 +16,7 @@ namespace Engine.Factories
             {
                 case 1:
                     Enemy snake =
-                        new Enemy(1,"Serpente", 4, 4, 1, 4, 5, 1, 2.0f,100,50);
+                        new Enemy(1,"Serpente", 4, 4, 1, 4, 20, 1, 2.0f,100,50);
 
                     AddLootItem(snake, 1, 25);
                     AddLootItem(snake, 2, 50);

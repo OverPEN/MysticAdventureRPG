@@ -11,12 +11,15 @@ namespace Engine.Models
 {
     public abstract class LivingEntity : BaseNotifyPropertyChanged
     {
+        public event EventHandler OnKilled;
+
         #region Private Properties
         private String _name;
         private int _maximumHitPoints;
         private int _currentHitPoints;
         private float _speed;
         private int _gold;
+        private Byte _level;
         #endregion
 
         #region Public Properties
@@ -26,16 +29,16 @@ namespace Engine.Models
             set
             {
                 _name = value;
-                OnPropertyChanged(nameof(Name));
+                OnPropertyChanged();
             }
         }
         public int MaximumHitPoints
         {
             get { return _maximumHitPoints; }
-            set
+            protected set
             {
                 _maximumHitPoints = value;
-                OnPropertyChanged(nameof(MaximumHitPoints));
+                OnPropertyChanged();
             }
         }
         public int CurrentHitPoints
@@ -44,7 +47,7 @@ namespace Engine.Models
             private set
             {
                 _currentHitPoints = value;
-                OnPropertyChanged(nameof(CurrentHitPoints));
+                OnPropertyChanged();
             }
         }
         public float Speed
@@ -53,7 +56,7 @@ namespace Engine.Models
             set
             {
                 _speed = value;
-                OnPropertyChanged(nameof(Speed));
+                OnPropertyChanged();
             }
         }
         public int Gold
@@ -62,16 +65,25 @@ namespace Engine.Models
             private set
             {
                 _gold = value;
-                OnPropertyChanged(nameof(Gold));
+                OnPropertyChanged();
             }
-        }      
+        }
+        public byte Level
+        {
+            get { return _level; }
+            protected set
+            {
+                _level = value;
+                OnPropertyChanged();
+            }
+        }
         public PlayerClassType Class { get; set; }
         public bool IsDead => CurrentHitPoints <= 0;
         public ObservableCollection<Item> Inventory { get; set; }
         public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
         #endregion
 
-        protected LivingEntity(string name, int maxHitPoints, int currHitPoints, float speed, int gold, PlayerClassType entityClass)
+        protected LivingEntity(string name, int maxHitPoints, int currHitPoints, float speed, int gold, PlayerClassType entityClass, byte level = 1)
         {
             Name = name;
             MaximumHitPoints = maxHitPoints;
@@ -79,6 +91,7 @@ namespace Engine.Models
             Speed = speed;
             Gold = gold;
             Class = entityClass;
+            Level = level;
             Inventory = new ObservableCollection<Item>();
         }
 
@@ -159,7 +172,14 @@ namespace Engine.Models
             if (IsDead)
             {
                 CurrentHitPoints = 0;
+                RaiseOnKilledEvent();
+
             }
+        }
+
+        private void RaiseOnKilledEvent()
+        {
+            OnKilled?.Invoke(this, new System.EventArgs());
         }
 
         #endregion

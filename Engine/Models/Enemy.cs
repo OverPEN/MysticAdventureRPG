@@ -11,15 +11,14 @@ namespace Engine.Models
 {
     public class Enemy : LivingEntity
     {
-
         #region Public Properties
-        public int EnemyID { get; set; }
-        public string ImageName { get; set; }
-        public int MinimumDamage { get; set; }
-        public int MaximumDamage { get; set; }
-        public int RewardExperiencePoints { get; private set; }
+        public int EnemyID { get; }
+        public string ImageName { get; }
+        public int MinimumDamage { get; }
+        public int MaximumDamage { get; }
+        public int RewardExperiencePoints { get; }
         public int EncounterRate { get; set; }
-        public int BaseMissRate { get; set; }
+        public int BaseMissRate { get; }
         #endregion
         
         public Enemy(int enemyID, string name, int maximumHitPoints, int currentHitPoints, int minDamage, int maxDamage, int rewardExperiencePoints, int rewardGold, float speed, int encRate, int missRate) : base(name.Replace('_', ' '),maximumHitPoints, currentHitPoints, speed, rewardGold, PlayerClassType.Enemy)

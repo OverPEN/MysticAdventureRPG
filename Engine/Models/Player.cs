@@ -13,32 +13,25 @@ namespace Engine.Models
 {
     public class Player : LivingEntity
     {
+        public event EventHandler OnLeveledUp;
+
         #region Private Properties
-        private Byte _level { get; set; }
-        private int _experience { get; set; }
-        private int _baseDamage { get; set; }
-        private int _worldID { get; set; }
-        private int _xCoordinate { get; set; }
-        private int _yCoordinate { get; set; }
+        private int _experience;
+        private int _baseDamage;
+        private int _worldID;
+        private int _xCoordinate;
+        private int _yCoordinate;
         #endregion
 
-        #region Public Properties
-        public byte Level
-        {
-            get { return _level; }
-            set
-            {
-                _level = value;
-                OnPropertyChanged(nameof(Level));
-            }
-        }
+        #region Public Properties       
         public int Experience
         {
             get { return _experience; }
-            set
+            private set
             {
                 _experience = value;
-                OnPropertyChanged(nameof(Experience));
+                OnPropertyChanged();
+                SetLevelAndParameters();
             }
         }
         public int BaseDamage
@@ -47,7 +40,7 @@ namespace Engine.Models
             set
             {
                 _baseDamage = value;
-                OnPropertyChanged(nameof(BaseDamage));
+                OnPropertyChanged();
             }
         }
         public int WorldID
@@ -56,7 +49,7 @@ namespace Engine.Models
             set
             {
                 _worldID = value;
-                OnPropertyChanged(nameof(WorldID));
+                OnPropertyChanged();
             }
         }
         public int XCoordinate
@@ -65,7 +58,7 @@ namespace Engine.Models
             set
             {
                 _xCoordinate = value;
-                OnPropertyChanged(nameof(XCoordinate));
+                OnPropertyChanged();
             }
         }
         public int YCoordinate
@@ -74,19 +67,18 @@ namespace Engine.Models
             set
             {
                 _yCoordinate = value;
-                OnPropertyChanged(nameof(YCoordinate));
+                OnPropertyChanged();
             }
         }
-        public WeaponDamageType BaseDamageType { get; set; } 
-        public ObservableCollection<Quest> Quests { get; set; }
+        public WeaponDamageType BaseDamageType { get;} 
+        public ObservableCollection<Quest> Quests { get; }
 
         #endregion
 
-        public Player(string name, int maxHitPoints, int currHitPoints, float speed, int gold, int worldID, int xCoord, int yCoord, PlayerClassType chosenClass, byte level, int experience) : base(name, maxHitPoints, currHitPoints, speed, gold, chosenClass )
+        public Player(string name, int maxHitPoints, int currHitPoints, float speed, int gold, int worldID, int xCoord, int yCoord, PlayerClassType chosenClass, byte level = 1, int experience = 0) : base(name, maxHitPoints, currHitPoints, speed, gold, chosenClass, level )
         {
             ClassBaseValues defaultValues = new ClassBaseValues(chosenClass);
 
-            Level = level;
             Experience = experience;
             BaseDamage = defaultValues.BaseDamage;
             BaseDamageType = defaultValues.BaseDamageType;
@@ -110,6 +102,7 @@ namespace Engine.Models
             Quests = new ObservableCollection<Quest>();
         }
 
+        #region Functions
         public bool HasAllTheseItems(List<Item> items)
         {
             foreach (Item item in items)
@@ -128,5 +121,27 @@ namespace Engine.Models
             }
             return true;
         }
+
+        public void AddExperience(int experiencePoints)
+        {
+            Experience += experiencePoints;
+        }
+
+        private void SetLevelAndParameters()
+        {
+            byte originalLevel = Level;
+
+            byte tempLevel = (byte)(Experience / (100 + ((Level-1)*50)) + 1);
+
+            if (tempLevel > originalLevel)
+            {
+                Level = tempLevel;
+                ClassBaseValues classBaseValues = new ClassBaseValues(Class);
+                MaximumHitPoints = (Level * classBaseValues.HitPoints) - ((Level -1) *((classBaseValues.HitPoints / 5)*4));
+                BaseDamage = (Level * classBaseValues.BaseDamage) - ((Level - 1) * ((classBaseValues.BaseDamage / 5) * 4));
+                OnLeveledUp?.Invoke(this, System.EventArgs.Empty);
+            }
+        }
+        #endregion
     }
 }
