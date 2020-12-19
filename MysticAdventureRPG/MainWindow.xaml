@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MysticAdventureRPG"
         xmlns:ViewModels="clr-namespace:MysticAdventureRPG.ViewModels"
+        xmlns:Converters="clr-namespace:CommonClasses.Converters;assembly=CommonClasses"
         mc:Ignorable="d"
         Title="Game Main Window" Height="800" Width="800">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+        <Converters:LevelToNecessaryXPConverter x:Key="LevelToNecessaryXPConverter"/>
     </Window.Resources>
     <Window.DataContext>
         <ViewModels:GameSessionViewModel/>
@@ -78,8 +80,18 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Grid.Row="4" Grid.Column="0" Content="XP:"/>
-            <Label Grid.Row="4" Grid.Column="1" Content="{Binding CurrentPlayer.Experience}"/>
+            <Label Grid.Row="4" Grid.Column="0" >
+                <Label.Content>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}Xp: {0} / {1}">
+                                <Binding Path="CurrentPlayer.Experience" />
+                                <Binding Path = "CurrentPlayer.Level" Converter="{StaticResource LevelToNecessaryXPConverter}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
             <Label Grid.Row="5" Grid.Column="0">
                 <Label.Content>
                     <TextBlock>

@@ -302,16 +302,10 @@ namespace MysticAdventureRPG.ViewModels
                 if (CurrentEnemy.IsDead)
                 {
                     GetEnemyAtLocation();
-                    return;
                 }
                 else
                 {
                     EvaluateEnemyTurn();
-                    if (CurrentPlayer.IsDead)
-                    {
-                        GetEnemyAtLocation();
-                        return;
-                    }
                 }
             }
             else
@@ -319,7 +313,7 @@ namespace MysticAdventureRPG.ViewModels
                 EvaluateEnemyTurn();
                 if (CurrentPlayer.IsDead)
                 {
-                    GetEnemyAtLocation();
+                    CurrentPlayer.CompletelyHeal();
                     return;
                 }
                 else
@@ -328,7 +322,6 @@ namespace MysticAdventureRPG.ViewModels
                     if (CurrentEnemy.IsDead)
                     {
                         GetEnemyAtLocation();
-                        return;
                     }
                 }
             }
@@ -406,8 +399,7 @@ namespace MysticAdventureRPG.ViewModels
 
                 CurrentLocation = CurrentWorld.GetLocationByID(1); // Player's home
                 CurrentPlayer.XCoordinate = CurrentLocation.XCoordinate;
-                CurrentPlayer.YCoordinate = CurrentLocation.YCoordinate;
-                CurrentPlayer.CompletelyHeal();           
+                CurrentPlayer.YCoordinate = CurrentLocation.YCoordinate;   
         }
 
         private void CompleteQuestsAtLocation()
