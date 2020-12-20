@@ -14,13 +14,13 @@ namespace Engine.Factories
         static TraderFactory()
         {
             Trader susan = new Trader(1, "Susan");
-            susan.AddItemToInventory(ItemFactory.CreateItem(1001));
+            susan.AddItemToInventory(ItemFactory.ObtainItem(1001));
 
             Trader farmerTed = new Trader(2, "Farmer Ted");
-            farmerTed.AddItemToInventory(ItemFactory.CreateItem(1001));
+            farmerTed.AddItemToInventory(ItemFactory.ObtainItem(1001));
 
             Trader peteTheHerbalist = new Trader(3, "Pete the Herbalist");
-            peteTheHerbalist.AddItemToInventory(ItemFactory.CreateItem(1001));
+            peteTheHerbalist.AddItemToInventory(ItemFactory.ObtainItem(1001));
 
             AddTraderToList(susan);
             AddTraderToList(farmerTed);

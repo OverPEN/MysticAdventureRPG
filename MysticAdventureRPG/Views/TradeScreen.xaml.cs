@@ -33,7 +33,7 @@ namespace MysticAdventureRPG.Views
 
         private void Bt_Vendi_Click(object sender, RoutedEventArgs e)
         {
-            Item item = ItemFactory.CreateItem((((FrameworkElement)sender).DataContext as Item).ItemID, (((FrameworkElement)sender).DataContext as Item).Quantity);
+            Item item = ItemFactory.ObtainItem((((FrameworkElement)sender).DataContext as Item).ItemID, (((FrameworkElement)sender).DataContext as Item).Quantity);
 
             if (item != null)
             {
@@ -49,7 +49,7 @@ namespace MysticAdventureRPG.Views
 
         private void Bt_Compra_Click(object sender, RoutedEventArgs e)
         {
-            Item item = ItemFactory.CreateItem((((FrameworkElement)sender).DataContext as Item).ItemID, (((FrameworkElement)sender).DataContext as Item).Quantity);
+            Item item = ItemFactory.ObtainItem((((FrameworkElement)sender).DataContext as Item).ItemID, (((FrameworkElement)sender).DataContext as Item).Quantity);
 
             if (item != null)
             {

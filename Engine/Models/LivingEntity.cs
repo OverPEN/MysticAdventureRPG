@@ -1,5 +1,6 @@
 ﻿using CommonClasses.BaseClasses;
 using CommonClasses.Enums;
+using CommonClasses.EventArgs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@ namespace Engine.Models
     public abstract class LivingEntity : BaseNotifyPropertyChanged
     {
         public event EventHandler OnKilled;
+        public event EventHandler<GameMessageEventArgs> OnActionPerformed;
 
         #region Private Properties
         private String _name;
@@ -20,6 +22,7 @@ namespace Engine.Models
         private float _speed;
         private int _gold;
         private Byte _level;
+        private Weapon _currentWeapon;
         #endregion
 
         #region Public Properties
@@ -77,7 +80,27 @@ namespace Engine.Models
                 OnPropertyChanged();
             }
         }
-        public PlayerClassType Class { get; set; }
+        public PlayerClassType Class { get; }
+        public Weapon CurrentWeapon
+        {
+            get { return _currentWeapon; }
+            set
+            {
+                if (_currentWeapon != null)
+                {
+                    _currentWeapon.Action.OnActionPerformed -= RaiseActionPerformedEvent;
+                }
+
+                _currentWeapon = value;
+
+                if (_currentWeapon != null)
+                {
+                    _currentWeapon.Action.OnActionPerformed += RaiseActionPerformedEvent;
+                }
+
+                OnPropertyChanged();
+            }
+        }
         public bool IsDead => CurrentHitPoints <= 0;
         public ObservableCollection<Item> Inventory { get; set; }
         public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
@@ -181,6 +204,16 @@ namespace Engine.Models
         private void RaiseOnKilledEvent()
         {
             OnKilled?.Invoke(this, new System.EventArgs());
+        }
+
+        private void RaiseActionPerformedEvent(object sender, GameMessageEventArgs result)
+        {
+            OnActionPerformed?.Invoke(this, result);
+        }
+
+        public void UseCurrentWeaponOn(LivingEntity target)
+        {
+            CurrentWeapon.PerformAction(this, target);
         }
 
         #endregion

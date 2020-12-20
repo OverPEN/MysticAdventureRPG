@@ -26,7 +26,6 @@ namespace MysticAdventureRPG.ViewModels
         private Player _currentPlayer;
         private Location _currentLocation;
         private Enemy _currentEnemy;
-        public Weapon _currentWeapon;
         private Trader _currentTrader;
         #endregion
 
@@ -85,6 +84,7 @@ namespace MysticAdventureRPG.ViewModels
             {
                 if (_currentPlayer != null)
                 {
+                    _currentPlayer.OnActionPerformed -= OnCurrentPlayerPerformedAction;
                     _currentPlayer.OnLeveledUp -= OnCurrentPlayerLeveledUp;
                     _currentPlayer.OnKilled -= OnCurrentPlayerKilled;
                 }
@@ -92,22 +92,13 @@ namespace MysticAdventureRPG.ViewModels
 
                 if (_currentPlayer != null)
                 {
+                    _currentPlayer.OnActionPerformed += OnCurrentPlayerPerformedAction;
                     _currentPlayer.OnLeveledUp += OnCurrentPlayerLeveledUp;
                     _currentPlayer.OnKilled += OnCurrentPlayerKilled;
                 }
             }
         }
         public World CurrentWorld { get; set; }
-        public Weapon CurrentWeapon
-        {
-            get { return _currentWeapon; }
-            set
-            {
-                _currentWeapon = value;
-
-                OnPropertyChanged();
-            }
-        }
         public Trader CurrentTrader
         {
             get { return _currentTrader; }
@@ -144,12 +135,12 @@ namespace MysticAdventureRPG.ViewModels
             CurrentPlayer = new Player("Giuseppe Penna", PlayerClassType.Guerriero);
             CurrentWorld = WorldFactory.CreateWorld();
             CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
-            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1001));
-            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1002));
-            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1003));
-            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1004));
-            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(4, 5));
-            CurrentPlayer.AddItemToInventory(ItemFactory.CreateItem(1001));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1001));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1002));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1003));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1004));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(4, 5));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1001));
         }
 
         #region Boolean Controls
@@ -266,7 +257,7 @@ namespace MysticAdventureRPG.ViewModels
                         RaiseMessage("Consegna:", GameMessageType.ImportantInfo);
                         foreach (Item item in quest.ItemsToComplete)
                         {
-                            RaiseMessage($"   {item.Quantity} {ItemFactory.CreateItem(item.ItemID).Name}", GameMessageType.Info);
+                            RaiseMessage($"   {item.Quantity} {ItemFactory.ObtainItem(item.ItemID).Name}", GameMessageType.Info);
                         }
 
                         RaiseMessage("Ricompensa:", GameMessageType.Info);
@@ -274,7 +265,7 @@ namespace MysticAdventureRPG.ViewModels
                         RaiseMessage($"   {quest.RewardGold} Oro", GameMessageType.Info);
                         foreach (Item item in quest.RewardItems)
                         {
-                            RaiseMessage($"   {item.Quantity} {ItemFactory.CreateItem(item.ItemID).Name}", GameMessageType.Info);
+                            RaiseMessage($"   {item.Quantity} {ItemFactory.ObtainItem(item.ItemID).Name}", GameMessageType.Info);
                         }
 
                         CurrentPlayer.Quests.Add(quest);
@@ -296,7 +287,7 @@ namespace MysticAdventureRPG.ViewModels
 
         public void EvaluateBattleTurn(object obj)
         {
-            if((CurrentPlayer.Speed + CurrentWeapon?.WeaponSpeed) >= CurrentEnemy.Speed)
+            if((CurrentPlayer.Speed + CurrentPlayer.CurrentWeapon?.WeaponSpeed) >= CurrentEnemy.Speed)
             {
                 EvaluatePlayerTurn();
                 if (CurrentEnemy.IsDead)
@@ -330,7 +321,7 @@ namespace MysticAdventureRPG.ViewModels
             int damageToEnemy;
 
             // Determino il danno inflitto dal PLayer
-            if (CurrentWeapon == null)
+            if (CurrentPlayer.CurrentWeapon == null)
             {
                 RaiseMessage("Non avendo equipaggiato un'arma ti scagli sul nemico a mani nude.", GameMessageType.BattleInfo);
                 damageToEnemy = CurrentPlayer.BaseDamage;
@@ -339,17 +330,7 @@ namespace MysticAdventureRPG.ViewModels
             }
             else
             {
-                RaiseMessage($"Attacchi il nemico con {CurrentWeapon.Name}.", GameMessageType.BattleInfo);
-                if (CurrentWeapon.MissRate > BaseRandomNumberGenerator.NumberBetween(0, 100))
-                {
-                    RaiseMessage($"Hai mancato {CurrentEnemy.Name}!", GameMessageType.BattleNegative);
-                }
-                else
-                {
-                    damageToEnemy = BaseRandomNumberGenerator.NumberBetween(CurrentWeapon.MinimumDamage, CurrentWeapon.MaximumDamage);
-                    RaiseMessage($"Hai colpito {CurrentEnemy.Name} causando {damageToEnemy} danni!", GameMessageType.BattlePositive);
-                    CurrentEnemy.TakeDamage(damageToEnemy);
-                }
+                CurrentPlayer.UseCurrentWeaponOn(CurrentEnemy);
             }
         }
 
@@ -366,7 +347,7 @@ namespace MysticAdventureRPG.ViewModels
 
                 foreach (Item drop in CurrentEnemy.Inventory)
                 {
-                    Item item = ItemFactory.CreateItem(drop.ItemID, drop.Quantity);
+                    Item item = ItemFactory.ObtainItem(drop.ItemID, drop.Quantity);
                     RaiseMessage($"Ricevi {item.Quantity} {item.Name}!", GameMessageType.BattleInfo);
                     CurrentPlayer.AddItemToInventory(item);
                     OnPropertyChanged(nameof(CurrentPlayer.Inventory));
@@ -430,7 +411,7 @@ namespace MysticAdventureRPG.ViewModels
 
                         foreach (Item item in quest.RewardItems)
                         {
-                            Item rewardItem = ItemFactory.CreateItem(item.ItemID,item.Quantity);
+                            Item rewardItem = ItemFactory.ObtainItem(item.ItemID,item.Quantity);
 
                             RaiseMessage($"Hai ricevuto {item.Quantity} {rewardItem.Name}", GameMessageType.Info);
                             CurrentPlayer.AddItemToInventory(rewardItem);
@@ -454,6 +435,11 @@ namespace MysticAdventureRPG.ViewModels
         private void OnCurrentPlayerLeveledUp(object sender, EventArgs eventArgs)
         {
             RaiseMessage($"Hai raggiunto il Livello {CurrentPlayer.Level}!", GameMessageType.BattlePositive);
+        }
+
+        private void OnCurrentPlayerPerformedAction(object sender, GameMessageEventArgs e)
+        {
+            RaiseMessage(e.Message, e.Type);
         }
         #endregion
     }
