@@ -18,6 +18,7 @@ namespace Engine.Factories
             NewWorld.AddLocation(2, 0, 1, "Prato", "Un prato con erba alta");
             NewWorld.LocationAt(0, 1).AddQuestToLocation(2);
             NewWorld.LocationAt(0, 1).AddEnemyToLocation(1);
+            NewWorld.LocationAt(0, 1).AddEnemyToLocation(2);
             NewWorld.AddLocation(3, 1, 0, "Negozio", "TraderLocation");
             NewWorld.LocationAt(1, 0).AddQuestToLocation(1);
             NewWorld.LocationAt(1, 0).TraderHere = TraderFactory.GetTraderByID(1);

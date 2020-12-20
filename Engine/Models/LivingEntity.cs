@@ -106,7 +106,7 @@ namespace Engine.Models
         public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
         #endregion
 
-        protected LivingEntity(string name, int maxHitPoints, int currHitPoints, float speed, int gold, PlayerClassType entityClass, byte level = 1)
+        protected LivingEntity(string name, int maxHitPoints, int currHitPoints, float speed, int gold, PlayerClassType entityClass, byte level = 1, Weapon currentWeapon = null)
         {
             Name = name;
             MaximumHitPoints = maxHitPoints;
@@ -115,6 +115,7 @@ namespace Engine.Models
             Gold = gold;
             Class = entityClass;
             Level = level;
+            CurrentWeapon = currentWeapon;
             Inventory = new ObservableCollection<Item>();
         }
 
@@ -188,7 +189,7 @@ namespace Engine.Models
             Gold -= amountOfGold;
         }
 
-        public bool TakeDamage(int hitPointsOfDamage)
+        public void TakeDamage(int hitPointsOfDamage)
         {
             CurrentHitPoints -= hitPointsOfDamage;
 
@@ -196,9 +197,7 @@ namespace Engine.Models
             {
                 CurrentHitPoints = 0;
                 RaiseOnKilledEvent();
-                return true;
             }
-            return false;
         }
 
         private void RaiseOnKilledEvent()

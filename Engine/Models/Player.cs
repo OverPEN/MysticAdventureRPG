@@ -139,6 +139,7 @@ namespace Engine.Models
                 ClassBaseValues classBaseValues = new ClassBaseValues(Class);
                 MaximumHitPoints = (Level * classBaseValues.HitPoints) - ((Level -1) *((classBaseValues.HitPoints / 5)*4));
                 BaseDamage = (Level * classBaseValues.BaseDamage) - ((Level - 1) * ((classBaseValues.BaseDamage / 5) * 4));
+                Speed = (Level * classBaseValues.Speed) - ((Level - 1) * ((classBaseValues.Speed / 5) * 4));
                 OnLeveledUp?.Invoke(this, System.EventArgs.Empty);
             }
         }

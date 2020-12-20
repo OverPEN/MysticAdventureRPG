@@ -40,15 +40,15 @@ namespace Engine.Actions
         {
             int damage;
 
-            ReportResult($"Attacchi il nemico con {_currentWeapon.Name}.", GameMessageType.BattleInfo);
+            ReportResult($"{actor.Name} attacca {target.Name} con {_currentWeapon.Name}.", GameMessageType.BattleInfo);
             if (_currentWeapon.MissRate > BaseRandomNumberGenerator.NumberBetween(0, 100))
             {
-                ReportResult($"Hai mancato {target.Name}!", GameMessageType.BattleNegative);
+                ReportResult($"{actor.Name} ha mancato {target.Name}!", (actor is Player)? GameMessageType.BattleNegative : GameMessageType.BattlePositive);
             }
             else
             {
                 damage = BaseRandomNumberGenerator.NumberBetween(_currentWeapon.MinimumDamage, _currentWeapon.MaximumDamage);
-                ReportResult($"Hai colpito {target.Name} causando {damage} danni!", GameMessageType.BattlePositive);
+                ReportResult($"{actor.Name} ha colpito {target.Name} causando {damage} danni!", (actor is Player) ? GameMessageType.BattlePositive : GameMessageType.BattleNegative);
                 target.TakeDamage(damage);
             }
         }

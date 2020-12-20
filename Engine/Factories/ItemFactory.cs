@@ -24,6 +24,7 @@ namespace Engine.Factories
             BuildNewWeapon(1003, "Arco da caccia storto", 5, 3, 10, WeaponDamageType.Penetrante, 1.2f, 10);
             BuildNewWeapon(1004, "Martello da fabbro usurato", 5, 6, 9, WeaponDamageType.Schianto, 1.8f, 25);
             BuildNewWeapon(1005, "Spada Grezza", 10, 9, 9, WeaponDamageType.Taglio, 1.0f, 20);
+            BuildNewWeapon(1006, "Denti ", 0, 1, 4, WeaponDamageType.Penetrante, 1.2f, 50);
         }
 
         public static Item ObtainItem(int itemID, byte quantity = 1)

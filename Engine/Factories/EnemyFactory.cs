@@ -14,21 +14,18 @@ namespace Engine.Factories
 
         static EnemyFactory()
         {
-            BuildNewEnemy(1, "Serpente", 4, 4, 1, 4, 1000, 1, 2.0f, 100, 50);
-
+            BuildNewEnemy(1, "Serpente", 4, 4, 10, 1, 2.0f, 50, ItemFactory.GetItemByID(1006) as Weapon);
             AddLootItemToEnemy(1, 1, 25);
             AddLootItemToEnemy(1, 2, 50);
             AddLootItemToEnemy(1, 3, 25);
+            BuildNewEnemy(2, "Bandito", 20, 20, 20, 8, 1.5f, 50, ItemFactory.GetItemByID(1001) as Weapon);
+            AddLootItemToEnemy(2, 1005, 25);
+
         }
 
-
-
-
-
-
-        private static void BuildNewEnemy(int enemyID, string name, int maxHitPoints, int currHitPoints, int minDamage, int maxDamage, int rewardExperiencePoints, int rewardGold, float speed, int encRate, int missRate)
+        private static void BuildNewEnemy(int enemyID, string name, int maxHitPoints, int currHitPoints, int rewardExperiencePoints, int rewardGold, float speed, int encRate, Weapon weapon)
         {
-            _standardEnemies.Add(new Enemy(enemyID, name, maxHitPoints, currHitPoints, minDamage, maxDamage, rewardExperiencePoints, rewardGold, speed, encRate, missRate));
+            _standardEnemies.Add(new Enemy(enemyID, name, maxHitPoints, currHitPoints, rewardExperiencePoints, rewardGold, speed, encRate, weapon));
         }
 
         public static Enemy GetEnemyByID(int enemyID)
