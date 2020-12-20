@@ -1,5 +1,6 @@
 ﻿using CommonClasses.BaseClasses;
 using CommonClasses.Enums;
+using Engine.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,9 +43,11 @@ namespace Engine.Models
             }
         }
         public bool IsUnique { get; }
+        public IAction Action { get; set; }
+
         #endregion
 
-        public Item(int itemID, string name, int price, ItemType type, byte quantity = 1, byte selectedQuantity = 1, bool isUnique = false)
+        public Item(int itemID, string name, int price, ItemType type, byte quantity = 1, byte selectedQuantity = 1, bool isUnique = false, IAction action = null)
         {
             ItemID = itemID;
             Name = name;
@@ -53,8 +56,13 @@ namespace Engine.Models
             Quantity = quantity;
             SelectedQuantity = selectedQuantity;
             IsUnique = isUnique;
+            Action = action;
         }
 
+        public void PerformAction(LivingEntity actor, LivingEntity target)
+        {
+            Action?.Execute(actor, target);
+        }
         public Item Clone(byte quantity = 1)
         {
             return new Item(ItemID, Name, Price, Type, Quantity = quantity, 1, IsUnique);

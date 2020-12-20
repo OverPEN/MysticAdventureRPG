@@ -3,14 +3,10 @@ using CommonClasses.Enums;
 using CommonClasses.EventArgs;
 using Engine.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine.Actions
 {
-    public class AttackWithWeapon
+    public class AttackWithWeapon : IAction
     {
         private readonly Weapon _currentWeapon;
         private readonly int _maximumDamage;

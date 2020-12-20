@@ -10,48 +10,37 @@ namespace Engine.Factories
 {
     public static class EnemyFactory
     {
-        public static Enemy GetEnemyByID(int enemyID)
+        private static readonly List<Enemy> _standardEnemies = new List<Enemy>();
+
+        static EnemyFactory()
         {
-            switch (enemyID)
-            {
-                case 1:
-                    Enemy snake =
-                        new Enemy(1,"Serpente", 4, 4, 1, 4, 1000, 1, 2.0f,100,50);
+            BuildNewEnemy(1, "Serpente", 4, 4, 1, 4, 1000, 1, 2.0f, 100, 50);
 
-                    AddLootItem(snake, 1, 25);
-                    AddLootItem(snake, 2, 50);
-                    AddLootItem(snake, 3, 25);
-
-                    return snake;
-
-                //case 2:
-                //    Enemy rat =
-                //        new Enemy("Rat", "Rat.png", 5, 5, 5, 1);
-
-                //    AddLootItem(rat, 9003, 25);
-                //    AddLootItem(rat, 9004, 75);
-
-                //    return rat;
-
-                //case 3:
-                //    Enemy giantSpider =
-                //        new Enemy("Giant Spider", "GiantSpider.png", 10, 10, 10, 3);
-
-                //    AddLootItem(giantSpider, 9005, 25);
-                //    AddLootItem(giantSpider, 9006, 75);
-
-                //    return giantSpider;
-
-                default:
-                    throw new ArgumentException(string.Format("EnemyType '{0}' does not exist", enemyID));
-            }
+            AddLootItemToEnemy(1, 1, 25);
+            AddLootItemToEnemy(1, 2, 50);
+            AddLootItemToEnemy(1, 3, 25);
         }
 
-        private static void AddLootItem(Enemy enemy, int itemID, int percentage)
+
+
+
+
+
+        private static void BuildNewEnemy(int enemyID, string name, int maxHitPoints, int currHitPoints, int minDamage, int maxDamage, int rewardExperiencePoints, int rewardGold, float speed, int encRate, int missRate)
+        {
+            _standardEnemies.Add(new Enemy(enemyID, name, maxHitPoints, currHitPoints, minDamage, maxDamage, rewardExperiencePoints, rewardGold, speed, encRate, missRate));
+        }
+
+        public static Enemy GetEnemyByID(int enemyID)
+        {
+            return _standardEnemies.FirstOrDefault(enemy => enemy.EnemyID == enemyID);
+        }
+
+        private static void AddLootItemToEnemy(int enemyID, int itemID, int percentage)
         {
             if (BaseRandomNumberGenerator.NumberBetween(1, 100) <= percentage)
             {
-                enemy.Inventory.Add(ItemFactory.GetItemByID(itemID).Clone());
+                GetEnemyByID(enemyID).Inventory.Add(ItemFactory.GetItemByID(itemID).Clone());
             }
         }
     }
