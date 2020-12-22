@@ -137,7 +137,8 @@ namespace MysticAdventureRPG.ViewModels
             CurrentPlayer = new Player("Giuseppe Penna", PlayerClassType.Guerriero);
             CurrentWorld = WorldFactory.CreateWorld();
             CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
-            
+
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1001));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1002));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1003));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1004));

@@ -14,11 +14,11 @@ namespace Engine.Factories
 
         static EnemyFactory()
         {
-            BuildNewEnemy(1, "Serpente", 4, 4, 10, 1, 2.0f, 50, ItemFactory.GetItemByID(1006) as Weapon);
+            BuildNewEnemy(1, "Serpente", 4, 4, 10, 1, 2.0f, 50, ItemFactory.ObtainItem(1006) as Weapon);
             AddLootItemToEnemy(1, 1, 25);
             AddLootItemToEnemy(1, 2, 50);
             AddLootItemToEnemy(1, 3, 25);
-            BuildNewEnemy(2, "Bandito", 20, 20, 20, 8, 1.5f, 50, ItemFactory.GetItemByID(1001) as Weapon);
+            BuildNewEnemy(2, "Bandito", 20, 20, 20, 8, 1.5f, 50, ItemFactory.ObtainItem(1001) as Weapon);
             AddLootItemToEnemy(2, 1005, 25);
 
         }
