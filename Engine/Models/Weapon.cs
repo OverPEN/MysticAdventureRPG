@@ -31,7 +31,10 @@ namespace Engine.Models
         #region Functions
         public new Weapon Clone(byte quantity = 1)
         {
-            return new Weapon(ItemID, Name, Price, MinimumDamage, MaximumDamage, DamageType, WeaponSpeed, MissRate, ItemType.Arma, quantity, Action);
+            Weapon clonedWeapon = new Weapon(ItemID, Name, Price, MinimumDamage, MaximumDamage, DamageType, WeaponSpeed, MissRate, ItemType.Arma, quantity, Action);
+            clonedWeapon.Action = new AttackWithWeapon(clonedWeapon);
+
+            return clonedWeapon;
         }
         #endregion
     }
