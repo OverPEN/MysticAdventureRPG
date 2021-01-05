@@ -72,6 +72,7 @@ namespace Engine.Models
         }
         public WeaponDamageType BaseDamageType { get;} 
         public ObservableCollection<Quest> Quests { get; }
+        public ObservableCollection<Recipe> Recipes { get; }
 
         #endregion
 
@@ -86,7 +87,8 @@ namespace Engine.Models
             XCoordinate = xCoord;
             YCoordinate = yCoord;
             Quests = new ObservableCollection<Quest>();
-      
+            Recipes = new ObservableCollection<Recipe>();
+
         }
 
         public Player(string name, PlayerClassType chosenClass) : base(name, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).Speed, new ClassBaseValues(chosenClass).Gold, chosenClass)
@@ -100,6 +102,7 @@ namespace Engine.Models
             XCoordinate = 0;
             YCoordinate = 0;
             Quests = new ObservableCollection<Quest>();
+            Recipes = new ObservableCollection<Recipe>();
         }
 
         #region Functions
@@ -141,6 +144,14 @@ namespace Engine.Models
                 BaseDamage = (Level * classBaseValues.BaseDamage) - ((Level - 1) * ((classBaseValues.BaseDamage / 5) * 4));
                 Speed = (Level * classBaseValues.Speed) - ((Level - 1) * ((classBaseValues.Speed / 5) * 4));
                 OnLeveledUp?.Invoke(this, System.EventArgs.Empty);
+            }
+        }
+
+        public void LearnRecipe(Recipe recipe)
+        {
+            if (!Recipes.Any(r => r.ID == recipe.ID))
+            {
+                Recipes.Add(recipe);
             }
         }
         #endregion

@@ -22,6 +22,10 @@ namespace Engine.Factories
 
             BuildNewHealingItem(2001, "Pane", 4, 5);
 
+            BuildNewItem(5, "Grano", 2, ItemType.Varie);
+            BuildNewItem(6, "Uova", 3, ItemType.Varie);
+            BuildNewItem(7, "Lievito", 5, ItemType.Varie);
+
             BuildNewWeapon(1001, "Spada Smussata", 5, 4, 9, WeaponDamageType.Taglio, 1.0f, 20);
             BuildNewWeapon(1002, "Bastone da mago scheggiato", 6, 6, 8, WeaponDamageType.Magico, 0.9f, 30);
             BuildNewWeapon(1003, "Arco da caccia storto", 5, 3, 10, WeaponDamageType.Penetrante, 1.2f, 10);
@@ -66,7 +70,7 @@ namespace Engine.Factories
 
         internal static Item GetItemByID(int id)
         {
-            return _standardItems.FirstOrDefault(item => item.ItemID == id);
+            return _standardItems.FirstOrDefault(item => item.ItemID == id).Clone();
         }
     }
 }

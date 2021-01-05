@@ -147,6 +147,8 @@ namespace MysticAdventureRPG.ViewModels
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(4, 5));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1005));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(2001, 3));
+
+            CurrentPlayer.LearnRecipe(RecipeFactory.RecipeByID(1));
         }
 
         #region Boolean Controls
