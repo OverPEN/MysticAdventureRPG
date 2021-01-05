@@ -162,7 +162,7 @@ namespace MysticAdventureRPG.ViewModels
         private bool wasKilled = false;
         #endregion
 
-        #region Public Functions From View
+        #region Functions From View
         private void MoveForward(object obj)
         {
             if (CanMoveForward)
@@ -287,6 +287,32 @@ namespace MysticAdventureRPG.ViewModels
         private void UseCurrentConsumable(object obj)
         {
             CurrentPlayer.UseCurrentConsumable();
+        }
+
+        public void CraftItemUsing(Recipe recipe)
+        {
+            if (CurrentPlayer.HasAllTheseItems(recipe.Ingredients))
+            {
+                foreach(GroupedItem groupedItem in recipe.Ingredients)
+                {
+                    CurrentPlayer.RemoveItemFromInventory(groupedItem);
+                }
+               
+                foreach (GroupedItem groupedItem in recipe.OutputItems)
+                {
+                        GroupedItem outputItem = ItemFactory.ObtainItem(groupedItem.Item.ItemID, groupedItem.Quantity);
+                        CurrentPlayer.AddItemToInventory(outputItem);
+                        RaiseMessage(new GameMessageEventArgs($"Hai creato {groupedItem.Quantity} {outputItem.Item.Name}", GameMessageType.Info));
+                }
+            }
+            else
+            {
+                RaiseMessage(new GameMessageEventArgs("Non hai gli ingredienti necessari:", GameMessageType.ImportantInfo));
+                foreach (GroupedItem groupedItem in recipe.Ingredients)
+                {
+                    RaiseMessage(new GameMessageEventArgs($"  {groupedItem.Quantity} {groupedItem.Item.Name}", GameMessageType.Info));
+                }
+            }
         }
         #endregion
 

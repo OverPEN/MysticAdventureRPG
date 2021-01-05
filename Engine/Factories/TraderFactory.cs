@@ -15,6 +15,9 @@ namespace Engine.Factories
         {
             Trader susan = new Trader(1, "Susan");
             susan.AddItemToInventory(ItemFactory.ObtainItem(1001));
+            susan.AddItemToInventory(ItemFactory.ObtainItem(5));
+            susan.AddItemToInventory(ItemFactory.ObtainItem(6));
+            susan.AddItemToInventory(ItemFactory.ObtainItem(7));
 
             Trader farmerTed = new Trader(2, "Farmer Ted");
             farmerTed.AddItemToInventory(ItemFactory.ObtainItem(1001));

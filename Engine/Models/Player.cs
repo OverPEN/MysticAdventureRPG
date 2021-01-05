@@ -106,25 +106,7 @@ namespace Engine.Models
         }
 
         #region Functions
-        public bool HasAllTheseItems(List<GroupedItem> items)
-        {
-            foreach (GroupedItem groupedItem in items)
-            {
-                if (Inventory.FirstOrDefault(i => i.ItemID == groupedItem.Item.ItemID) != null)
-                {
-                    if (GroupedInventory.FirstOrDefault(i => i.Item.ItemID == groupedItem.Item.ItemID).Quantity < groupedItem.Quantity)
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }             
-            }
-            return true;
-        }
-
+        
         public void AddExperience(int experiencePoints)
         {
             Experience += experiencePoints;

@@ -1,5 +1,6 @@
 ﻿using CommonClasses.Enums;
 using CommonClasses.EventArgs;
+using Engine.Models;
 using MysticAdventureRPG.ViewModels;
 using MysticAdventureRPG.Views;
 using System;
@@ -38,6 +39,12 @@ namespace MysticAdventureRPG
         private void OnGameMessageRaised(object sender, GameMessageEventArgs e)
         {
             dtContext.OnGameMessageRaised(sender, e, ref GameMessages);
+        }
+
+        private void OnClick_Craft(object sender, RoutedEventArgs e)
+        {
+            Recipe recipe = ((FrameworkElement)sender).DataContext as Recipe;
+            dtContext.CraftItemUsing(recipe);
         }
     }
 }
