@@ -44,10 +44,10 @@
             </Label.Content>
         </Label>
         <!--PlayerInventory-->
-        <DataGrid Name="PlayerInventory" Grid.Row="2" Grid.Column="0" Margin="5" ItemsSource="{Binding CurrentPlayer.Inventory}" AutoGenerateColumns="False"  HeadersVisibility="Column"  CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Auto">
+        <DataGrid Name="PlayerInventory" Grid.Row="2" Grid.Column="0" Margin="5" ItemsSource="{Binding CurrentPlayer.GroupedInventory}" AutoGenerateColumns="False"  HeadersVisibility="Column"  CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Oggetto" IsReadOnly="True" Width="*" Binding="{Binding Path=Name}"/>
-                <DataGridTextColumn Header="Valore"  IsReadOnly="True" Width="Auto" Binding="{Binding Path=Price}"/>
+                <DataGridTextColumn Header="Oggetto" IsReadOnly="True" Width="*" Binding="{Binding Path=Item.Name}"/>
+                <DataGridTextColumn Header="Valore"  IsReadOnly="True" Width="Auto" Binding="{Binding Path=Item.Price}"/>
                 <DataGridTextColumn Header="Quantità" IsReadOnly="True" Width="Auto" Binding="{Binding Path=Quantity}"/>
                 <DataGridTemplateColumn Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
@@ -66,10 +66,10 @@
             </DataGrid.Columns>
         </DataGrid>
         <!--TraderInventory-->
-        <DataGrid Name="TraderInventory" Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding CurrentTrader.Inventory}" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Auto">
+        <DataGrid Name="TraderInventory" Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding CurrentTrader.GroupedInventory}" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Oggetto" IsReadOnly="True" Width="*" Binding="{Binding Path=Name}"/>
-                <DataGridTextColumn Header="Valore" IsReadOnly="True" Width="Auto"  Binding="{Binding Path=Price}"/>
+                <DataGridTextColumn Header="Oggetto" IsReadOnly="True" Width="*" Binding="{Binding Path=Item.Name}"/>
+                <DataGridTextColumn Header="Valore" IsReadOnly="True" Width="Auto"  Binding="{Binding Path=Item.Price}"/>
                 <DataGridTextColumn Header="Quantità" IsReadOnly="True" Width="Auto" Binding="{Binding Path=Quantity}"/>
                 <DataGridTemplateColumn Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>

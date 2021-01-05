@@ -23,6 +23,7 @@ namespace Engine.Models
         private int _gold;
         private Byte _level;
         private Weapon _currentWeapon;
+        private Item _currentConsumable;
         #endregion
 
         #region Public Properties
@@ -103,7 +104,30 @@ namespace Engine.Models
         }
         public bool IsDead => CurrentHitPoints <= 0;
         public ObservableCollection<Item> Inventory { get; set; }
+        public ObservableCollection<GroupedItem> GroupedInventory { get; set; }
         public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
+        public List<Item> Consumables => Inventory.Where(i => i.Type == ItemType.Consumabile).ToList();
+        public bool HasConsumable => Consumables.Any();
+        public Item CurrentConsumable
+        {
+            get => _currentConsumable;
+            set
+            {
+                if (_currentConsumable != null)
+                {
+                    _currentConsumable.Action.OnActionPerformed -= RaiseActionPerformedEvent;
+                }
+
+                _currentConsumable = value;
+
+                if (_currentConsumable != null)
+                {
+                    _currentConsumable.Action.OnActionPerformed += RaiseActionPerformedEvent;
+                }
+
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         protected LivingEntity(string name, int maxHitPoints, int currHitPoints, float speed, int gold, PlayerClassType entityClass, byte level = 1, Weapon currentWeapon = null)
@@ -117,45 +141,56 @@ namespace Engine.Models
             Level = level;
             CurrentWeapon = currentWeapon;
             Inventory = new ObservableCollection<Item>();
+            GroupedInventory = new ObservableCollection<GroupedItem>();
         }
 
         #region Functions
-        public void AddItemToInventory(Item item)
+        public void AddItemToInventory(GroupedItem groupedItem)
         {
-            if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) == null || item.IsUnique)
+            for(int i=0; i<groupedItem.Quantity; i++)
+                Inventory.Add(groupedItem.Item);
+
+            if (groupedItem.Item.IsUnique)
             {
-                if (item.IsUnique)
-                {
-                    byte itemQuantity = item.Quantity;
-                    item.Quantity = 1;
-                    for (byte i = 0; i < itemQuantity; i++)
-                        Inventory.Add(item);
-                }
-                else
-                    Inventory.Add(item);
+                GroupedInventory.Add(new GroupedItem(groupedItem.Item, 1));
             }
             else
             {
-                Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity += item.Quantity;
+                if (!GroupedInventory.Any(gi => gi.Item.ItemID == groupedItem.Item.ItemID))
+                {
+                    GroupedInventory.Add(new GroupedItem(groupedItem.Item, 0));
+                }
+
+                GroupedInventory.First(gi => gi.Item.ItemID == groupedItem.Item.ItemID).Quantity+= groupedItem.Quantity;
             }
             OnPropertyChanged(nameof(Weapons));
+            OnPropertyChanged(nameof(Consumables));
+            OnPropertyChanged(nameof(HasConsumable));
         }
 
-        public void RemoveItemFromInventory(Item item)
+        public void RemoveItemFromInventory(GroupedItem groupedItem)
         {
-            if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) != null)
+            for (int i = 0; i <groupedItem.Quantity; i++)
+                Inventory.Remove(Inventory.FirstOrDefault(f=> f.ItemID == groupedItem.Item.ItemID));
+
+            GroupedItem groupedItemToRemove = GroupedInventory.FirstOrDefault(gi => gi.Item.ItemID == groupedItem.Item.ItemID);
+
+
+            if (groupedItemToRemove != null)
             {
-                if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity <= item.Quantity || item.IsUnique)
+                if (groupedItemToRemove.Quantity <= 1 || groupedItemToRemove.Quantity <= groupedItem.Quantity)
                 {
-                    Inventory.Remove(Inventory.FirstOrDefault(i => i.ItemID == item.ItemID));
+                    GroupedInventory.Remove(groupedItemToRemove);
                 }
                 else
                 {
-                    Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity -= item.Quantity;
+                    groupedItemToRemove.Quantity-= groupedItem.Quantity;
                 }
             }
 
             OnPropertyChanged(nameof(Weapons));
+            OnPropertyChanged(nameof(Consumables));
+            OnPropertyChanged(nameof(HasConsumable));
         }
 
         public void Heal(int hitPointsToHeal)
@@ -213,6 +248,12 @@ namespace Engine.Models
         public void UseCurrentWeaponOn(LivingEntity target)
         {
             CurrentWeapon.PerformAction(this, target);
+        }
+
+        public void UseCurrentConsumable()
+        {
+            CurrentConsumable.PerformAction(this, this);
+            RemoveItemFromInventory(new GroupedItem(CurrentConsumable,1));
         }
 
         #endregion

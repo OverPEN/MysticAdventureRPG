@@ -10,34 +10,30 @@ namespace Engine.Factories
 {
     public static class EnemyFactory
     {
-        private static readonly List<Enemy> _standardEnemies = new List<Enemy>();
-
-        static EnemyFactory()
-        {
-            BuildNewEnemy(1, "Serpente", 4, 4, 10, 1, 2.0f, 50, ItemFactory.ObtainItem(1006) as Weapon);
-            AddLootItemToEnemy(1, 1, 25);
-            AddLootItemToEnemy(1, 2, 50);
-            AddLootItemToEnemy(1, 3, 25);
-            BuildNewEnemy(2, "Bandito", 20, 20, 20, 8, 1.5f, 50, ItemFactory.ObtainItem(1001) as Weapon);
-            AddLootItemToEnemy(2, 1005, 25);
-
-        }
-
-        private static void BuildNewEnemy(int enemyID, string name, int maxHitPoints, int currHitPoints, int rewardExperiencePoints, int rewardGold, float speed, int encRate, Weapon weapon)
-        {
-            _standardEnemies.Add(new Enemy(enemyID, name, maxHitPoints, currHitPoints, rewardExperiencePoints, rewardGold, speed, encRate, weapon));
-        }
-
         public static Enemy GetEnemyByID(int enemyID)
         {
-            return _standardEnemies.FirstOrDefault(enemy => enemy.EnemyID == enemyID);
+            Enemy enemy = null;
+            switch (enemyID)
+            {
+                case 1:
+                    enemy = new Enemy(1, "Serpente", 4, 4, 10, 1, 2.0f, 50, ItemFactory.ObtainItem(1006).Item as Weapon);
+                    AddLootItemToEnemy(ref enemy, 1, 25, (byte)BaseRandomNumberGenerator.NumberBetween(1,3));
+                    AddLootItemToEnemy(ref enemy, 2, 50, (byte)BaseRandomNumberGenerator.NumberBetween(1, 3));
+                    AddLootItemToEnemy(ref enemy, 3, 25, (byte)BaseRandomNumberGenerator.NumberBetween(1, 3));
+                    break;
+                case 2:
+                    enemy = new Enemy(2, "Bandito", 20, 20, 20, 8, 1.5f, 50, ItemFactory.ObtainItem(1001).Item as Weapon);
+                    AddLootItemToEnemy(ref enemy, 1005, 25, 1);
+                    break;
+            }
+            return enemy;
         }
 
-        private static void AddLootItemToEnemy(int enemyID, int itemID, int percentage)
+        private static void AddLootItemToEnemy(ref Enemy enemy, int itemID, int percentage, byte quantity)
         {
             if (BaseRandomNumberGenerator.NumberBetween(1, 100) <= percentage)
             {
-                GetEnemyByID(enemyID).Inventory.Add(ItemFactory.GetItemByID(itemID).Clone());
+                enemy.AddItemToInventory(new GroupedItem(ItemFactory.GetItemByID(itemID).Clone(),quantity));
             }
         }
     }

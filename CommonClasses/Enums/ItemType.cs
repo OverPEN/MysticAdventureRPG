@@ -10,7 +10,7 @@ namespace CommonClasses.Enums
     {
         Arma = 0,
         Armatura = 1,
-        Pozione = 3,
+        Consumabile = 3,
         Munizione = 4,
         Varie = 5
     }

@@ -15,9 +15,9 @@ namespace Engine.Factories
         static QuestFactory()
         {
             // Declare the items need to complete the quest, and its reward items
-            List<Item> itemsToComplete = new List<Item>();
-            List<Item> itemsToComplete2 = new List<Item>();
-            List<Item> rewardItems = new List<Item>();
+            List<GroupedItem> itemsToComplete = new List<GroupedItem>();
+            List<GroupedItem> itemsToComplete2 = new List<GroupedItem>();
+            List<GroupedItem> rewardItems = new List<GroupedItem>();
 
             itemsToComplete.Add(ItemFactory.ObtainItem(1,2));
             itemsToComplete2.Add(ItemFactory.ObtainItem(1, 5));

@@ -103,13 +103,13 @@ namespace Engine.Models
         }
 
         #region Functions
-        public bool HasAllTheseItems(List<Item> items)
+        public bool HasAllTheseItems(List<GroupedItem> items)
         {
-            foreach (Item item in items)
+            foreach (GroupedItem groupedItem in items)
             {
-                if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID) != null)
+                if (Inventory.FirstOrDefault(i => i.ItemID == groupedItem.Item.ItemID) != null)
                 {
-                    if (Inventory.FirstOrDefault(i => i.ItemID == item.ItemID).Quantity < item.Quantity)
+                    if (GroupedInventory.FirstOrDefault(i => i.Item.ItemID == groupedItem.Item.ItemID).Quantity < groupedItem.Quantity)
                     {
                         return false;
                     }

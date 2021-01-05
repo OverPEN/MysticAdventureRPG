@@ -13,12 +13,12 @@ namespace Engine.Models
         public string Name { get; }
         public string Description { get; }
         public QuestStatus Status { get; set; }
-        public List<Item> ItemsToComplete { get;}
+        public List<GroupedItem> ItemsToComplete { get;}
         public int RewardExperiencePoints { get; }
         public int RewardGold { get; }
-        public List<Item> RewardItems { get; }
+        public List<GroupedItem> RewardItems { get; }
 
-        public Quest(int id, string name, string description, List<Item> itemsToComplete, int rewardExperiencePoints, int rewardGold, List<Item> rewardItems, QuestStatus status = QuestStatus.Inattiva)
+        public Quest(int id, string name, string description, List<GroupedItem> itemsToComplete, int rewardExperiencePoints, int rewardGold, List<GroupedItem> rewardItems, QuestStatus status = QuestStatus.Inattiva)
 
         {
             QuestID = id;

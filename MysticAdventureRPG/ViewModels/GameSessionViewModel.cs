@@ -121,6 +121,7 @@ namespace MysticAdventureRPG.ViewModels
         public ICommand MoveLeftCommand { get; set; }
         public ICommand AttackEnemyCommand { get; set; }
         public ICommand ShowTraderScreenCommand { get; set; }
+        public ICommand UseCurrentConsumableCommand { get; set; }
         #endregion
 
         public GameSessionViewModel()
@@ -132,6 +133,7 @@ namespace MysticAdventureRPG.ViewModels
             MoveLeftCommand = new BaseCommand(MoveLeft);
             AttackEnemyCommand = new BaseCommand(EvaluateBattleTurn);
             ShowTraderScreenCommand = new BaseCommand(ShowTraderScreen);
+            UseCurrentConsumableCommand = new BaseCommand(UseCurrentConsumable);
             #endregion
 
             CurrentPlayer = new Player("Giuseppe Penna", PlayerClassType.Guerriero);
@@ -144,6 +146,7 @@ namespace MysticAdventureRPG.ViewModels
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1004));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(4, 5));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1005));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(2001, 3));
         }
 
         #region Boolean Controls
@@ -158,7 +161,7 @@ namespace MysticAdventureRPG.ViewModels
         #endregion
 
         #region Public Functions From View
-        public void MoveForward(object obj)
+        private void MoveForward(object obj)
         {
             if (CanMoveForward)
             {
@@ -167,7 +170,7 @@ namespace MysticAdventureRPG.ViewModels
             }
         }
 
-        public void MoveRight(object obj)
+        private void MoveRight(object obj)
         {
             if (CanMoveRight)
             {
@@ -176,7 +179,7 @@ namespace MysticAdventureRPG.ViewModels
             }
         }
 
-        public void MoveBackwards(object obj)
+        private void MoveBackwards(object obj)
         {
             if (CanMoveBackwards)
             {
@@ -185,7 +188,7 @@ namespace MysticAdventureRPG.ViewModels
             }
         }
 
-        public void MoveLeft(object obj)
+        private void MoveLeft(object obj)
         {
             if (CanMoveLeft)
             {
@@ -238,61 +241,10 @@ namespace MysticAdventureRPG.ViewModels
             gameConsole.Document.Blocks.Add(par);
             gameConsole.ScrollToEnd();
         }
-        #endregion
 
-        #region Private Functions
-        private void RefreshLocation()
+        private void EvaluateBattleTurn(object obj)
         {
-            CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
-        }
-
-        private void GivePlayerQuestsAtLocation()
-        {
-            foreach (Quest quest in CurrentLocation.QuestsAvailableHere)
-            {
-                if (!CurrentPlayer.Quests.Any(q => q.QuestID == quest.QuestID))
-                {
-                    if (quest.Status == QuestStatus.Nuova)
-                    {
-                        quest.Status = QuestStatus.Iniziata;
-                        
-                        RaiseMessage(new GameMessageEventArgs($"Quest attivata: '{quest.Name}'", GameMessageType.ImportantInfo));
-                        RaiseMessage(new GameMessageEventArgs(quest.Description, GameMessageType.Info));
-
-                        RaiseMessage(new GameMessageEventArgs("Consegna:", GameMessageType.ImportantInfo));
-                        foreach (Item item in quest.ItemsToComplete)
-                        {
-                            RaiseMessage(new GameMessageEventArgs($"   {item.Quantity} {ItemFactory.ObtainItem(item.ItemID).Name}", GameMessageType.Info));
-                        }
-
-                        RaiseMessage(new GameMessageEventArgs("Ricompensa:", GameMessageType.Info));
-                        RaiseMessage(new GameMessageEventArgs($"   {quest.RewardExperiencePoints} XP", GameMessageType.Info));
-                        RaiseMessage(new GameMessageEventArgs($"   {quest.RewardGold} Oro", GameMessageType.Info));
-                        foreach (Item item in quest.RewardItems)
-                        {
-                            RaiseMessage(new GameMessageEventArgs($"   {item.Quantity} {ItemFactory.ObtainItem(item.ItemID).Name}", GameMessageType.Info));
-                        }
-
-                        CurrentPlayer.Quests.Add(quest);
-                    }
-
-                }
-            }
-        }
-
-        private void GetEnemyAtLocation()
-        {
-            CurrentEnemy = CurrentLocation.GetEnemy();
-        }
-
-        private void RaiseMessage(GameMessageEventArgs gameMessage)
-        {
-            OnMessageRaised?.Invoke(this, gameMessage);
-        }
-
-        public void EvaluateBattleTurn(object obj)
-        {
-            if((CurrentPlayer.Speed + CurrentPlayer.CurrentWeapon?.WeaponSpeed) >= (CurrentEnemy.Speed + CurrentEnemy.CurrentWeapon.WeaponSpeed))
+            if ((CurrentPlayer.Speed + CurrentPlayer.CurrentWeapon?.WeaponSpeed) >= (CurrentEnemy.Speed + CurrentEnemy.CurrentWeapon.WeaponSpeed))
             {
                 EvaluatePlayerTurn();
                 if (CurrentEnemy.IsDead)
@@ -321,6 +273,72 @@ namespace MysticAdventureRPG.ViewModels
                     }
                 }
             }
+        }
+
+        private void ShowTraderScreen(object obj)
+        {
+            TradeScreen tradeScreen = new TradeScreen();
+            tradeScreen.DataContext = this;
+            tradeScreen.ShowDialog();
+        }
+
+        private void UseCurrentConsumable(object obj)
+        {
+            CurrentPlayer.UseCurrentConsumable();
+        }
+        #endregion
+
+        #region Private Functions
+        private void RefreshLocation()
+        {
+            CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
+        }
+
+        private void GivePlayerQuestsAtLocation()
+        {
+            foreach (Quest quest in CurrentLocation.QuestsAvailableHere)
+            {
+                if (!CurrentPlayer.Quests.Any(q => q.QuestID == quest.QuestID))
+                {
+                    if (quest.Status == QuestStatus.Nuova)
+                    {
+                        quest.Status = QuestStatus.Iniziata;
+                        
+                        RaiseMessage(new GameMessageEventArgs($"Quest attivata: '{quest.Name}'", GameMessageType.ImportantInfo));
+                        RaiseMessage(new GameMessageEventArgs(quest.Description, GameMessageType.Info));
+
+                        RaiseMessage(new GameMessageEventArgs("Consegna:", GameMessageType.ImportantInfo));
+                        foreach (GroupedItem groupedItem in quest.ItemsToComplete)
+                        {
+                            //RaiseMessage(new GameMessageEventArgs($"   {groupedItem.Quantity} {ItemFactory.ObtainItem(groupedItem.Item.ItemID).Item.Name}", GameMessageType.Info));
+                            RaiseMessage(new GameMessageEventArgs($"   {groupedItem.Quantity} {groupedItem.Item.Name}", GameMessageType.Info));
+                        }
+
+                        RaiseMessage(new GameMessageEventArgs("Ricompensa:", GameMessageType.Info));
+                        RaiseMessage(new GameMessageEventArgs($"   {quest.RewardExperiencePoints} XP", GameMessageType.Info));
+                        RaiseMessage(new GameMessageEventArgs($"   {quest.RewardGold} Oro", GameMessageType.Info));
+                        foreach (GroupedItem groupedItem in quest.RewardItems)
+                        {
+                            //RaiseMessage(new GameMessageEventArgs($"   {groupedItem.Quantity} {ItemFactory.ObtainItem(groupedItem.Item.ItemID).Item.Name}", GameMessageType.Info));
+                            RaiseMessage(new GameMessageEventArgs($"   {groupedItem.Quantity} {groupedItem.Item.Name}", GameMessageType.Info));
+                        }
+
+                        CurrentPlayer.Quests.Add(quest);
+                    }
+
+                }
+            }
+        }
+
+        private void GetEnemyAtLocation()
+        {
+            
+            CurrentEnemy = CurrentLocation.GetEnemy();
+        }
+
+        private void RaiseMessage(GameMessageEventArgs gameMessage)
+        {
+            OnMessageRaised?.Invoke(this, gameMessage);
         }
 
         private void EvaluatePlayerTurn()
@@ -352,13 +370,16 @@ namespace MysticAdventureRPG.ViewModels
                 RaiseMessage(new GameMessageEventArgs($"Ricevi {CurrentEnemy.Gold} oro!", GameMessageType.BattleInfo));
                 CurrentPlayer.ReceiveGold(CurrentEnemy.Gold);
 
-                foreach (Item drop in CurrentEnemy.Inventory)
+                foreach (GroupedItem drop in CurrentEnemy.GroupedInventory)
                 {
-                    Item item = ItemFactory.ObtainItem(drop.ItemID, drop.Quantity);
-                    RaiseMessage(new GameMessageEventArgs($"Ricevi {item.Quantity} {item.Name}!", GameMessageType.BattleInfo));
-                    CurrentPlayer.AddItemToInventory(item);
+                    RaiseMessage(new GameMessageEventArgs($"Ricevi {drop.Quantity} {drop.Item.Name}!", GameMessageType.BattleInfo));
+                    for(int i = 0; i<drop.Quantity; i++)
+                    {
+                        CurrentPlayer.AddItemToInventory(drop);
+                    }
                     OnPropertyChanged(nameof(CurrentPlayer.Inventory));
-                    
+                    OnPropertyChanged(nameof(CurrentPlayer.GroupedInventory));
+
                 }
         }
 
@@ -388,9 +409,9 @@ namespace MysticAdventureRPG.ViewModels
                         RaiseMessage(new GameMessageEventArgs($"Hai completato la Quest: '{quest.Name}'", GameMessageType.ImportantInfo));
 
                         // Rimuovo gli oggetti della quest dall'inventario del giocatore
-                        foreach (Item item in quest.ItemsToComplete)
+                        foreach (GroupedItem groupedItem in quest.ItemsToComplete)
                         {
-                                CurrentPlayer.RemoveItemFromInventory(CurrentPlayer.Inventory.First(i => i.ItemID == item.ItemID));
+                                CurrentPlayer.RemoveItemFromInventory(CurrentPlayer.GroupedInventory.First(i => i.Item.ItemID == groupedItem.Item.ItemID));
                         }
 
                         // Aggiungo le ricompense della queste al giocatore
@@ -400,12 +421,11 @@ namespace MysticAdventureRPG.ViewModels
                         RaiseMessage(new GameMessageEventArgs($"Hai ricevuto {quest.RewardGold} Oro", GameMessageType.Info));
                         CurrentPlayer.ReceiveGold(quest.RewardGold);
 
-                        foreach (Item item in quest.RewardItems)
+                        foreach (GroupedItem rewardItem in quest.RewardItems)
                         {
-                            Item rewardItem = ItemFactory.ObtainItem(item.ItemID,item.Quantity);
-
-                            RaiseMessage(new GameMessageEventArgs($"Hai ricevuto {item.Quantity} {rewardItem.Name}", GameMessageType.Info));
+                            RaiseMessage(new GameMessageEventArgs($"Hai ricevuto {rewardItem.Quantity} {rewardItem.Item.Name}", GameMessageType.Info));
                             CurrentPlayer.AddItemToInventory(rewardItem);
+
                         }
 
                         // Segno la Quest come completata
@@ -414,13 +434,6 @@ namespace MysticAdventureRPG.ViewModels
                     }
                 }
             }
-        }
-
-        private void ShowTraderScreen(object obj)
-        {
-            TradeScreen tradeScreen = new TradeScreen();
-            tradeScreen.DataContext = this;
-            tradeScreen.ShowDialog();
         }
 
         private void OnCurrentPlayerLeveledUp(object sender, EventArgs eventArgs)
@@ -437,6 +450,7 @@ namespace MysticAdventureRPG.ViewModels
         {
             RaiseMessage(e);
         }
+
         #endregion
     }
 }
