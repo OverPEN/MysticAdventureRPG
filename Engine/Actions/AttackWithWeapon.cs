@@ -6,34 +6,32 @@ using System;
 
 namespace Engine.Actions
 {
-    public class AttackWithWeapon : IAction
+    public class AttackWithWeapon : BaseAction, IAction
     {
         private readonly Weapon _currentWeapon;
         private readonly int _maximumDamage;
         private readonly int _minimumDamage;
 
-        public event EventHandler<GameMessageEventArgs> OnActionPerformed;
-
-        public AttackWithWeapon(Weapon Weapon)
+        public AttackWithWeapon(Weapon itemInUse) : base (itemInUse)
         {
-            if (Weapon == null)
+            if (itemInUse == null)
             {
-                throw new ArgumentException($"{Weapon.Name} is not a weapon");
+                throw new ArgumentException($"{itemInUse.Name} is not a weapon");
             }
 
             if (_minimumDamage < 0)
             {
-                throw new ArgumentException("minimumDamage must be 0 or larger");
+                throw new ArgumentException("Il danno minimo deve essere 0 o maggiore");
             }
 
             if (_maximumDamage < _minimumDamage)
             {
-                throw new ArgumentException("maximumDamage must be >= minimumDamage");
+                throw new ArgumentException("Il danno massimo deve essere inferiore al danno minimo");
             }
 
-            _currentWeapon = Weapon;
-            _minimumDamage = Weapon.MinimumDamage;
-            _maximumDamage = Weapon.MaximumDamage;
+            _currentWeapon = itemInUse;
+            _minimumDamage = itemInUse.MinimumDamage;
+            _maximumDamage = itemInUse.MaximumDamage;
         }
 
         public void Execute(LivingEntity actor, LivingEntity target)
@@ -51,11 +49,6 @@ namespace Engine.Actions
                 ReportResult($"{actor.Name} ha colpito {target.Name} causando {damage} danni!", (actor is Player) ? GameMessageType.BattlePositive : GameMessageType.BattleNegative);
                 target.TakeDamage(damage);
             }
-        }
-
-        private void ReportResult(string result, GameMessageType type)
-        {
-            OnActionPerformed?.Invoke(this, new GameMessageEventArgs(result, type));
         }
     }
 }

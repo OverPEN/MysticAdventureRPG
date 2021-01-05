@@ -373,10 +373,7 @@ namespace MysticAdventureRPG.ViewModels
                 foreach (GroupedItem drop in CurrentEnemy.GroupedInventory)
                 {
                     RaiseMessage(new GameMessageEventArgs($"Ricevi {drop.Quantity} {drop.Item.Name}!", GameMessageType.BattleInfo));
-                    for(int i = 0; i<drop.Quantity; i++)
-                    {
-                        CurrentPlayer.AddItemToInventory(drop);
-                    }
+                    CurrentPlayer.AddItemToInventory(drop);
                     OnPropertyChanged(nameof(CurrentPlayer.Inventory));
                     OnPropertyChanged(nameof(CurrentPlayer.GroupedInventory));
 

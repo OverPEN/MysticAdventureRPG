@@ -9,21 +9,19 @@ using Engine.Models;
 
 namespace Engine.Actions
 {
-    public class Heal : IAction
+    public class Heal : BaseAction, IAction
     {
         private readonly Item _item;
         public readonly int _hitPointsToHeal;
 
-        public event EventHandler<GameMessageEventArgs> OnActionPerformed;
-
-        public Heal(Item item, int hitPointsToHeal)
+        public Heal(Item itemInUse, int hitPointsToHeal) : base (itemInUse)
         {
-            if (item.Type != ItemType.Consumabile)
+            if (itemInUse.Type != ItemType.Consumabile)
             {
-                throw new ArgumentException($"{item.Name} non è un consumabile!");
+                throw new ArgumentException($"{itemInUse.Name} non è un consumabile!");
             }
 
-            _item = item;
+            _item = itemInUse;
             _hitPointsToHeal = hitPointsToHeal;
         }
 
@@ -31,11 +29,6 @@ namespace Engine.Actions
         {
             ReportResult($"{actor.Name} si cura di {_hitPointsToHeal} punt{(_hitPointsToHeal > 1 ? "i" : "o")} salute!", GameMessageType.BattleInfo);
             target.Heal(_hitPointsToHeal);
-        }
-
-        private void ReportResult(string result, GameMessageType type)
-        {
-            OnActionPerformed?.Invoke(this, new GameMessageEventArgs(result, type));
         }
     }
 }
