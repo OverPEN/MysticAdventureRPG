@@ -266,13 +266,17 @@ namespace Engine.Models
 
         public void UseCurrentWeaponOn(LivingEntity target)
         {
-            CurrentWeapon.PerformAction(this, target);
+            if(target!=null)
+                CurrentWeapon.PerformAction(this, target);
         }
 
         public void UseCurrentConsumable()
         {
-            CurrentConsumable.PerformAction(this, this);
-            RemoveItemFromInventory(new GroupedItem(CurrentConsumable,1));
+            if (CurrentConsumable != null)
+            {
+                CurrentConsumable.PerformAction(this, this);
+                RemoveItemFromInventory(new GroupedItem(CurrentConsumable, 1));
+            }
         }
 
         #endregion

@@ -70,7 +70,7 @@ namespace Engine.Factories
 
         internal static Item GetItemByID(int id)
         {
-            return _standardItems.FirstOrDefault(item => item.ItemID == id).Clone();
+            return _standardItems.FirstOrDefault(item => item.ItemID == id);
         }
     }
 }

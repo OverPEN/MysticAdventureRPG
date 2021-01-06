@@ -46,5 +46,10 @@ namespace MysticAdventureRPG
             Recipe recipe = ((FrameworkElement)sender).DataContext as Recipe;
             dtContext.CraftItemUsing(recipe);
         }
+
+        private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            dtContext.ExecuteFromKeyboard(e.Key, ref PlayerTabControl);
+        }
     }
 }

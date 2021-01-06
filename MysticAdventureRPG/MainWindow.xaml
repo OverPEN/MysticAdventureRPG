@@ -7,7 +7,8 @@
         xmlns:ViewModels="clr-namespace:MysticAdventureRPG.ViewModels"
         xmlns:Converters="clr-namespace:CommonClasses.Converters;assembly=CommonClasses"
         mc:Ignorable="d"
-        Title="Game Main Window" Height="800" Width="800">
+        Title="Game Main Window" Height="800" Width="800"
+        KeyDown="MainWindow_OnKeyDown">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
         <Converters:LevelToNecessaryXPConverter x:Key="LevelToNecessaryXPConverter"/>
@@ -162,8 +163,8 @@
         </Grid>
         <!-- Inventory and Quests -->
         <Grid Name="InventoryQuests" Grid.Row="2" Grid.Column="0" Background="BurlyWood">
-            <TabControl>
-                <TabItem Header="Inventario">
+            <TabControl Name="PlayerTabControl">
+                <TabItem Header="Inventario" Name="Inventory">
                     <DataGrid Name="InventoryDataGrid" ItemsSource="{Binding CurrentPlayer.GroupedInventory}" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Oggetto:" Binding="{Binding Item.Name}" Width="*" IsReadOnly="True"/>
@@ -172,7 +173,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
-                <TabItem Header="Quests">
+                <TabItem Header="Quests" Name="Quests">
                     <DataGrid ItemsSource="{Binding CurrentPlayer.Quests}" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Quest:" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
@@ -180,14 +181,14 @@
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
-                <TabItem Header="Creazione">
+                <TabItem Header="Creazione" Name="Crafting">
                     <DataGrid ItemsSource="{Binding CurrentPlayer.Recipes}" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
                             <DataGridTemplateColumn MinWidth="75">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Click="OnClick_Craft" Width="55" Content="Crea"/>
+                                        <Button Click="OnClick_Craft" Width="55" Content="Crea" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

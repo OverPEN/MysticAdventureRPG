@@ -27,6 +27,8 @@ namespace MysticAdventureRPG.ViewModels
         private Location _currentLocation;
         private Enemy _currentEnemy;
         private Trader _currentTrader;
+        private readonly Dictionary<Key, ICommand> _userInputActions = new Dictionary<Key, ICommand>();
+
         #endregion
 
         #region Public Properties
@@ -122,6 +124,7 @@ namespace MysticAdventureRPG.ViewModels
         public ICommand AttackEnemyCommand { get; set; }
         public ICommand ShowTraderScreenCommand { get; set; }
         public ICommand UseCurrentConsumableCommand { get; set; }
+        public ICommand SetTabFocusToCommand { get; set; }
         #endregion
 
         public GameSessionViewModel()
@@ -134,7 +137,10 @@ namespace MysticAdventureRPG.ViewModels
             AttackEnemyCommand = new BaseCommand(EvaluateBattleTurn);
             ShowTraderScreenCommand = new BaseCommand(ShowTraderScreen);
             UseCurrentConsumableCommand = new BaseCommand(UseCurrentConsumable);
+            SetTabFocusToCommand = new BaseCommand(SetTabFocusTo);
             #endregion
+
+            InitializeUserInputActions();
 
             CurrentPlayer = new Player("Giuseppe Penna", PlayerClassType.Guerriero);
             CurrentWorld = WorldFactory.CreateWorld();
@@ -246,32 +252,35 @@ namespace MysticAdventureRPG.ViewModels
 
         private void EvaluateBattleTurn(object obj)
         {
-            if ((CurrentPlayer.Speed + CurrentPlayer.CurrentWeapon?.WeaponSpeed) >= (CurrentEnemy.Speed + CurrentEnemy.CurrentWeapon.WeaponSpeed))
+            if (HasEnemy)
             {
-                EvaluatePlayerTurn();
-                if (CurrentEnemy.IsDead)
-                {
-                    GetEnemyAtLocation();
-                }
-                else
-                {
-                    CurrentEnemy.UseCurrentWeaponOn(CurrentPlayer);
-                }
-            }
-            else
-            {
-                CurrentEnemy.UseCurrentWeaponOn(CurrentPlayer);
-                if (wasKilled)
-                {
-                    wasKilled = false;
-                    return;
-                }
-                else
+                if ((CurrentPlayer.Speed + CurrentPlayer.CurrentWeapon?.WeaponSpeed) >= (CurrentEnemy.Speed + CurrentEnemy.CurrentWeapon.WeaponSpeed))
                 {
                     EvaluatePlayerTurn();
                     if (CurrentEnemy.IsDead)
                     {
                         GetEnemyAtLocation();
+                    }
+                    else
+                    {
+                        CurrentEnemy.UseCurrentWeaponOn(CurrentPlayer);
+                    }
+                }
+                else
+                {
+                    CurrentEnemy.UseCurrentWeaponOn(CurrentPlayer);
+                    if (wasKilled)
+                    {
+                        wasKilled = false;
+                        return;
+                    }
+                    else
+                    {
+                        EvaluatePlayerTurn();
+                        if (CurrentEnemy.IsDead)
+                        {
+                            GetEnemyAtLocation();
+                        }
                     }
                 }
             }
@@ -279,9 +288,13 @@ namespace MysticAdventureRPG.ViewModels
 
         private void ShowTraderScreen(object obj)
         {
-            TradeScreen tradeScreen = new TradeScreen();
-            tradeScreen.DataContext = this;
-            tradeScreen.ShowDialog();
+            if(CurrentTrader!= null)
+            {
+                TradeScreen tradeScreen = new TradeScreen();
+                tradeScreen.DataContext = this;
+                tradeScreen.ShowDialog();
+            }
+            
         }
 
         private void UseCurrentConsumable(object obj)
@@ -312,6 +325,20 @@ namespace MysticAdventureRPG.ViewModels
                 {
                     RaiseMessage(new GameMessageEventArgs($"  {groupedItem.Quantity} {groupedItem.Item.Name}", GameMessageType.Info));
                 }
+            }
+        }
+
+        public void ExecuteFromKeyboard( Key key, ref TabControl tabControl)
+        {
+            if (_userInputActions.ContainsKey(key))
+            {
+                if(key == Key.Q || key == Key.I || key == Key.R)
+                {
+                    Tuple<TabControl, string> parameters = new Tuple<TabControl, string>(tabControl, key == Key.Q ? "Quests" : key == Key.I ? "Inventory" : "Crafting");
+                    _userInputActions[key].Execute(parameters);
+                }      
+                else
+                    _userInputActions[key].Execute(null);
             }
         }
         #endregion
@@ -474,6 +501,36 @@ namespace MysticAdventureRPG.ViewModels
         private void OnCurrentEnemyPerformedAction(object sender, GameMessageEventArgs e)
         {
             RaiseMessage(e);
+        }
+
+        private void InitializeUserInputActions()
+        {
+            _userInputActions.Add(Key.W, MoveForwardCommand);
+            _userInputActions.Add(Key.A, MoveLeftCommand);
+            _userInputActions.Add(Key.S, MoveBackwardsCommand);
+            _userInputActions.Add(Key.D, MoveRightCommand);
+            _userInputActions.Add(Key.Z, AttackEnemyCommand);
+            _userInputActions.Add(Key.C, UseCurrentConsumableCommand);
+            _userInputActions.Add(Key.I, SetTabFocusToCommand);
+            _userInputActions.Add(Key.Q, SetTabFocusToCommand);
+            _userInputActions.Add(Key.R, SetTabFocusToCommand);
+            _userInputActions.Add(Key.T, ShowTraderScreenCommand);
+        }
+
+        private void SetTabFocusTo(object obj)
+        {
+            Tuple<TabControl, string> parameter = obj as Tuple<TabControl, string>;
+            foreach (object item in parameter.Item1.Items)
+            {
+                if (item is TabItem tabItem)
+                {
+                    if (tabItem.Name == parameter.Item2)
+                    {
+                        tabItem.IsSelected = true;
+                        return;
+                    }
+                }
+            }
         }
 
         #endregion
