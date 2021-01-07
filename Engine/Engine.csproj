@@ -53,6 +53,7 @@
     <Compile Include="Factories\WorldFactory.cs" />
     <Compile Include="Models\Enemy.cs" />
     <Compile Include="Models\GroupedItem.cs" />
+    <Compile Include="Models\HealingItem.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\LivingEntity.cs" />
     <Compile Include="Models\Location.cs" />
@@ -86,6 +87,11 @@
     <Resource Include="Resources\LocationsImages\Taverna.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GameData\GameItems.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

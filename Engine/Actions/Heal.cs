@@ -11,18 +11,18 @@ namespace Engine.Actions
 {
     public class Heal : BaseAction, IAction
     {
-        private readonly Item _item;
+        private readonly HealingItem _item;
         public readonly int _hitPointsToHeal;
 
-        public Heal(Item itemInUse, int hitPointsToHeal) : base (itemInUse)
+        public Heal(HealingItem itemInUse) : base (itemInUse)
         {
-            if (itemInUse.Type != ItemType.Consumabile)
+            if (itemInUse.Type != ItemType.Consumable)
             {
                 throw new ArgumentException($"{itemInUse.Name} non è un consumabile!");
             }
 
             _item = itemInUse;
-            _hitPointsToHeal = hitPointsToHeal;
+            _hitPointsToHeal = _item.HitPointsToHeal;
         }
 
         public void Execute(LivingEntity actor, LivingEntity target)

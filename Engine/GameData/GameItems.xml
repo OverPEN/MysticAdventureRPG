@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Items>
+  <Weapons>
+    <Weapon ItemID="1001" Name="Spada Smussata" Price="5" MinimumDamage="4" MaximumDamage="9" DamageType="Taglio" WeaponSpeed="1.0" MissRate="20"/>
+    <Weapon ItemID="1002" Name="Bastone da mago scheggiato" Price="6" MinimumDamage="6" MaximumDamage="8" DamageType="Magico" WeaponSpeed="0.9" MissRate="30"/>
+    <Weapon ItemID="1003" Name="Arco da caccia storto" Price="5" MinimumDamage="3" MaximumDamage="10" DamageType="Penetrante" WeaponSpeed="1.2" MissRate="10"/>
+    <Weapon ItemID="1004" Name="Martello da fabbro usurato" Price="5" MinimumDamage="6" MaximumDamage="9" DamageType="Schianto" WeaponSpeed="1.8" MissRate="25"/>
+    <Weapon ItemID="1005" Name="Spada Grezza" Price="10" MinimumDamage="9" MaximumDamage="9" DamageType="Taglio" WeaponSpeed="1.0" MissRate="20"/>
+    <Weapon ItemID="1006" Name="Denti" Price="0" MinimumDamage="1" MaximumDamage="4" DamageType="Penetrante" WeaponSpeed="1.2" MissRate="50"/>
+  </Weapons>
+  <Munitions>
+    <Munition ItemID="4" Name="Freccia comune" Price="2"/>
+  </Munitions>
+  <HealingItems>
+    <HealingItem ItemID="2001" Name="Pane" Price="4" HitPointsToHeal="5"/>
+  </HealingItems>
+  <MiscellaneousItems>
+    <MiscellaneousItem ItemID="1" Name="Denti di Serpente" Price="1"/>
+    <MiscellaneousItem ItemID="2" Name="Pelle di Serpente" Price="1"/>
+    <MiscellaneousItem ItemID="3" Name="Uova di Serpente" Price="1"/>
+    <MiscellaneousItem ItemID="5" Name="Grano" Price="2"/>
+    <MiscellaneousItem ItemID="6" Name="Uova" Price="3"/>
+    <MiscellaneousItem ItemID="7" Name="Lievito" Price="5"/>
+  </MiscellaneousItems>
+</Items>

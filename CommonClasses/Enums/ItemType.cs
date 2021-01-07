@@ -8,10 +8,10 @@ namespace CommonClasses.Enums
 {
     public enum ItemType : byte
     {
-        Arma = 0,
-        Armatura = 1,
-        Consumabile = 3,
-        Munizione = 4,
-        Varie = 5
+        Weapon = 0,
+        Armor = 1,
+        Consumable = 3,
+        Munition = 4,
+        Miscellaneous = 5
     }
 }

@@ -6,34 +6,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Xml;
 
 namespace Engine.Factories
 {
     public static class ItemFactory
     {
+        private const string GAME_DATA_FILENAME = ".\\GameData\\GameItems.xml";
+
         private static readonly List<Item> _standardItems = new List<Item>();
 
         static ItemFactory()
         {
-            BuildNewItem(1, "Denti di serpente", 1, ItemType.Varie);
-            BuildNewItem(2, "Pelle di serpente", 1, ItemType.Varie);
-            BuildNewItem(3, "Uova di serpente", 1, ItemType.Varie);
-            BuildNewItem(4, "Freccia", 1, ItemType.Munizione);
+            if (File.Exists(GAME_DATA_FILENAME))
+            {
+                XmlDocument data = new XmlDocument();
+                data.LoadXml(File.ReadAllText(GAME_DATA_FILENAME));
 
-            BuildNewHealingItem(2001, "Pane", 4, 5);
-
-            BuildNewItem(5, "Grano", 2, ItemType.Varie);
-            BuildNewItem(6, "Uova", 3, ItemType.Varie);
-            BuildNewItem(7, "Lievito", 5, ItemType.Varie);
-
-            BuildNewWeapon(1001, "Spada Smussata", 5, 4, 9, WeaponDamageType.Taglio, 1.0f, 20);
-            BuildNewWeapon(1002, "Bastone da mago scheggiato", 6, 6, 8, WeaponDamageType.Magico, 0.9f, 30);
-            BuildNewWeapon(1003, "Arco da caccia storto", 5, 3, 10, WeaponDamageType.Penetrante, 1.2f, 10);
-            BuildNewWeapon(1004, "Martello da fabbro usurato", 5, 6, 9, WeaponDamageType.Schianto, 1.8f, 25);
-            BuildNewWeapon(1005, "Spada Grezza", 10, 9, 9, WeaponDamageType.Taglio, 1.0f, 20);
-            BuildNewWeapon(1006, "Denti ", 0, 1, 4, WeaponDamageType.Penetrante, 1.2f, 50);
+                LoadItemsFromNodes(data.SelectNodes("/Items/Weapons/Weapon"));
+                LoadItemsFromNodes(data.SelectNodes("/Items/Munitions/Munition"));
+                LoadItemsFromNodes(data.SelectNodes("/Items/HealingItems/HealingItem"));
+                LoadItemsFromNodes(data.SelectNodes("/Items/MiscellaneousItems/MiscellaneousItem"));
+            }
+            else
+            {
+                throw new FileNotFoundException($"Missing data file: {GAME_DATA_FILENAME}");
+            }
         }
 
+        #region Functions
         public static GroupedItem ObtainItem(int itemID, byte quantity = 1)
         {
             Item standardItem = GetItemByID(itemID);
@@ -49,28 +51,115 @@ namespace Engine.Factories
             return null;
         }
 
-        private static void BuildNewItem(int itemID, string name, int price, ItemType type)
-        {
-            _standardItems.Add(new Item(itemID, name, price, type));
-        }
-
-        private static void BuildNewWeapon(int weaponID, string name, int price, int minDamage, int maxDamage, WeaponDamageType damageType, float weaponSpeed, int missRate)
-        {
-            Weapon weapon = new Weapon(weaponID, name, price, minDamage, maxDamage, damageType, weaponSpeed, missRate);
-            weapon.Action = new AttackWithWeapon(weapon);
-            _standardItems.Add(weapon);
-        }
-
-        private static void BuildNewHealingItem(int id, string name, int price, int hitPointsToHeal)
-        {
-            Item item = new Item(id, name, price, ItemType.Consumabile);
-            item.Action = new Heal(item, hitPointsToHeal);
-            _standardItems.Add(item);
-        }
-
         internal static Item GetItemByID(int id)
         {
             return _standardItems.FirstOrDefault(item => item.ItemID == id);
         }
+
+        private static void LoadItemsFromNodes(XmlNodeList nodes)
+        {
+            if (nodes == null)
+            {
+                return;
+            }
+
+            foreach (XmlNode node in nodes)
+            {
+                ItemType itemType = DetermineItemType(node.Name);
+
+                if (itemType == ItemType.Weapon)
+                {
+                    Weapon weapon = new Weapon(GetXmlAttributeAsInt(node, nameof(Weapon.ItemID)), GetXmlAttributeAsString(node, nameof(Weapon.Name)), GetXmlAttributeAsInt(node, nameof(Weapon.Price)), GetXmlAttributeAsInt(node, nameof(Weapon.MinimumDamage)), GetXmlAttributeAsInt(node, nameof(Weapon.MaximumDamage)), GetXmlAttributeAsDamageType(node, nameof(Weapon.DamageType)), GetXmlAttributeAsFloat(node, nameof(Weapon.WeaponSpeed)), GetXmlAttributeAsInt(node, nameof(Weapon.MissRate)));
+                    weapon.Action = new AttackWithWeapon(weapon);
+
+                    _standardItems.Add(weapon);
+                }
+                else if (itemType == ItemType.Consumable)
+                {
+                    HealingItem healingItem = new HealingItem(GetXmlAttributeAsInt(node, nameof(Item.ItemID)), GetXmlAttributeAsString(node, nameof(HealingItem.Name)), GetXmlAttributeAsInt(node, nameof(HealingItem.Price)), GetXmlAttributeAsInt(node, nameof(HealingItem.HitPointsToHeal)));
+
+                    healingItem.Action = new Heal(healingItem);
+
+                    _standardItems.Add(healingItem);
+                }
+                else if(itemType == ItemType.Armor)
+                {
+
+                }
+                else if (itemType == ItemType.Munition)
+                {
+                    Item item = new Item(GetXmlAttributeAsInt(node, nameof(Item.ItemID)), GetXmlAttributeAsString(node, nameof(Item.Name)), GetXmlAttributeAsInt(node, nameof(Item.Price)), itemType);
+
+                    _standardItems.Add(item);
+                }
+                else if (itemType == ItemType.Miscellaneous)
+                {
+                    Item item = new Item(GetXmlAttributeAsInt(node, nameof(Item.ItemID)), GetXmlAttributeAsString(node, nameof(Item.Name)), GetXmlAttributeAsInt(node, nameof(Item.Price)), itemType);
+
+                    _standardItems.Add(item);
+                }
+            }
+        }
+
+        private static ItemType DetermineItemType(string itemType)
+        {
+            switch (itemType)
+            {
+                case "Weapon":
+                    return ItemType.Weapon;
+                case "HealingItem":
+                    return ItemType.Consumable;
+                case "Munition":
+                    return ItemType.Munition;
+                default:
+                    return ItemType.Miscellaneous;
+            }
+        }
+
+        private static int GetXmlAttributeAsInt(XmlNode node, string attributeName)
+        {
+            return Convert.ToInt32(GetXmlAttribute(node, attributeName));
+        }
+
+        private static float GetXmlAttributeAsFloat(XmlNode node, string attributeName)
+        {
+            return Convert.ToSingle(GetXmlAttribute(node, attributeName));
+        }
+
+        private static string GetXmlAttributeAsString(XmlNode node, string attributeName)
+        {
+            return GetXmlAttribute(node, attributeName);
+        }
+
+        private static WeaponDamageType GetXmlAttributeAsDamageType(XmlNode node, string attributeName)
+        {
+            string attribute = GetXmlAttribute(node, attributeName);
+
+            switch (attribute)
+            {
+                case "Taglio":
+                    return WeaponDamageType.Taglio;
+                case "Magico":
+                    return WeaponDamageType.Magico;
+                case "Schianto":
+                    return WeaponDamageType.Schianto;
+                default:
+                    return WeaponDamageType.Penetrante;
+            }
+
+        }
+
+        private static string GetXmlAttribute(XmlNode node, string attributeName)
+        {
+            XmlAttribute attribute = node.Attributes?[attributeName];
+
+            if (attribute == null)
+            {
+                throw new ArgumentException($"L'attributo '{attributeName}' non esiste");
+            }
+
+            return attribute.Value;
+        }
+        #endregion
     }
 }
