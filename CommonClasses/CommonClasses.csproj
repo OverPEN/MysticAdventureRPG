@@ -55,7 +55,9 @@
     <Compile Include="Enums\PlayerClassType.cs" />
     <Compile Include="BaseClasses\ClassBaseValues.cs" />
     <Compile Include="EventArgs\GameMessageEventArgs.cs" />
+    <Compile Include="ExtensionMethods\XamlExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

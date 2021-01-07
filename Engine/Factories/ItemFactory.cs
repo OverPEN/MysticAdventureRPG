@@ -1,4 +1,5 @@
 ﻿using CommonClasses.Enums;
+using CommonClasses.ExtensionMethods;
 using Engine.Actions;
 using Engine.Models;
 using System;
@@ -69,14 +70,14 @@ namespace Engine.Factories
 
                 if (itemType == ItemType.Weapon)
                 {
-                    Weapon weapon = new Weapon(GetXmlAttributeAsInt(node, nameof(Weapon.ItemID)), GetXmlAttributeAsString(node, nameof(Weapon.Name)), GetXmlAttributeAsInt(node, nameof(Weapon.Price)), GetXmlAttributeAsInt(node, nameof(Weapon.MinimumDamage)), GetXmlAttributeAsInt(node, nameof(Weapon.MaximumDamage)), GetXmlAttributeAsDamageType(node, nameof(Weapon.DamageType)), GetXmlAttributeAsFloat(node, nameof(Weapon.WeaponSpeed)), GetXmlAttributeAsInt(node, nameof(Weapon.MissRate)));
+                    Weapon weapon = new Weapon(node.GetXmlAttributeAsInt(nameof(Weapon.ItemID)), node.GetXmlAttributeAsString(nameof(Weapon.Name)), node.GetXmlAttributeAsInt(nameof(Weapon.Price)), node.GetXmlAttributeAsInt(nameof(Weapon.MinimumDamage)), node.GetXmlAttributeAsInt(nameof(Weapon.MaximumDamage)), node.GetXmlAttributeAsDamageType(nameof(Weapon.DamageType)), node.GetXmlAttributeAsFloat(nameof(Weapon.WeaponSpeed)), node.GetXmlAttributeAsInt(nameof(Weapon.MissRate)));
                     weapon.Action = new AttackWithWeapon(weapon);
 
                     _standardItems.Add(weapon);
                 }
                 else if (itemType == ItemType.Consumable)
                 {
-                    HealingItem healingItem = new HealingItem(GetXmlAttributeAsInt(node, nameof(Item.ItemID)), GetXmlAttributeAsString(node, nameof(HealingItem.Name)), GetXmlAttributeAsInt(node, nameof(HealingItem.Price)), GetXmlAttributeAsInt(node, nameof(HealingItem.HitPointsToHeal)));
+                    HealingItem healingItem = new HealingItem(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(HealingItem.Name)), node.GetXmlAttributeAsInt(nameof(HealingItem.Price)), node.GetXmlAttributeAsInt(nameof(HealingItem.HitPointsToHeal)));
 
                     healingItem.Action = new Heal(healingItem);
 
@@ -88,13 +89,13 @@ namespace Engine.Factories
                 }
                 else if (itemType == ItemType.Munition)
                 {
-                    Item item = new Item(GetXmlAttributeAsInt(node, nameof(Item.ItemID)), GetXmlAttributeAsString(node, nameof(Item.Name)), GetXmlAttributeAsInt(node, nameof(Item.Price)), itemType);
+                    Item item = new Item(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(Item.Name)), node.GetXmlAttributeAsInt(nameof(Item.Price)), itemType);
 
                     _standardItems.Add(item);
                 }
                 else if (itemType == ItemType.Miscellaneous)
                 {
-                    Item item = new Item(GetXmlAttributeAsInt(node, nameof(Item.ItemID)), GetXmlAttributeAsString(node, nameof(Item.Name)), GetXmlAttributeAsInt(node, nameof(Item.Price)), itemType);
+                    Item item = new Item(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(Item.Name)), node.GetXmlAttributeAsInt(nameof(Item.Price)), itemType);
 
                     _standardItems.Add(item);
                 }
@@ -114,51 +115,6 @@ namespace Engine.Factories
                 default:
                     return ItemType.Miscellaneous;
             }
-        }
-
-        private static int GetXmlAttributeAsInt(XmlNode node, string attributeName)
-        {
-            return Convert.ToInt32(GetXmlAttribute(node, attributeName));
-        }
-
-        private static float GetXmlAttributeAsFloat(XmlNode node, string attributeName)
-        {
-            return Convert.ToSingle(GetXmlAttribute(node, attributeName));
-        }
-
-        private static string GetXmlAttributeAsString(XmlNode node, string attributeName)
-        {
-            return GetXmlAttribute(node, attributeName);
-        }
-
-        private static WeaponDamageType GetXmlAttributeAsDamageType(XmlNode node, string attributeName)
-        {
-            string attribute = GetXmlAttribute(node, attributeName);
-
-            switch (attribute)
-            {
-                case "Taglio":
-                    return WeaponDamageType.Taglio;
-                case "Magico":
-                    return WeaponDamageType.Magico;
-                case "Schianto":
-                    return WeaponDamageType.Schianto;
-                default:
-                    return WeaponDamageType.Penetrante;
-            }
-
-        }
-
-        private static string GetXmlAttribute(XmlNode node, string attributeName)
-        {
-            XmlAttribute attribute = node.Attributes?[attributeName];
-
-            if (attribute == null)
-            {
-                throw new ArgumentException($"L'attributo '{attributeName}' non esiste");
-            }
-
-            return attribute.Value;
         }
         #endregion
     }
