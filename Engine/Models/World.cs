@@ -23,11 +23,12 @@ namespace Engine.Models
             }
         }
 
-        internal void AddLocation(int id, int xCoordinate, int yCoordinate, string name, string description)
+        internal void AddLocation(Location location)
         {
-            Location loc = new Location(id, xCoordinate, yCoordinate, name.Replace('_', ' '), description);
-
-            _locations.Add(loc);
+            if (!_locations.Exists(w => w.LocationID == location.LocationID))
+                _locations.Add(location);
+            else
+                throw new InvalidOperationException($"La location {location.Name} è già presente!");
         }
 
         public Location LocationAt(int xCoord, int yCoord)

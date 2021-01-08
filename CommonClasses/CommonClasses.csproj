@@ -47,6 +47,7 @@
     <Compile Include="BaseClasses\BaseCommand.cs" />
     <Compile Include="BaseClasses\BaseNotifyPropertyChanged.cs" />
     <Compile Include="BaseClasses\BaseRandomNumberGenerator.cs" />
+    <Compile Include="Converters\FileToBitmapConverter.cs" />
     <Compile Include="Converters\LevelToNecessaryXPConverter.cs" />
     <Compile Include="Enums\GameMessageType.cs" />
     <Compile Include="Enums\QuestStatus.cs" />

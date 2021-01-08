@@ -132,7 +132,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding CurrentLocation.Name}"/>
-                    <Image Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="400" Source="{Binding CurrentLocation.ImageName}" Stretch="UniformToFill"/>
+                    <Image Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="400" Source="{Binding CurrentLocation.ImageName, Converter={StaticResource FileToBitmapConverter}}" Stretch="UniformToFill"/>
                     <TextBlock Grid.Row="2" HorizontalAlignment="Center" Text="{Binding CurrentLocation.Description}" TextWrapping="Wrap"/>
                 </Grid>
             </Border>
@@ -145,7 +145,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" HorizontalAlignment="Center" Height="Auto" Content="{Binding CurrentEnemy.Name}" />
-                    <Image Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="125" Width="125" Source="{Binding CurrentEnemy.ImageName}" />
+                    <Image Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="125" Width="125" Source="{Binding CurrentEnemy.ImageName, Converter={StaticResource FileToBitmapConverter}}" />
                     <Label Name="EnemyHitPoints" Grid.Row="2" Visibility="{Binding HasEnemy, Converter={StaticResource BooleanToVisibility}}" HorizontalAlignment="Center">
                         <Label.Content>
                             <TextBlock>

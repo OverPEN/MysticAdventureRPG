@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Locations RootImagePath="/Resources/LocationsImages/">
+  <Location LocationID="1" XCoordinate="0" YCoordinate="0" Name="Casa" ImageName="Casa.jpg">
+    <Description><![CDATA[Casa Dolce Casa]]></Description>
+  </Location>
+  <Location LocationID="2" XCoordinate="0" YCoordinate="1" Name="Campo" ImageName="Campo.jpg">
+    <Description><![CDATA[Un campo con erba alta]]></Description>
+    <Enemies>
+      <Enemy EnemyID="1" EncounterRate="100"/>
+    </Enemies>
+  </Location>
+  <Location LocationID="3" XCoordinate="1" YCoordinate="0" Name="Emporio di Susan" ImageName="Emporio_di_Susan.jpg">
+    <Description><![CDATA[L'Emporio di Susan, vende beni generici]]></Description>
+    <Trader TraderID="1"/>
+    <Quests>
+      <Quest QuestID="1"/>
+    </Quests>
+  </Location>
+  <Location LocationID="4" XCoordinate="1" YCoordinate="1" Name="Quartiere Malfamato" ImageName="Quartiere_Malfamato.jpg">
+    <Description><![CDATA[Un brutto quartiere della tua cittadina, spesso frequentato da gente losca]]></Description>
+    <Enemies>
+      <Enemy EnemyID="2" EncounterRate="70"/>
+    </Enemies>
+  </Location>
+</Locations>

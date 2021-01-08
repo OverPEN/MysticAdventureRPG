@@ -19,15 +19,8 @@ namespace Engine.Factories
             susan.AddItemToInventory(ItemFactory.ObtainItem(6));
             susan.AddItemToInventory(ItemFactory.ObtainItem(7));
 
-            Trader farmerTed = new Trader(2, "Farmer Ted");
-            farmerTed.AddItemToInventory(ItemFactory.ObtainItem(1001));
-
-            Trader peteTheHerbalist = new Trader(3, "Pete the Herbalist");
-            peteTheHerbalist.AddItemToInventory(ItemFactory.ObtainItem(1001));
-
             AddTraderToList(susan);
-            AddTraderToList(farmerTed);
-            AddTraderToList(peteTheHerbalist);
+
         }
 
         public static Trader GetTraderByID(int id)

@@ -1,30 +1,101 @@
 ﻿using Engine.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommonClasses.ExtensionMethods;
+using System.Xml;
 
 namespace Engine.Factories
 {
     public static class WorldFactory
     {
+        private const string GAME_DATA_FILENAME = ".\\GameData\\Locations.xml";
+
         public static World CreateWorld()
         {
-            World NewWorld = new World();
+            World world = new World();
 
-            NewWorld.WorldID = 0;
-            NewWorld.AddLocation(1, 0, 0, "Casa", "Casa Dolce Casa");
-            NewWorld.AddLocation(2, 0, 1, "Prato", "Un prato con erba alta");
-            NewWorld.LocationAt(0, 1).AddQuestToLocation(2);
-            NewWorld.LocationAt(0, 1).AddEnemyToLocation(1);
-            NewWorld.LocationAt(0, 1).AddEnemyToLocation(2);
-            NewWorld.AddLocation(3, 1, 0, "Negozio", "TraderLocation");
-            NewWorld.LocationAt(1, 0).AddQuestToLocation(1);
-            NewWorld.LocationAt(1, 0).TraderHere = TraderFactory.GetTraderByID(1);
-            NewWorld.AddLocation(4, 1, 1, "Location", "Default");
+            world.WorldID = 0;
 
-            return NewWorld;
+            if (File.Exists(GAME_DATA_FILENAME))
+            {
+                XmlDocument data = new XmlDocument();
+                data.LoadXml(File.ReadAllText(GAME_DATA_FILENAME));
+
+                string rootImagePath = data.SelectSingleNode("/Locations").GetXmlAttributeAsString("RootImagePath");
+
+                LoadLocationsFromNodes(world, rootImagePath, data.SelectNodes("/Locations/Location"));
+
+            }
+            else
+            {
+                throw new FileNotFoundException($"Missing data file: {GAME_DATA_FILENAME}");
+            }
+
+            return world;
         }
+
+        #region Functions
+        private static void LoadLocationsFromNodes(World world, string rootImagePath, XmlNodeList nodes)
+        {
+            if (nodes == null)
+            {
+                return;
+            }
+
+            foreach (XmlNode node in nodes)
+            {
+                Location location = new Location(node.GetXmlAttributeAsInt(nameof(Location.LocationID)), node.GetXmlAttributeAsInt(nameof(Location.XCoordinate)), node.GetXmlAttributeAsInt(nameof(Location.YCoordinate)), node.GetXmlAttributeAsString(nameof(Location.Name)), node.SelectSingleNode("./Description")?.InnerText ?? "", $".{rootImagePath}{node.GetXmlAttributeAsString(nameof(Location.ImageName))}");
+
+                AddEnemies(location, node.SelectNodes("./Monsters/Monster"));
+                AddQuests(location, node.SelectNodes("./Quests/Quest"));
+                AddTrader(location, node.SelectSingleNode("./Trader"));
+
+                world.AddLocation(location);
+            }
+        }
+
+        private static void AddEnemies(Location location, XmlNodeList enemies)
+        {
+            if (enemies == null)
+            {
+                return;
+            }
+
+            foreach (XmlNode monsterNode in enemies)
+            {
+                location.AddEnemyToLocation(monsterNode.GetXmlAttributeAsInt(nameof(EnemyEncounter.EnemyID)), monsterNode.GetXmlAttributeAsInt(nameof(EnemyEncounter.EncounterRate)));
+
+            }
+        }
+
+        private static void AddQuests(Location location, XmlNodeList quests)
+        {
+            if (quests == null)
+            {
+                return;
+            }
+
+            foreach (XmlNode questNode in quests)
+            {
+                location.AddQuestToLocation(questNode.GetXmlAttributeAsInt(nameof(Quest.QuestID)));
+
+            }
+        }
+
+        private static void AddTrader(Location location, XmlNode traderHere)
+        {
+            if (traderHere == null)
+            {
+                return;
+            }
+
+            location.AddTraderToLocation(traderHere.GetXmlAttributeAsInt(nameof(Trader.TraderID)));
+
+        }
+        #endregion
     }
 }

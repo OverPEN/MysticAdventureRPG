@@ -57,6 +57,7 @@
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\LivingEntity.cs" />
     <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\EnemyEncounter.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Quest.cs" />
     <Compile Include="Models\Recipe.cs" />
@@ -75,23 +76,32 @@
     <Folder Include="Resources\EnemyImages\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\LocationsImages\Casa.jpg">
+    <None Include="Resources\LocationsImages\Casa.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\LocationsImages\Negozio.jpg">
+    </None>
+    <None Include="Resources\LocationsImages\Emporio_di_Susan.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\LocationsImages\Sala_Reale.jpg">
+    </None>
+    <None Include="Resources\LocationsImages\Sala_Reale.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\LocationsImages\Taverna.jpg">
+    </None>
+    <None Include="Resources\LocationsImages\Taverna.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="GameData\GameItems.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="GameData\Locations.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\LocationsImages\Quartiere_Malfamato.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\LocationsImages\Campo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

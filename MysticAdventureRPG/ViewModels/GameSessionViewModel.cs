@@ -388,7 +388,7 @@ namespace MysticAdventureRPG.ViewModels
         private void GetEnemyAtLocation()
         {
             
-            CurrentEnemy = CurrentLocation.GetEnemy();
+            CurrentEnemy = CurrentLocation.GetEnemyAtLocation();
         }
 
         private void RaiseMessage(GameMessageEventArgs gameMessage)

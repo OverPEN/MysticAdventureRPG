@@ -16,13 +16,13 @@ namespace Engine.Factories
             switch (enemyID)
             {
                 case 1:
-                    enemy = new Enemy(1, "Serpente", 4, 4, 10, 1, 2.0f, 50, ItemFactory.ObtainItem(1006).Item as Weapon);
+                    enemy = new Enemy(1, "Serpente", 4, 10, 1, 2.0f, ItemFactory.ObtainItem(1006).Item as Weapon);
                     AddLootItemToEnemy(ref enemy, 1, 25, (byte)BaseRandomNumberGenerator.NumberBetween(1,3));
                     AddLootItemToEnemy(ref enemy, 2, 50, (byte)BaseRandomNumberGenerator.NumberBetween(1, 3));
                     AddLootItemToEnemy(ref enemy, 3, 25, (byte)BaseRandomNumberGenerator.NumberBetween(1, 3));
                     break;
                 case 2:
-                    enemy = new Enemy(2, "Bandito", 20, 20, 20, 8, 1.5f, 50, ItemFactory.ObtainItem(1001).Item as Weapon);
+                    enemy = new Enemy(2, "Bandito", 20, 20, 8, 1.5f, ItemFactory.ObtainItem(1001).Item as Weapon);
                     AddLootItemToEnemy(ref enemy, 1005, 25, 1);
                     break;
             }

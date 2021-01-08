@@ -17,17 +17,17 @@ namespace Engine.Models
         public string Description { get; }
         public string ImageName { get; }
         public List<Quest> QuestsAvailableHere { get; } = new List<Quest>();
-        public List<Enemy> EnemiesHere { get; } = new List<Enemy>();
+        public List<EnemyEncounter> EnemiesHere { get; } = new List<EnemyEncounter>();
         public Trader TraderHere { get; set; }
 
-        public Location(int id, int xCoord, int yCoord, string name, string description)
+        public Location(int id, int xCoord, int yCoord, string name, string description, string imageName)
         {
             LocationID = id;
             XCoordinate = xCoord;
             YCoordinate = yCoord;
             Name = name;
             Description = description;
-            ImageName = $"/Engine;component/Resources/LocationsImages/{name}.jpg";
+            ImageName = imageName;
         }
 
         #region Functions
@@ -43,7 +43,7 @@ namespace Engine.Models
             }
         }
 
-        public void AddEnemyToLocation(int enemyID, int encounterRate = 0)
+        public void AddEnemyToLocation(int enemyID, int encounterRate)
         {
             if (EnemiesHere.Exists(m => m.EnemyID == enemyID))
             {
@@ -54,11 +54,11 @@ namespace Engine.Models
             else
             {
                 // Se l'Enemy non esiste lo aggiungo alla Location
-                EnemiesHere.Add(EnemyFactory.GetEnemyByID(enemyID));
+                EnemiesHere.Add(new EnemyEncounter(enemyID, encounterRate));
             }
         }
 
-        public Enemy GetEnemy()
+        public Enemy GetEnemyAtLocation()
         {
             if (!EnemiesHere.Any())
             {
@@ -72,7 +72,7 @@ namespace Engine.Models
             // Quando il numero random è minore di runningTotal ritorno quell'Enemy
             int runningTotal = 0;
 
-            foreach (Enemy enemy in EnemiesHere)
+            foreach (EnemyEncounter enemy in EnemiesHere)
             {
                 runningTotal += enemy.EncounterRate;
 
@@ -84,6 +84,15 @@ namespace Engine.Models
 
             // In caso di problemi ritorno il primo Enemy della lista.
             return EnemyFactory.GetEnemyByID(EnemiesHere.First().EnemyID);
+        }
+
+        public void AddTraderToLocation(int traderID)
+        {
+            if (TraderHere == null)
+                TraderHere = TraderFactory.GetTraderByID(traderID);
+            else
+                throw new InvalidOperationException($"Nella Location {Name} è già presente un Trader!");
+
         }
         #endregion
     }

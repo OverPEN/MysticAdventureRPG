@@ -15,15 +15,13 @@ namespace Engine.Models
         public int EnemyID { get; }
         public string ImageName { get; }
         public int RewardExperiencePoints { get; }
-        public int EncounterRate { get; set; }
         #endregion
         
-        public Enemy(int enemyID, string name, int maximumHitPoints, int currentHitPoints,int rewardExperiencePoints, int rewardGold, float speed, int encRate, Weapon currWeapon) : base(name.Replace('_', ' '),maximumHitPoints, currentHitPoints, speed, rewardGold, PlayerClassType.Enemy, 1, currWeapon)
+        public Enemy(int enemyID, string name, int maximumHitPoints,int rewardExperiencePoints, int rewardGold, float speed, Weapon currWeapon) : base(name.Replace('_', ' '),maximumHitPoints, maximumHitPoints, speed, rewardGold, PlayerClassType.Enemy, 1, currWeapon)
         {
             EnemyID = enemyID;
             ImageName = $"/Engine;component/Resources/EnemyImages/{name}";
             RewardExperiencePoints = rewardExperiencePoints;
-            EncounterRate = encRate;
         }
     }
 }
