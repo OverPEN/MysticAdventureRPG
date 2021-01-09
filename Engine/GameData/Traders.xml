@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Traders>
+  <Trader TraderID="1">
+    <Name><![CDATA[Susan]]></Name>
+    <InventoryItems>
+      <Item ItemID="1001" Quantity="1"/>
+      <Item ItemID="5" Quantity="3"/>
+      <Item ItemID="6" Quantity="3"/>
+      <Item ItemID="7" Quantity="3"/>
+    </InventoryItems>
+  </Trader>
+</Traders>

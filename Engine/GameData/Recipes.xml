@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Recipes>
+  <Recipe ID="1">
+    <Name><![CDATA[Pane]]></Name>
+    <Ingredients>
+      <Item ItemID="5" Quantity="1"/>
+      <Item ItemID="6" Quantity="1"/>
+      <Item ItemID="7" Quantity="1"/>
+    </Ingredients>
+    <OutputItems>
+      <Item ItemID="2001" Quantity="1"/>
+    </OutputItems>
+  </Recipe>
+</Recipes>

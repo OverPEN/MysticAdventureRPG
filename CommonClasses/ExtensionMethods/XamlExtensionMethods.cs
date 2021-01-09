@@ -32,6 +32,11 @@ namespace CommonClasses.ExtensionMethods
             return Convert.ToSingle(GetXmlAttributeAsString(node, attributeName));
         }
 
+        public static byte GetXmlAttributeAsByte(this XmlNode node, string attributeName)
+        {
+            return Convert.ToByte(GetXmlAttributeAsString(node, attributeName));
+        }
+
         public static WeaponDamageTypeEnum GetXmlAttributeAsDamageType(this XmlNode node, string attributeName)
         {
             string attribute = GetXmlAttributeAsString(node, attributeName);

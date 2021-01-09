@@ -31,6 +31,7 @@ namespace Engine.Factories
             }
         }
 
+        #region Functions
         private static void LoadQuestsFromNodes(XmlNodeList nodes)
         {
             foreach (XmlNode node in nodes)
@@ -40,12 +41,12 @@ namespace Engine.Factories
 
                 foreach (XmlNode childNode in node.SelectNodes("./ItemsToComplete/Item"))
                 {
-                    itemsToComplete.Add(new GroupedItem(ItemFactory.GetItemByID(childNode.GetXmlAttributeAsInt(nameof(Item.ItemID))), (byte)childNode.GetXmlAttributeAsInt(nameof(GroupedItem.Quantity))));
+                    itemsToComplete.Add(new GroupedItem(ItemFactory.GetItemByID(childNode.GetXmlAttributeAsInt(nameof(Item.ItemID))), childNode.GetXmlAttributeAsByte(nameof(GroupedItem.Quantity))));
                 }
 
                 foreach (XmlNode childNode in node.SelectNodes("./RewardItems/Item"))
                 {
-                    rewardItems.Add(new GroupedItem(ItemFactory.GetItemByID(childNode.GetXmlAttributeAsInt(nameof(Item.ItemID))), (byte)childNode.GetXmlAttributeAsInt(nameof(GroupedItem.Quantity))));
+                    rewardItems.Add(new GroupedItem(ItemFactory.GetItemByID(childNode.GetXmlAttributeAsInt(nameof(Item.ItemID))), childNode.GetXmlAttributeAsByte(nameof(GroupedItem.Quantity))));
                 }
 
                 _quests.Add(new Quest(node.GetXmlAttributeAsInt(nameof(Quest.QuestID)), node.SelectSingleNode($"./{nameof(Quest.Name)}")?.InnerText ?? "", node.SelectSingleNode($"./{nameof(Quest.Description)}")?.InnerText ?? "", itemsToComplete, node.GetXmlAttributeAsInt(nameof(Quest.RewardExperiencePoints)), node.GetXmlAttributeAsInt(nameof(Quest.RewardGold)), rewardItems));
@@ -56,5 +57,6 @@ namespace Engine.Factories
         {
             return _quests.FirstOrDefault(quest => quest.QuestID == id);
         }
+        #endregion
     }
 }

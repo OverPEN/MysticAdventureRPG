@@ -1,26 +1,59 @@
-﻿using Engine.Models;
+﻿using CommonClasses.ExtensionMethods;
+using Engine.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Engine.Factories
 {
     public static class TraderFactory
     {
+        private const string GAME_DATA_FILENAME = ".\\GameData\\Traders.xml";
         private static readonly List<Trader> _traders = new List<Trader>();
 
         static TraderFactory()
         {
-            Trader susan = new Trader(1, "Susan");
-            susan.AddItemToInventory(ItemFactory.ObtainItem(1001));
-            susan.AddItemToInventory(ItemFactory.ObtainItem(5));
-            susan.AddItemToInventory(ItemFactory.ObtainItem(6));
-            susan.AddItemToInventory(ItemFactory.ObtainItem(7));
+            if (File.Exists(GAME_DATA_FILENAME))
+            {
+                XmlDocument data = new XmlDocument();
+                data.LoadXml(File.ReadAllText(GAME_DATA_FILENAME));
 
-            AddTraderToList(susan);
+                LoadTradersFromNodes(data.SelectNodes("/Traders/Trader"));
+            }
+            else
+            {
+                throw new FileNotFoundException($"Missing data file: {GAME_DATA_FILENAME}");
+            }
 
+
+            //Trader susan = new Trader(1, "Susan");
+            //susan.AddItemToInventory(ItemFactory.ObtainItem(1001));
+            //susan.AddItemToInventory(ItemFactory.ObtainItem(5));
+            //susan.AddItemToInventory(ItemFactory.ObtainItem(6));
+            //susan.AddItemToInventory(ItemFactory.ObtainItem(7));
+
+            //AddTraderToList(susan);
+        }
+
+        #region Functions
+
+        private static void LoadTradersFromNodes(XmlNodeList nodes)
+        {
+            foreach (XmlNode node in nodes)
+            {
+                Trader trader = new Trader(node.GetXmlAttributeAsInt(nameof(Trader.TraderID)), node.SelectSingleNode($"./{nameof(Trader.Name)}")?.InnerText ?? "");
+
+                foreach (XmlNode childNode in node.SelectNodes("./InventoryItems/Item"))
+                {
+                    trader.AddItemToInventory(ItemFactory.ObtainItem(childNode.GetXmlAttributeAsInt(nameof(Item.ItemID)), childNode.GetXmlAttributeAsByte("Quantity")));
+                }
+
+                AddTraderToList(trader);
+            }
         }
 
         public static Trader GetTraderByID(int id)
@@ -37,5 +70,6 @@ namespace Engine.Factories
 
             _traders.Add(trader);
         }
+        #endregion
     }
 }
