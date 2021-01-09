@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:MysticAdventureRPG"
              xmlns:converters ="clr-namespace:CommonClasses.Converters;assembly=CommonClasses"
+             DispatcherUnhandledException="App_OnDispatcherUnhandledException"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <converters:FileToBitmapConverter x:Key="FileToBitmapConverter"/>
