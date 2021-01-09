@@ -176,15 +176,27 @@
                 <TabItem Header="Quests" Name="Quests">
                     <DataGrid ItemsSource="{Binding CurrentPlayer.Quests}" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Quest:" Binding="{Binding Quest.Name}" Width="*" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Descrizione:" Binding="{Binding Quest.Description}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Quest:" Binding="{Binding Quest.Name}" Width="*" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="{Binding Quest.ToolTipContents}"/>
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Stato:" Binding="{Binding Status}" Width="*" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Creazione" Name="Crafting">
                     <DataGrid ItemsSource="{Binding CurrentPlayer.Recipes}" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Oggetto" Binding="{Binding Name}" Width="*" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="{Binding ToolTipContents}"/>
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
                             <DataGridTemplateColumn MinWidth="75">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

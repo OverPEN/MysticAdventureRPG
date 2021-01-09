@@ -14,12 +14,22 @@ namespace Engine.Models
         public List<GroupedItem> Ingredients { get; } = new List<GroupedItem>();
         public List<GroupedItem> OutputItems { get; } = new List<GroupedItem>();
 
+        public string ToolTipContents =>
+            "Ingredienti:" + Environment.NewLine +
+            "===========" + Environment.NewLine +
+            string.Join(Environment.NewLine, Ingredients.Select(i => i.GroupedItemDescription)) +
+            Environment.NewLine + Environment.NewLine +
+            "Oggetti creati:" + Environment.NewLine +
+            "===========" + Environment.NewLine +
+            string.Join(Environment.NewLine, OutputItems.Select(i => i.GroupedItemDescription));
+
         public Recipe(int id, string name)
         {
             ID = id;
             Name = name;
         }
 
+        #region Functions
         public void AddIngredient(int itemID, byte quantity)
         {
             if (!Ingredients.Any(x => x.Item.ItemID == itemID))
@@ -35,5 +45,6 @@ namespace Engine.Models
                 OutputItems.Add(new GroupedItem(ItemFactory.GetItemByID(itemID), quantity));
             }
         }
+        #endregion
     }
 }

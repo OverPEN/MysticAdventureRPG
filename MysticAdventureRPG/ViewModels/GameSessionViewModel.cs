@@ -431,6 +431,14 @@ namespace MysticAdventureRPG.ViewModels
                     CurrentPlayer.AddItemToInventory(drop);
                     OnPropertyChanged(nameof(CurrentPlayer.Inventory));
                     OnPropertyChanged(nameof(CurrentPlayer.GroupedInventory));
+                    foreach(QuestStatus questStatus in CurrentPlayer.Quests)
+                    {
+                        if(questStatus.Quest.ItemsToComplete.Exists(e=>e.Item.ItemID == drop.Item.ItemID))
+                        {
+                        if (CurrentPlayer.HasAllTheseItems(questStatus.Quest.ItemsToComplete))
+                            questStatus.Status = QuestStatusEnum.Completabile;
+                        }
+                    }
 
                 }
         }
@@ -452,7 +460,7 @@ namespace MysticAdventureRPG.ViewModels
         {
             foreach (QuestStatus questStatus in CurrentLocation.QuestsAvailableHere)
             {
-                QuestStatus questToComplete = CurrentPlayer.Quests.FirstOrDefault(q => q.Quest.QuestID == questStatus.Quest.QuestID && questStatus.Status == QuestStatusEnum.Iniziata);
+                QuestStatus questToComplete = CurrentPlayer.Quests.FirstOrDefault(q => q.Quest.QuestID == questStatus.Quest.QuestID && questStatus.Status == QuestStatusEnum.Completabile);
 
                 if (questToComplete != null)
                 {

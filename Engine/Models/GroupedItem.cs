@@ -43,6 +43,7 @@ namespace Engine.Models
                 OnPropertyChanged();
             }
         }
+        public string GroupedItemDescription => $"{Quantity} {Item.Name}";
         #endregion
 
         public GroupedItem(Item item, byte quantity)

@@ -17,6 +17,18 @@ namespace Engine.Models
         public int RewardGold { get; }
         public List<GroupedItem> RewardItems { get; }
 
+        public string ToolTipContents =>
+            Description + Environment.NewLine + Environment.NewLine +
+            "Consegnare:" + Environment.NewLine +
+            "===========================" + Environment.NewLine +
+            string.Join(Environment.NewLine, ItemsToComplete.Select(i => i.GroupedItemDescription)) +
+            Environment.NewLine + Environment.NewLine +
+            "Ricompense:" + Environment.NewLine +
+            "===========================" + Environment.NewLine +
+            $"{RewardExperiencePoints} XP" + Environment.NewLine +
+            $"{RewardGold} Oro" + Environment.NewLine +
+            string.Join(Environment.NewLine, RewardItems.Select(i => i.GroupedItemDescription));
+
         public Quest(int id, string name, string description, List<GroupedItem> itemsToComplete, int rewardExperiencePoints, int rewardGold, List<GroupedItem> rewardItems)
 
         {
