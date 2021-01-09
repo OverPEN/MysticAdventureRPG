@@ -66,16 +66,16 @@ namespace Engine.Factories
 
             foreach (XmlNode node in nodes)
             {
-                ItemType itemType = DetermineItemType(node.Name);
+                ItemTypeEnum itemType = DetermineItemType(node.Name);
 
-                if (itemType == ItemType.Weapon)
+                if (itemType == ItemTypeEnum.Weapon)
                 {
                     Weapon weapon = new Weapon(node.GetXmlAttributeAsInt(nameof(Weapon.ItemID)), node.GetXmlAttributeAsString(nameof(Weapon.Name)), node.GetXmlAttributeAsInt(nameof(Weapon.Price)), node.GetXmlAttributeAsInt(nameof(Weapon.MinimumDamage)), node.GetXmlAttributeAsInt(nameof(Weapon.MaximumDamage)), node.GetXmlAttributeAsDamageType(nameof(Weapon.DamageType)), node.GetXmlAttributeAsFloat(nameof(Weapon.WeaponSpeed)), node.GetXmlAttributeAsInt(nameof(Weapon.MissRate)));
                     weapon.Action = new AttackWithWeapon(weapon);
 
                     _standardItems.Add(weapon);
                 }
-                else if (itemType == ItemType.Consumable)
+                else if (itemType == ItemTypeEnum.Consumable)
                 {
                     HealingItem healingItem = new HealingItem(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(HealingItem.Name)), node.GetXmlAttributeAsInt(nameof(HealingItem.Price)), node.GetXmlAttributeAsInt(nameof(HealingItem.HitPointsToHeal)));
 
@@ -83,17 +83,17 @@ namespace Engine.Factories
 
                     _standardItems.Add(healingItem);
                 }
-                else if(itemType == ItemType.Armor)
+                else if(itemType == ItemTypeEnum.Armor)
                 {
 
                 }
-                else if (itemType == ItemType.Munition)
+                else if (itemType == ItemTypeEnum.Munition)
                 {
                     Item item = new Item(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(Item.Name)), node.GetXmlAttributeAsInt(nameof(Item.Price)), itemType);
 
                     _standardItems.Add(item);
                 }
-                else if (itemType == ItemType.Miscellaneous)
+                else if (itemType == ItemTypeEnum.Miscellaneous)
                 {
                     Item item = new Item(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(Item.Name)), node.GetXmlAttributeAsInt(nameof(Item.Price)), itemType);
 
@@ -102,18 +102,18 @@ namespace Engine.Factories
             }
         }
 
-        private static ItemType DetermineItemType(string itemType)
+        private static ItemTypeEnum DetermineItemType(string itemType)
         {
             switch (itemType)
             {
                 case "Weapon":
-                    return ItemType.Weapon;
+                    return ItemTypeEnum.Weapon;
                 case "HealingItem":
-                    return ItemType.Consumable;
+                    return ItemTypeEnum.Consumable;
                 case "Munition":
-                    return ItemType.Munition;
+                    return ItemTypeEnum.Munition;
                 default:
-                    return ItemType.Miscellaneous;
+                    return ItemTypeEnum.Miscellaneous;
             }
         }
         #endregion

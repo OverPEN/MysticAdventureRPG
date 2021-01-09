@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CommonClasses.Enums
 {
-    public enum WeaponDamageType : byte
+    public enum  QuestStatusEnum : byte
     {
-        Taglio = 0,
-        Magico = 1,
-        Schianto = 2,
-        Penetrante = 3
+        Nuova = 0,
+        Iniziata = 1,
+        Completata = 2,
+        Inattiva = 3
     }
 }

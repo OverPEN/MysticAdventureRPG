@@ -20,7 +20,7 @@ namespace Engine.Actions
             _itemInUse = itemInUse;
         }
 
-        protected void ReportResult(string result, GameMessageType type)
+        protected void ReportResult(string result, GameMessageTypeEnum type)
         {
             OnActionPerformed?.Invoke(this, new GameMessageEventArgs(result, type));
         }

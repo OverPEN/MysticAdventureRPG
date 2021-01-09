@@ -81,7 +81,7 @@ namespace Engine.Models
                 OnPropertyChanged();
             }
         }
-        public PlayerClassType Class { get; }
+        public PlayerClassTypeEnum Class { get; }
         public Weapon CurrentWeapon
         {
             get { return _currentWeapon; }
@@ -106,7 +106,7 @@ namespace Engine.Models
         public ObservableCollection<Item> Inventory { get; set; }
         public ObservableCollection<GroupedItem> GroupedInventory { get; set; }
         public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
-        public List<Item> Consumables => Inventory.Where(i => i.Type == ItemType.Consumable).ToList();
+        public List<Item> Consumables => Inventory.Where(i => i.Type == ItemTypeEnum.Consumable).ToList();
         public bool HasConsumable => Consumables.Any();
         public Item CurrentConsumable
         {
@@ -130,7 +130,7 @@ namespace Engine.Models
         }
         #endregion
 
-        protected LivingEntity(string name, int maxHitPoints, int currHitPoints, float speed, int gold, PlayerClassType entityClass, byte level = 1, Weapon currentWeapon = null)
+        protected LivingEntity(string name, int maxHitPoints, int currHitPoints, float speed, int gold, PlayerClassTypeEnum entityClass, byte level = 1, Weapon currentWeapon = null)
         {
             Name = name;
             MaximumHitPoints = maxHitPoints;

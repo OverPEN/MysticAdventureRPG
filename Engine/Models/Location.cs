@@ -1,4 +1,5 @@
 ﻿using CommonClasses.BaseClasses;
+using CommonClasses.Enums;
 using Engine.Factories;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Engine.Models
         public string Name { get; }
         public string Description { get; }
         public string ImageName { get; }
-        public List<Quest> QuestsAvailableHere { get; } = new List<Quest>();
+        public List<QuestStatus> QuestsAvailableHere { get; } = new List<QuestStatus>();
         public List<EnemyEncounter> EnemiesHere { get; } = new List<EnemyEncounter>();
         public Trader TraderHere { get; set; }
 
@@ -31,15 +32,15 @@ namespace Engine.Models
         }
 
         #region Functions
-        public void AddQuestToLocation(int questID)
+        public void AddQuestToLocation(int questID, QuestStatusEnum status = QuestStatusEnum.Nuova)
         {
-            if (QuestsAvailableHere.Exists(m => m.QuestID == questID))
+            if (QuestsAvailableHere.Exists(m => m.Quest.QuestID == questID))
             {
                 return;
             }
             else
             {
-                QuestsAvailableHere.Add(QuestFactory.GetQuestByID(questID));
+                QuestsAvailableHere.Add(new QuestStatus(QuestFactory.GetQuestByID(questID), status));
             }
         }
 

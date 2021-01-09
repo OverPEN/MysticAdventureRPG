@@ -1,31 +1,55 @@
 ﻿using CommonClasses.Enums;
+using CommonClasses.ExtensionMethods;
 using Engine.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Engine.Factories
 {
     internal static class QuestFactory
     {
+        private const string GAME_DATA_FILENAME = ".\\GameData\\Quests.xml";
         private static readonly List<Quest> _quests = new List<Quest>();
 
         static QuestFactory()
         {
-            // Declare the items need to complete the quest, and its reward items
-            List<GroupedItem> itemsToComplete = new List<GroupedItem>();
-            List<GroupedItem> itemsToComplete2 = new List<GroupedItem>();
-            List<GroupedItem> rewardItems = new List<GroupedItem>();
+            if (File.Exists(GAME_DATA_FILENAME))
+            {
+                XmlDocument data = new XmlDocument();
+                data.LoadXml(File.ReadAllText(GAME_DATA_FILENAME));
 
-            itemsToComplete.Add(ItemFactory.ObtainItem(1,2));
-            itemsToComplete2.Add(ItemFactory.ObtainItem(1, 5));
-            rewardItems.Add(ItemFactory.ObtainItem(1005,2));
+                LoadQuestsFromNodes(data.SelectNodes("/Quests/Quest"));
+            }
+            else
+            {
+                throw new FileNotFoundException($"Missing data file: {GAME_DATA_FILENAME}");
+            }
+        }
 
-            // Create the quest
-            _quests.Add(new Quest(1, "Ripulisci il Prato", "Sconfiggi i serpenti nel prato", itemsToComplete, 25, 10, rewardItems, QuestStatus.Nuova));
-            _quests.Add(new Quest(2, "Quest 2", "Quest 2", itemsToComplete2, 25, 10, rewardItems, QuestStatus.Nuova));
+        private static void LoadQuestsFromNodes(XmlNodeList nodes)
+        {
+            foreach (XmlNode node in nodes)
+            {
+                List<GroupedItem> itemsToComplete = new List<GroupedItem>();
+                List<GroupedItem> rewardItems = new List<GroupedItem>();
+
+                foreach (XmlNode childNode in node.SelectNodes("./ItemsToComplete/Item"))
+                {
+                    itemsToComplete.Add(new GroupedItem(ItemFactory.GetItemByID(childNode.GetXmlAttributeAsInt(nameof(Item.ItemID))), (byte)childNode.GetXmlAttributeAsInt(nameof(GroupedItem.Quantity))));
+                }
+
+                foreach (XmlNode childNode in node.SelectNodes("./RewardItems/Item"))
+                {
+                    rewardItems.Add(new GroupedItem(ItemFactory.GetItemByID(childNode.GetXmlAttributeAsInt(nameof(Item.ItemID))), (byte)childNode.GetXmlAttributeAsInt(nameof(GroupedItem.Quantity))));
+                }
+
+                _quests.Add(new Quest(node.GetXmlAttributeAsInt(nameof(Quest.QuestID)), node.SelectSingleNode($"./{nameof(Quest.Name)}")?.InnerText ?? "", node.SelectSingleNode($"./{nameof(Quest.Description)}")?.InnerText ?? "", itemsToComplete, node.GetXmlAttributeAsInt(nameof(Quest.RewardExperiencePoints)), node.GetXmlAttributeAsInt(nameof(Quest.RewardGold)), rewardItems));
+            }
         }
 
         internal static Quest GetQuestByID(int id)

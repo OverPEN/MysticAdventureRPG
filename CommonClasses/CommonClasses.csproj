@@ -49,11 +49,11 @@
     <Compile Include="BaseClasses\BaseRandomNumberGenerator.cs" />
     <Compile Include="Converters\FileToBitmapConverter.cs" />
     <Compile Include="Converters\LevelToNecessaryXPConverter.cs" />
-    <Compile Include="Enums\GameMessageType.cs" />
-    <Compile Include="Enums\QuestStatus.cs" />
-    <Compile Include="Enums\WeaponDamageType.cs" />
-    <Compile Include="Enums\ItemType.cs" />
-    <Compile Include="Enums\PlayerClassType.cs" />
+    <Compile Include="Enums\GameMessageTypeEnum.cs" />
+    <Compile Include="Enums\QuestStatusEnum.cs" />
+    <Compile Include="Enums\WeaponDamageTypeEnum.cs" />
+    <Compile Include="Enums\ItemTypeEnum.cs" />
+    <Compile Include="Enums\PlayerClassTypeEnum.cs" />
     <Compile Include="BaseClasses\ClassBaseValues.cs" />
     <Compile Include="EventArgs\GameMessageEventArgs.cs" />
     <Compile Include="ExtensionMethods\XamlExtensionMethods.cs" />

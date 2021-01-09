@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CommonClasses.Enums
 {
-    public enum GameMessageType : byte
+    public enum GameMessageTypeEnum : byte
     {
         Info = 0,
         BattleNegative = 1,

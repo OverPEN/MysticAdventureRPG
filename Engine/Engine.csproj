@@ -61,6 +61,7 @@
     <Compile Include="Models\EnemyEncounter.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Quest.cs" />
+    <Compile Include="Models\QuestStatus.cs" />
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\Trader.cs" />
     <Compile Include="Models\Weapon.cs" />
@@ -89,15 +90,21 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="GameData\Enemies.xml">
+    <None Include="GameData\Enemies.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GameData\GameItems.xml">
+    </None>
+    <None Include="GameData\GameItems.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GameData\Locations.xml">
+    </None>
+    <None Include="GameData\Locations.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
+    <None Include="GameData\Quests.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\EnemyImages\Bandito.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\EnemyImages\Serpente.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

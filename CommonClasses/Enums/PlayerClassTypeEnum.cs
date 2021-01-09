@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CommonClasses.Enums
 {
-    public enum PlayerClassType : byte
+    public enum PlayerClassTypeEnum : byte
     {
         Trader = 0,
         Enemy = 1,

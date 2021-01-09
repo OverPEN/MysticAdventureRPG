@@ -12,13 +12,12 @@ namespace Engine.Models
         public int QuestID { get; }
         public string Name { get; }
         public string Description { get; }
-        public QuestStatus Status { get; set; }
         public List<GroupedItem> ItemsToComplete { get;}
         public int RewardExperiencePoints { get; }
         public int RewardGold { get; }
         public List<GroupedItem> RewardItems { get; }
 
-        public Quest(int id, string name, string description, List<GroupedItem> itemsToComplete, int rewardExperiencePoints, int rewardGold, List<GroupedItem> rewardItems, QuestStatus status = QuestStatus.Inattiva)
+        public Quest(int id, string name, string description, List<GroupedItem> itemsToComplete, int rewardExperiencePoints, int rewardGold, List<GroupedItem> rewardItems)
 
         {
             QuestID = id;
@@ -28,7 +27,6 @@ namespace Engine.Models
             RewardExperiencePoints = rewardExperiencePoints;
             RewardGold = rewardGold;
             RewardItems = rewardItems;
-            Status = status;
         }
     }
 }

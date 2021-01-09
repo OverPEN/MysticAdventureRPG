@@ -13,13 +13,13 @@ namespace Engine.Models
         #region Public Properties
         public int MinimumDamage { get; set; }
         public int MaximumDamage { get; set; }
-        public WeaponDamageType DamageType { get; }
+        public WeaponDamageTypeEnum DamageType { get; }
         public float WeaponSpeed { get; }
         public int MissRate { get; }
         #endregion
 
-        public Weapon(int itemID, string name, int price, int minDamage, int maxDamage, WeaponDamageType damageType, float weaponSpeed, int missRate, ItemType type = ItemType.Weapon, IAction action = null)
-            : base(itemID, name, price, type = ItemType.Weapon, true, action)
+        public Weapon(int itemID, string name, int price, int minDamage, int maxDamage, WeaponDamageTypeEnum damageType, float weaponSpeed, int missRate, ItemTypeEnum type = ItemTypeEnum.Weapon, IAction action = null)
+            : base(itemID, name, price, type = ItemTypeEnum.Weapon, true, action)
         {
             MinimumDamage = minDamage;
             MaximumDamage = maxDamage;
@@ -31,7 +31,7 @@ namespace Engine.Models
         #region Functions
         public new Weapon Clone()
         {
-            Weapon clonedWeapon = new Weapon(ItemID, Name, Price, MinimumDamage, MaximumDamage, DamageType, WeaponSpeed, MissRate, ItemType.Weapon, Action);
+            Weapon clonedWeapon = new Weapon(ItemID, Name, Price, MinimumDamage, MaximumDamage, DamageType, WeaponSpeed, MissRate, ItemTypeEnum.Weapon, Action);
             clonedWeapon.Action = new AttackWithWeapon(clonedWeapon);
 
             return clonedWeapon;

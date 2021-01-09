@@ -32,20 +32,20 @@ namespace CommonClasses.ExtensionMethods
             return Convert.ToSingle(GetXmlAttributeAsString(node, attributeName));
         }
 
-        public static WeaponDamageType GetXmlAttributeAsDamageType(this XmlNode node, string attributeName)
+        public static WeaponDamageTypeEnum GetXmlAttributeAsDamageType(this XmlNode node, string attributeName)
         {
             string attribute = GetXmlAttributeAsString(node, attributeName);
 
             switch (attribute)
             {
                 case "Taglio":
-                    return WeaponDamageType.Taglio;
+                    return WeaponDamageTypeEnum.Taglio;
                 case "Magico":
-                    return WeaponDamageType.Magico;
+                    return WeaponDamageTypeEnum.Magico;
                 case "Schianto":
-                    return WeaponDamageType.Schianto;
+                    return WeaponDamageTypeEnum.Schianto;
                 default:
-                    return WeaponDamageType.Penetrante;
+                    return WeaponDamageTypeEnum.Penetrante;
             }
 
         }

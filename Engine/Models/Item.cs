@@ -16,12 +16,12 @@ namespace Engine.Models
         public int ItemID { get; }
         public string Name { get; }
         public int Price { get; }
-        public ItemType Type { get; }
+        public ItemTypeEnum Type { get; }
         public bool IsUnique { get; }
         public IAction Action { get; set; }
         #endregion
 
-        public Item(int itemID, string name, int price, ItemType type, bool isUnique = false, IAction action = null)
+        public Item(int itemID, string name, int price, ItemTypeEnum type, bool isUnique = false, IAction action = null)
         {
             ItemID = itemID;
             Name = name;

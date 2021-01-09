@@ -11,7 +11,7 @@ namespace Engine.Models
     {
         public int HitPointsToHeal { get; set; }
 
-        public HealingItem(int itemID, string name, int price, int hitPointsToHeal) : base(itemID, name, price, ItemType.Consumable)
+        public HealingItem(int itemID, string name, int price, int hitPointsToHeal) : base(itemID, name, price, ItemTypeEnum.Consumable)
         {
             HitPointsToHeal = hitPointsToHeal;
         }

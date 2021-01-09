@@ -176,8 +176,8 @@
                 <TabItem Header="Quests" Name="Quests">
                     <DataGrid ItemsSource="{Binding CurrentPlayer.Quests}" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Quest:" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Descrizione:" Binding="{Binding Description}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Quest:" Binding="{Binding Quest.Name}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Descrizione:" Binding="{Binding Quest.Description}" Width="*" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>

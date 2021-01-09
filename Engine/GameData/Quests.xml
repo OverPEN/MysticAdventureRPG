@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Quests>
+  <Quest QuestID="1" RewardExperiencePoints="25" RewardGold="10">
+    <Name><![CDATA[Ripulisci il Prato]]></Name>
+    <Description><![CDATA[Sconfiggi i serpenti nel prato.]]></Description>
+    <ItemsToComplete>
+      <Item ItemID="1" Quantity="2"/>
+    </ItemsToComplete>
+    <RewardItems>
+      <Item ItemID="1005" Quantity="1"/>
+    </RewardItems>
+  </Quest>
+</Quests>

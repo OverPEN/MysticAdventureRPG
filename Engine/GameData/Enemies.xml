@@ -7,7 +7,7 @@
       <LootItem ItemID="3" DropRate="25" MinQuantity="1" MaxQuantity="3"/>
     </LootItems>
   </Enemy>
-  <Enemy EnemyID="2" Name="Bandito" MaximumHitPoints="20" RewardExperiencePoints="20" Gold="8" Speed="1.5" CurrentWeapon="1001" ImageName="Bandito.jpg">
+  <Enemy EnemyID="2" Name="Bandito" MaximumHitPoints="20" RewardExperiencePoints="20" Gold="8" Speed="1.5" CurrentWeapon="1001" ImageName="Bandito.png">
     <LootItems>
       <LootItem ItemID="1005" DropRate="25" MinQuantity="1" MaxQuantity="1"/>
     </LootItems>

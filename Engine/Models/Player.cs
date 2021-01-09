@@ -70,13 +70,13 @@ namespace Engine.Models
                 OnPropertyChanged();
             }
         }
-        public WeaponDamageType BaseDamageType { get;} 
-        public ObservableCollection<Quest> Quests { get; }
+        public WeaponDamageTypeEnum BaseDamageType { get;} 
+        public ObservableCollection<QuestStatus> Quests { get; }
         public ObservableCollection<Recipe> Recipes { get; }
 
         #endregion
 
-        public Player(string name, int maxHitPoints, int currHitPoints, float speed, int gold, int worldID, int xCoord, int yCoord, PlayerClassType chosenClass, byte level = 1, int experience = 0) : base(name, maxHitPoints, currHitPoints, speed, gold, chosenClass, level )
+        public Player(string name, int maxHitPoints, int currHitPoints, float speed, int gold, int worldID, int xCoord, int yCoord, PlayerClassTypeEnum chosenClass, byte level = 1, int experience = 0) : base(name, maxHitPoints, currHitPoints, speed, gold, chosenClass, level )
         {
             ClassBaseValues defaultValues = new ClassBaseValues(chosenClass);
 
@@ -86,12 +86,12 @@ namespace Engine.Models
             WorldID = worldID;
             XCoordinate = xCoord;
             YCoordinate = yCoord;
-            Quests = new ObservableCollection<Quest>();
+            Quests = new ObservableCollection<QuestStatus>();
             Recipes = new ObservableCollection<Recipe>();
 
         }
 
-        public Player(string name, PlayerClassType chosenClass) : base(name, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).Speed, new ClassBaseValues(chosenClass).Gold, chosenClass)
+        public Player(string name, PlayerClassTypeEnum chosenClass) : base(name, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).Speed, new ClassBaseValues(chosenClass).Gold, chosenClass)
         {
             ClassBaseValues defaultValues = new ClassBaseValues(chosenClass);
             Level = 1;
@@ -101,7 +101,7 @@ namespace Engine.Models
             WorldID = 0;
             XCoordinate = 0;
             YCoordinate = 0;
-            Quests = new ObservableCollection<Quest>();
+            Quests = new ObservableCollection<QuestStatus>();
             Recipes = new ObservableCollection<Recipe>();
         }
 

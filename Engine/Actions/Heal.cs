@@ -16,7 +16,7 @@ namespace Engine.Actions
 
         public Heal(HealingItem itemInUse) : base (itemInUse)
         {
-            if (itemInUse.Type != ItemType.Consumable)
+            if (itemInUse.Type != ItemTypeEnum.Consumable)
             {
                 throw new ArgumentException($"{itemInUse.Name} non è un consumabile!");
             }
@@ -27,7 +27,7 @@ namespace Engine.Actions
 
         public void Execute(LivingEntity actor, LivingEntity target)
         {
-            ReportResult($"{actor.Name} si cura di {_hitPointsToHeal} punt{(_hitPointsToHeal > 1 ? "i" : "o")} salute!", GameMessageType.BattleInfo);
+            ReportResult($"{actor.Name} si cura di {_hitPointsToHeal} punt{(_hitPointsToHeal > 1 ? "i" : "o")} salute!", GameMessageTypeEnum.BattleInfo);
             target.Heal(_hitPointsToHeal);
         }
     }

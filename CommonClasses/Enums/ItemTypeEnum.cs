@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace CommonClasses.Enums
 {
-    public enum  QuestStatus : byte
+    public enum ItemTypeEnum : byte
     {
-        Nuova = 0,
-        Iniziata = 1,
-        Completata = 2,
-        Inattiva = 3
+        Weapon = 0,
+        Armor = 1,
+        Consumable = 3,
+        Munition = 4,
+        Miscellaneous = 5
     }
 }
