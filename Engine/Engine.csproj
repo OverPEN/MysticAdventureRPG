@@ -55,6 +55,7 @@
     <Compile Include="Models\GroupedItem.cs" />
     <Compile Include="Models\HealingItem.cs" />
     <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\LootItem.cs" />
     <Compile Include="Models\LivingEntity.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\EnemyEncounter.cs" />
@@ -72,9 +73,7 @@
       <Name>CommonClasses</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\EnemyImages\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\LocationsImages\Casa.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -90,12 +89,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="GameData\Enemies.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="GameData\GameItems.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="GameData\Locations.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\EnemyImages\Serpente.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\LocationsImages\Quartiere_Malfamato.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

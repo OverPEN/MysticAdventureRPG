@@ -50,7 +50,7 @@ namespace Engine.Factories
             {
                 Location location = new Location(node.GetXmlAttributeAsInt(nameof(Location.LocationID)), node.GetXmlAttributeAsInt(nameof(Location.XCoordinate)), node.GetXmlAttributeAsInt(nameof(Location.YCoordinate)), node.GetXmlAttributeAsString(nameof(Location.Name)), node.SelectSingleNode("./Description")?.InnerText ?? "", $".{rootImagePath}{node.GetXmlAttributeAsString(nameof(Location.ImageName))}");
 
-                AddEnemies(location, node.SelectNodes("./Monsters/Monster"));
+                AddEnemies(location, node.SelectNodes("./Enemies/Enemy"));
                 AddQuests(location, node.SelectNodes("./Quests/Quest"));
                 AddTrader(location, node.SelectSingleNode("./Trader"));
 

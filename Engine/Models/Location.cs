@@ -48,8 +48,7 @@ namespace Engine.Models
             if (EnemiesHere.Exists(m => m.EnemyID == enemyID))
             {
                 // In caso l'Enemy sia già presente nella location ne aumento l'EncounterRate.
-                EnemiesHere.First(m => m.EnemyID == enemyID)
-                            .EncounterRate += (encounterRate/3);
+                EnemiesHere.First(m => m.EnemyID == enemyID).EncounterRate += (encounterRate / 3);
             }
             else
             {

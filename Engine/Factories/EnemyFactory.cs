@@ -1,40 +1,69 @@
 ﻿using CommonClasses.BaseClasses;
+using CommonClasses.ExtensionMethods;
 using Engine.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Engine.Factories
 {
     public static class EnemyFactory
     {
-        public static Enemy GetEnemyByID(int enemyID)
+        private const string GAME_DATA_FILENAME = ".\\GameData\\Enemies.xml";
+
+        private static readonly List<Enemy> _baseEnemies = new List<Enemy>();
+
+        static EnemyFactory()
         {
-            Enemy enemy = null;
-            switch (enemyID)
+            if (File.Exists(GAME_DATA_FILENAME))
             {
-                case 1:
-                    enemy = new Enemy(1, "Serpente", 4, 10, 1, 2.0f, ItemFactory.ObtainItem(1006).Item as Weapon);
-                    AddLootItemToEnemy(ref enemy, 1, 25, (byte)BaseRandomNumberGenerator.NumberBetween(1,3));
-                    AddLootItemToEnemy(ref enemy, 2, 50, (byte)BaseRandomNumberGenerator.NumberBetween(1, 3));
-                    AddLootItemToEnemy(ref enemy, 3, 25, (byte)BaseRandomNumberGenerator.NumberBetween(1, 3));
-                    break;
-                case 2:
-                    enemy = new Enemy(2, "Bandito", 20, 20, 8, 1.5f, ItemFactory.ObtainItem(1001).Item as Weapon);
-                    AddLootItemToEnemy(ref enemy, 1005, 25, 1);
-                    break;
+                XmlDocument data = new XmlDocument();
+                data.LoadXml(File.ReadAllText(GAME_DATA_FILENAME));
+
+                string rootImagePath = data.SelectSingleNode("/Enemies").GetXmlAttributeAsString("RootImagePath");
+
+                LoadEnemiesFromNodes(data.SelectNodes("/Enemies/Enemy"), rootImagePath);
             }
-            return enemy;
+            else
+            {
+                throw new FileNotFoundException($"Missing data file: {GAME_DATA_FILENAME}");
+            }
         }
 
-        private static void AddLootItemToEnemy(ref Enemy enemy, int itemID, int percentage, byte quantity)
+        #region Functions
+        private static void LoadEnemiesFromNodes(XmlNodeList nodes, string rootImagePath)
         {
-            if (BaseRandomNumberGenerator.NumberBetween(1, 100) <= percentage)
+            if (nodes == null)
             {
-                enemy.AddItemToInventory(new GroupedItem(ItemFactory.GetItemByID(itemID).Clone(),quantity));
+                return;
+            }
+
+            foreach (XmlNode node in nodes)
+            {
+                Enemy enemy = new Enemy(node.GetXmlAttributeAsInt(nameof(Enemy.EnemyID)), node.GetXmlAttributeAsString(nameof(Enemy.Name)), node.GetXmlAttributeAsInt(nameof(Enemy.MaximumHitPoints)), node.GetXmlAttributeAsInt(nameof(Enemy.RewardExperiencePoints)), node.GetXmlAttributeAsInt(nameof(Enemy.Gold)), node.GetXmlAttributeAsFloat(nameof(Enemy.Speed)), ItemFactory.ObtainItem(node.GetXmlAttributeAsInt(nameof(Enemy.CurrentWeapon))).Item as Weapon, $".{rootImagePath}{node.GetXmlAttributeAsString(nameof(Enemy.ImageName))}");
+
+                XmlNodeList lootItemNodes = node.SelectNodes("./LootItems/LootItem");
+                if (lootItemNodes != null)
+                {
+                    foreach (XmlNode lootItemNode in lootItemNodes)
+                    {
+                        enemy.AddItemToLootTable(lootItemNode.GetXmlAttributeAsInt(nameof(LootItem.ItemID)), lootItemNode.GetXmlAttributeAsInt(nameof(LootItem.DropRate)), lootItemNode.GetXmlAttributeAsInt("MinQuantity"), lootItemNode.GetXmlAttributeAsInt("MaxQuantity"));
+                    }
+                }
+
+                _baseEnemies.Add(enemy);
             }
         }
+
+        public static Enemy GetEnemyByID(int enemyID)
+        {
+            return _baseEnemies.FirstOrDefault(m => m.EnemyID == enemyID)?.GetNewInstance();
+        }
+        #endregion
+
     }
 }
