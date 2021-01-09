@@ -106,7 +106,7 @@ namespace Engine.Models
         public ObservableCollection<Item> Inventory { get; set; }
         public ObservableCollection<GroupedItem> GroupedInventory { get; set; }
         public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
-        public List<Item> Consumables => Inventory.Where(i => i.Type == ItemTypeEnum.Consumable).ToList();
+        public List<Item> Consumables => GroupedInventory.Where(i => i.Item.Type == ItemTypeEnum.Consumable).Select(s=>s.Item).ToList();
         public bool HasConsumable => Consumables.Any();
         public Item CurrentConsumable
         {
