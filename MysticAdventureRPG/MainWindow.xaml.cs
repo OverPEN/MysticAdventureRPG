@@ -3,6 +3,7 @@ using CommonClasses.EventArgs;
 using Engine.Models;
 using MysticAdventureRPG.ViewModels;
 using MysticAdventureRPG.Views;
+using Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,18 +28,20 @@ namespace MysticAdventureRPG
     public partial class MainWindow : Window
     {
         GameSessionViewModel dtContext;
+        private readonly MessageBroker _messageBroker = MessageBroker.GetInstance();
+
         public MainWindow()
         {
             InitializeComponent();
 
             dtContext = DataContext as GameSessionViewModel;
 
-            dtContext.OnMessageRaised += OnGameMessageRaised;
+            _messageBroker.OnMessageRaised += OnGameMessageRaised;
         }
 
         private void OnGameMessageRaised(object sender, GameMessageEventArgs e)
         {
-            dtContext.OnGameMessageRaised(sender, e, ref GameMessages);
+            _messageBroker.OnGameMessageRaised(sender, e, ref GameMessages);
         }
 
         private void OnClick_Craft(object sender, RoutedEventArgs e)

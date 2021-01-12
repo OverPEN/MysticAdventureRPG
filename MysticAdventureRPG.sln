@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonClasses", "CommonClasses\CommonClasses.csproj", "{D799EC3A-903B-46FB-8F09-449EA578CDF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationLogger", "ApplicationLogger\ApplicationLogger.csproj", "{6929A5FB-DAFD-48FE-A21C-2FEADAE6CE15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "ApplicationLogger\Services.csproj", "{6929A5FB-DAFD-48FE-A21C-2FEADAE6CE15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

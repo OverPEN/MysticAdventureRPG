@@ -128,9 +128,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ApplicationLogger\ApplicationLogger.csproj">
+    <ProjectReference Include="..\ApplicationLogger\Services.csproj">
       <Project>{6929A5FB-DAFD-48FE-A21C-2FEADAE6CE15}</Project>
-      <Name>ApplicationLogger</Name>
+      <Name>Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\CommonClasses\CommonClasses.csproj">
       <Project>{D799EC3A-903B-46FB-8F09-449EA578CDF3}</Project>
