@@ -55,6 +55,7 @@
     <Compile Include="Enums\ItemTypeEnum.cs" />
     <Compile Include="Enums\PlayerClassTypeEnum.cs" />
     <Compile Include="BaseClasses\ClassBaseValues.cs" />
+    <Compile Include="EventArgs\CombatVictoryEventArgs.cs" />
     <Compile Include="EventArgs\GameMessageEventArgs.cs" />
     <Compile Include="ExtensionMethods\XamlExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

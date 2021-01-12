@@ -128,10 +128,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ApplicationLogger\Services.csproj">
-      <Project>{6929A5FB-DAFD-48FE-A21C-2FEADAE6CE15}</Project>
-      <Name>Services</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CommonClasses\CommonClasses.csproj">
       <Project>{D799EC3A-903B-46FB-8F09-449EA578CDF3}</Project>
       <Name>CommonClasses</Name>
@@ -139,6 +135,10 @@
     <ProjectReference Include="..\Engine\Engine.csproj">
       <Project>{698c2f2e-0c7c-44ab-a9e3-873804d6f431}</Project>
       <Name>Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\Services.csproj">
+      <Project>{6929A5FB-DAFD-48FE-A21C-2FEADAE6CE15}</Project>
+      <Name>Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

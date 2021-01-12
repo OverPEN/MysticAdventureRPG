@@ -29,6 +29,7 @@ namespace MysticAdventureRPG.ViewModels
         private Trader _currentTrader;
         private readonly Dictionary<Key, ICommand> _userInputActions = new Dictionary<Key, ICommand>();
         private readonly MessageBroker _messageBroker = MessageBroker.GetInstance();
+        private BattleService _currentBattle;
 
         #endregion
 
@@ -46,10 +47,10 @@ namespace MysticAdventureRPG.ViewModels
                 OnPropertyChanged(nameof(CanMoveBackwards));
                 OnPropertyChanged(nameof(CanMoveLeft));
 
-                _messageBroker.RaiseMessage($"Sei giunto a {CurrentLocation.Name}.", GameMessageTypeEnum.ImportantInfo);
+                _messageBroker.RaiseMessage(Environment.NewLine + $"Sei giunto a {CurrentLocation.Name}.", GameMessageTypeEnum.ImportantInfo);
                 GivePlayerQuestsAtLocation();
                 CompleteQuestsAtLocation();
-                GetEnemyAtLocation();
+                CurrentEnemy = CurrentLocation.GetEnemyAtLocation();
 
                 CurrentTrader = CurrentLocation.TraderHere;
                 if (HasTrader)
@@ -63,19 +64,18 @@ namespace MysticAdventureRPG.ViewModels
             get { return _currentEnemy; }
             set
             {
-                if (_currentEnemy != null)
+                if (_currentBattle != null)
                 {
-                    _currentEnemy.OnActionPerformed -= OnCurrentEnemyPerformedAction;
-                    _currentEnemy.OnKilled -= OnCurrentEnemyKilled;
+                    _currentBattle.OnCombatVictory -= OnCurrentEnemyKilled;
+                    _currentBattle.Dispose();
                 }
 
                 _currentEnemy = value;
 
-                if (CurrentEnemy != null)
+                if (_currentEnemy != null)
                 {
-                    _currentEnemy.OnActionPerformed += OnCurrentEnemyPerformedAction;
-                    _currentEnemy.OnKilled += OnCurrentEnemyKilled;
-                    _messageBroker.RaiseMessage($"Ti imbatti in un {CurrentEnemy.Name}!", GameMessageTypeEnum.BattleInfo);
+                    _currentBattle = new BattleService(CurrentPlayer, CurrentEnemy);
+                    _currentBattle.OnCombatVictory += OnCurrentEnemyKilled;
                 }
 
                 OnPropertyChanged();
@@ -89,17 +89,15 @@ namespace MysticAdventureRPG.ViewModels
             {
                 if (_currentPlayer != null)
                 {
-                    _currentPlayer.OnActionPerformed -= OnCurrentPlayerPerformedAction;
                     _currentPlayer.OnLeveledUp -= OnCurrentPlayerLeveledUp;
-                    _currentPlayer.OnKilled -= OnCurrentPlayerKilled;
+                    _currentPlayer.OnKilled -= OnPlayerKilled;
                 }
                 _currentPlayer = value;
 
                 if (_currentPlayer != null)
                 {
-                    _currentPlayer.OnActionPerformed += OnCurrentPlayerPerformedAction;
                     _currentPlayer.OnLeveledUp += OnCurrentPlayerLeveledUp;
-                    _currentPlayer.OnKilled += OnCurrentPlayerKilled;
+                    _currentPlayer.OnKilled += OnPlayerKilled;
                 }
             }
         }
@@ -166,7 +164,6 @@ namespace MysticAdventureRPG.ViewModels
         public bool HasEnemy => CurrentEnemy != null;
         public bool HasTrader => CurrentTrader != null;
 
-        private bool wasKilled = false;
         #endregion
 
         #region Functions From View
@@ -210,35 +207,7 @@ namespace MysticAdventureRPG.ViewModels
         {
             if (HasEnemy)
             {
-                if ((CurrentPlayer.Speed + CurrentPlayer.CurrentWeapon?.WeaponSpeed) >= (CurrentEnemy.Speed + CurrentEnemy.CurrentWeapon.WeaponSpeed))
-                {
-                    EvaluatePlayerTurn();
-                    if (CurrentEnemy.IsDead)
-                    {
-                        GetEnemyAtLocation();
-                    }
-                    else
-                    {
-                        CurrentEnemy.UseCurrentWeaponOn(CurrentPlayer);
-                    }
-                }
-                else
-                {
-                    CurrentEnemy.UseCurrentWeaponOn(CurrentPlayer);
-                    if (wasKilled)
-                    {
-                        wasKilled = false;
-                        return;
-                    }
-                    else
-                    {
-                        EvaluatePlayerTurn();
-                        if (CurrentEnemy.IsDead)
-                        {
-                            GetEnemyAtLocation();
-                        }
-                    }
-                }
+                _currentBattle.EvaluateBattleTurn();
             }
         }
 
@@ -339,69 +308,20 @@ namespace MysticAdventureRPG.ViewModels
             }
         }
 
-        private void GetEnemyAtLocation()
+        private void OnCurrentEnemyKilled(object sender, EventArgs eventArgs)
         {
-            
             CurrentEnemy = CurrentLocation.GetEnemyAtLocation();
         }
 
-        private void EvaluatePlayerTurn()
-        {
-            int damageToEnemy;
-
-            // Determino il danno inflitto dal PLayer
-            if (CurrentPlayer.CurrentWeapon == null)
-            {
-                _messageBroker.RaiseMessage("Non avendo equipaggiato un'arma ti scagli sul nemico a mani nude.", GameMessageTypeEnum.BattleInfo);
-                damageToEnemy = CurrentPlayer.BaseDamage;
-                _messageBroker.RaiseMessage($"Hai colpito {CurrentEnemy.Name} causando {damageToEnemy} danni!", GameMessageTypeEnum.BattlePositive);
-                CurrentEnemy.TakeDamage(damageToEnemy);
-            }
-            else
-            {
-                CurrentPlayer.UseCurrentWeaponOn(CurrentEnemy);
-            }
-        }
-
-        private void OnCurrentEnemyKilled(object sender, EventArgs eventArgs)
-        {
-            // Se il nemico è sconfitto ottengo il loot
-                _messageBroker.RaiseMessage($"Hai sconfitto {CurrentEnemy.Name}!", GameMessageTypeEnum.BattleInfo);
-
-                _messageBroker.RaiseMessage($"Ricevi {CurrentEnemy.RewardExperiencePoints} punti esperienza!", GameMessageTypeEnum.BattleInfo);
-                CurrentPlayer.AddExperience(CurrentEnemy.RewardExperiencePoints);
-
-                _messageBroker.RaiseMessage($"Ricevi {CurrentEnemy.Gold} oro!", GameMessageTypeEnum.BattleInfo);
-                CurrentPlayer.ReceiveGold(CurrentEnemy.Gold);
-
-                foreach (GroupedItem drop in CurrentEnemy.GroupedInventory)
-                {
-                    _messageBroker.RaiseMessage($"Ricevi {drop.Quantity} {drop.Item.Name}!", GameMessageTypeEnum.BattleInfo);
-                    CurrentPlayer.AddItemToInventory(drop);
-                    OnPropertyChanged(nameof(CurrentPlayer.Inventory));
-                    OnPropertyChanged(nameof(CurrentPlayer.GroupedInventory));
-                    foreach(QuestStatus questStatus in CurrentPlayer.Quests)
-                    {
-                        if(questStatus.Quest.ItemsToComplete.Exists(e=>e.Item.ItemID == drop.Item.ItemID))
-                        {
-                        if (CurrentPlayer.HasAllTheseItems(questStatus.Quest.ItemsToComplete))
-                            questStatus.Status = QuestStatusEnum.Completabile;
-                        }
-                    }
-
-                }
-        }
-
-        private void OnCurrentPlayerKilled(object sender, EventArgs eventArgs)
+        private void OnPlayerKilled(object sender, EventArgs eventArgs)
         {
             // Se il player è sconfitto lo porto al checkpoint e lo curo
-                _messageBroker.RaiseMessage($"Sei stato ucciso.", GameMessageTypeEnum.BattleNegative);
+                _messageBroker.RaiseMessage(Environment.NewLine + $"Sei stato ucciso.", GameMessageTypeEnum.BattleNegative);
 
                 CurrentLocation = CurrentWorld.GetLocationByID(1); // Player's home
                 CurrentPlayer.XCoordinate = CurrentLocation.XCoordinate;
                 CurrentPlayer.YCoordinate = CurrentLocation.YCoordinate;
                 CurrentPlayer.CompletelyHeal();
-                wasKilled = true;
         }
 
         private void CompleteQuestsAtLocation()
@@ -447,16 +367,6 @@ namespace MysticAdventureRPG.ViewModels
         private void OnCurrentPlayerLeveledUp(object sender, EventArgs eventArgs)
         {
             _messageBroker.RaiseMessage($"Hai raggiunto il Livello {CurrentPlayer.Level}!", GameMessageTypeEnum.BattlePositive);
-        }
-
-        private void OnCurrentPlayerPerformedAction(object sender, GameMessageEventArgs e)
-        {
-            _messageBroker.RaiseMessage(e.Message, e.Type);
-        }
-
-        private void OnCurrentEnemyPerformedAction(object sender, GameMessageEventArgs e)
-        {
-            _messageBroker.RaiseMessage(e.Message, e.Type);
         }
 
         private void InitializeUserInputActions()
