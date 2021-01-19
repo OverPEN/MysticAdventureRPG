@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Enemies RootImagePath="/Resources/EnemyImages/">
-  <Enemy EnemyID="1" Name="Serpente" MaximumHitPoints="4" RewardExperiencePoints="10" Gold="1" Speed="2.0" CurrentWeapon="1006" ImageName="Serpente.png">
+  <Enemy EnemyID="1" Name="Serpente" MaximumHitPoints="4" RewardExperiencePoints="10" Gold="1" Speed="2,0" CurrentWeapon="1006" ImageName="Serpente.png">
     <LootItems>
       <LootItem ItemID="1" DropRate="25" MinQuantity="1" MaxQuantity="3"/>
       <LootItem ItemID="2" DropRate="50" MinQuantity="1" MaxQuantity="2"/>
       <LootItem ItemID="3" DropRate="25" MinQuantity="1" MaxQuantity="3"/>
     </LootItems>
   </Enemy>
-  <Enemy EnemyID="2" Name="Bandito" MaximumHitPoints="20" RewardExperiencePoints="20" Gold="8" Speed="1.5" CurrentWeapon="1001" ImageName="Bandito.png">
+  <Enemy EnemyID="2" Name="Bandito" MaximumHitPoints="20" RewardExperiencePoints="20" Gold="8" Speed="1,5" CurrentWeapon="1001" ImageName="Bandito.png">
     <LootItems>
       <LootItem ItemID="1005" DropRate="25" MinQuantity="1" MaxQuantity="1"/>
     </LootItems>

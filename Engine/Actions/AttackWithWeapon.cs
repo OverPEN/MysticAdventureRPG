@@ -33,7 +33,7 @@ namespace Engine.Actions
             _maximumDamage = itemInUse.MaximumDamage;
         }
 
-        public void Execute(LivingEntity actor, LivingEntity target)
+        public void Execute(LivingEntity actor, LivingEntity target, object attackType = null)
         {
             int damage;
 
@@ -45,6 +45,8 @@ namespace Engine.Actions
             else
             {
                 damage = BaseRandomNumberGenerator.NumberBetween(_currentWeapon.MinimumDamage, _currentWeapon.MaximumDamage);
+                if (attackType.ToString() == "H")
+                    damage += _currentWeapon.MinimumDamage;
                 ReportResult($"{actor.Name} ha colpito {target.Name} causando {damage} danni!", (actor is Player) ? GameMessageTypeEnum.BattlePositive : GameMessageTypeEnum.BattleNegative);
                 target.TakeDamage(damage);
             }

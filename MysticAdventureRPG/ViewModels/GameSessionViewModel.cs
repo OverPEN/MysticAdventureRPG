@@ -227,7 +227,7 @@ namespace MysticAdventureRPG.ViewModels
         {
             if (HasEnemy)
             {
-                _currentBattle.EvaluateBattleTurn();
+                _currentBattle.EvaluateBattleTurn(obj.ToString());
             }
         }
 

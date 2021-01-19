@@ -20,7 +20,7 @@ namespace Engine.Actions
             _hitPointsToHeal = _item.HitPointsToHeal;
         }
 
-        public void Execute(LivingEntity actor, LivingEntity target)
+        public void Execute(LivingEntity actor, LivingEntity target, object parameter = null)
         {
             ReportResult($"{actor.Name} si cura di {_hitPointsToHeal} punt{(_hitPointsToHeal > 1 ? "i" : "o")} salute!", GameMessageTypeEnum.BattleInfo);
             target.Heal(_hitPointsToHeal);

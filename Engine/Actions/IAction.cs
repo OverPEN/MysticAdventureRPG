@@ -7,6 +7,6 @@ namespace Engine.Actions
     public interface IAction
     {
         event EventHandler<GameMessageEventArgs> OnActionPerformed;
-        void Execute(LivingEntity actor, LivingEntity target);
+        void Execute(LivingEntity actor, LivingEntity target, object parameter = null);
     }
 }

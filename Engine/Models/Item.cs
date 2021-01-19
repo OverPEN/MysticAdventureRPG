@@ -35,9 +35,9 @@ namespace Engine.Models
             UsableBy = usableBy;
         }
 
-        public void PerformAction(LivingEntity actor, LivingEntity target)
+        public void PerformAction(LivingEntity actor, LivingEntity target, object paramter = null)
         {
-            Action?.Execute(actor, target);
+            Action?.Execute(actor, target, paramter);
         }
         public Item Clone()
         {

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Items>
   <Weapons>
-    <Weapon ItemID="1001" Name="Spada Smussata" Price="5" MinimumDamage="4" MaximumDamage="9" DamageType="Taglio" WeaponSpeed="1.0" MissRate="20" UsableBy="1,2,4,5"/>
-    <Weapon ItemID="1002" Name="Bastone da mago scheggiato" Price="6" MinimumDamage="6" MaximumDamage="8" DamageType="Magico" WeaponSpeed="0.9" MissRate="30" UsableBy="1,3"/>
-    <Weapon ItemID="1004" Name="Martello da fabbro usurato" Price="5" MinimumDamage="6" MaximumDamage="9" DamageType="Schianto" WeaponSpeed="1.8" MissRate="25" UsableBy="1,4"/>
-    <Weapon ItemID="1005" Name="Spada Grezza" Price="10" MinimumDamage="9" MaximumDamage="9" DamageType="Taglio" WeaponSpeed="1.0" MissRate="20" UsableBy="1,2,4,5"/>
-    <Weapon ItemID="1006" Name="Denti" Price="0" MinimumDamage="1" MaximumDamage="4" DamageType="Penetrante" WeaponSpeed="1.2" MissRate="50" UsableBy="1"/>
+    <Weapon ItemID="1001" Name="Spada Smussata" Price="5" MinimumDamage="4" MaximumDamage="9" DamageType="Taglio" WeaponSpeed="1,0" MissRate="20" UsableBy="1,2,4,5"/>
+    <Weapon ItemID="1002" Name="Bastone da mago scheggiato" Price="6" MinimumDamage="6" MaximumDamage="8" DamageType="Magico" WeaponSpeed="0,9" MissRate="30" UsableBy="1,3"/>
+    <Weapon ItemID="1004" Name="Martello da fabbro usurato" Price="5" MinimumDamage="6" MaximumDamage="9" DamageType="Schianto" WeaponSpeed="1,8" MissRate="25" UsableBy="1,4"/>
+    <Weapon ItemID="1005" Name="Spada Grezza" Price="10" MinimumDamage="9" MaximumDamage="9" DamageType="Taglio" WeaponSpeed="1,0" MissRate="20" UsableBy="1,2,4,5"/>
+    <Weapon ItemID="1006" Name="Denti" Price="0" MinimumDamage="1" MaximumDamage="4" DamageType="Penetrante" WeaponSpeed="1,2" MissRate="50" UsableBy="1"/>
   </Weapons>
   <Munitions>
   </Munitions>

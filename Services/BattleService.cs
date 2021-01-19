@@ -39,11 +39,11 @@ namespace Services
             _enemy.OnKilled -= OnCurrentEnemyKilled;
         }
 
-        public void EvaluateBattleTurn()
+        public void EvaluateBattleTurn(string attackType)
         {
-            if ((_player.Speed + _player.CurrentWeapon?.WeaponSpeed) >= (_enemy.Speed + _enemy.CurrentWeapon.WeaponSpeed))
+            if ((_player.Speed + _player.CurrentWeapon?.WeaponSpeed) >= (_enemy.Speed + _enemy.CurrentWeapon.WeaponSpeed) && attackType == "L")
             {
-                EvaluatePlayerTurn();
+                EvaluatePlayerTurn(attackType);
                 if (!_enemy.IsDead)
                 {
                     _enemy.UseCurrentWeaponOn(_player);
@@ -59,12 +59,12 @@ namespace Services
                 }
                 else
                 {
-                    EvaluatePlayerTurn();
+                    EvaluatePlayerTurn(attackType);
                 }
             }
         }
 
-        private void EvaluatePlayerTurn()
+        private void EvaluatePlayerTurn(string attackType)
         {
             int damageToEnemy;
 
@@ -78,7 +78,7 @@ namespace Services
             }
             else
             {
-                _player.UseCurrentWeaponOn(_enemy);
+                _player.UseCurrentWeaponOn(_enemy, attackType);
             }
         }
 

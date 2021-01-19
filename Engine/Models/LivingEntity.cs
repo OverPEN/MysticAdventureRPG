@@ -268,10 +268,10 @@ namespace Engine.Models
             OnActionPerformed?.Invoke(this, result);
         }
 
-        public void UseCurrentWeaponOn(LivingEntity target)
+        public void UseCurrentWeaponOn(LivingEntity target, string attackType = "L")
         {
             if(target!=null)
-                CurrentWeapon.PerformAction(this, target);
+                CurrentWeapon.PerformAction(this, target, attackType);
         }
 
         public void UseCurrentConsumable()
