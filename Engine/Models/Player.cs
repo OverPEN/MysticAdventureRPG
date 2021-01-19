@@ -1,6 +1,7 @@
 ﻿using CommonClasses.BaseClasses;
 using CommonClasses.Enums;
 using Engine.Factories;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,26 +24,7 @@ namespace Engine.Models
         private int _yCoordinate;
         #endregion
 
-        #region Public Properties       
-        public int Experience
-        {
-            get { return _experience; }
-            private set
-            {
-                _experience = value;
-                OnPropertyChanged();
-                SetLevelAndParameters();
-            }
-        }
-        public int BaseDamage
-        {
-            get { return _baseDamage; }
-            set
-            {
-                _baseDamage = value;
-                OnPropertyChanged();
-            }
-        }
+        #region Public Properties
         public int WorldID
         {
             get { return _worldID; }
@@ -70,18 +52,38 @@ namespace Engine.Models
                 OnPropertyChanged();
             }
         }
+        public int Experience
+        {
+            get { return _experience; }
+            private set
+            {
+                _experience = value;
+                OnPropertyChanged();
+                SetLevelAndParameters();
+            }
+        }
+        public int BaseDamage
+        {
+            get { return _baseDamage; }
+            set
+            {
+                _baseDamage = value;
+                OnPropertyChanged();
+            }
+        }
+        [JsonIgnore]
         public WeaponDamageTypeEnum BaseDamageType { get;} 
         public ObservableCollection<QuestStatus> Quests { get; }
         public ObservableCollection<Recipe> Recipes { get; }
 
         #endregion
 
-        public Player(string name, int maxHitPoints, int currHitPoints, float speed, int gold, int worldID, int xCoord, int yCoord, PlayerClassTypeEnum chosenClass, byte level = 1, int experience = 0) : base(name, maxHitPoints, currHitPoints, speed, gold, chosenClass, level )
+        public Player(string name, int maxHitPoints, int currHitPoints, float speed, int gold, int worldID, int xCoord, int yCoord, PlayerClassTypeEnum chosenClass, int baseDamage, byte level = 1, int experience = 0) : base(name, maxHitPoints, currHitPoints, speed, gold, chosenClass, level )
         {
             ClassBaseValues defaultValues = new ClassBaseValues(chosenClass);
 
             Experience = experience;
-            BaseDamage = defaultValues.BaseDamage;
+            BaseDamage = baseDamage;
             BaseDamageType = defaultValues.BaseDamageType;
             WorldID = worldID;
             XCoordinate = xCoord;
@@ -134,6 +136,14 @@ namespace Engine.Models
             if (!Recipes.Any(r => r.ID == recipe.ID))
             {
                 Recipes.Add(recipe);
+            }
+        }
+
+        public void ObtainQuest(QuestStatus questStatus)
+        {
+            if (!Quests.Any(r => r.Quest.QuestID == questStatus.Quest.QuestID))
+            {
+                Quests.Add(questStatus);
             }
         }
         #endregion

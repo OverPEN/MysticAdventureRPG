@@ -8,7 +8,8 @@
         xmlns:Converters="clr-namespace:CommonClasses.Converters;assembly=CommonClasses"
         mc:Ignorable="d"
         Title="Game Main Window" Height="800" Width="800"
-        KeyDown="MainWindow_OnKeyDown">
+        KeyDown="MainWindow_OnKeyDown"
+        Closing="MainWindow_OnClosing">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
         <Converters:LevelToNecessaryXPConverter x:Key="LevelToNecessaryXPConverter"/>

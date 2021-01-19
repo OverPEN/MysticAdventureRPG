@@ -74,7 +74,7 @@ namespace MysticAdventureRPG.ViewModels
 
                 if (_currentEnemy != null)
                 {
-                    _currentBattle = new BattleService(CurrentPlayer, CurrentEnemy);
+                    _currentBattle = new BattleService( CurrentPlayer, CurrentEnemy);
                     _currentBattle.OnCombatVictory += OnCurrentEnemyKilled;
                 }
 
@@ -140,20 +140,24 @@ namespace MysticAdventureRPG.ViewModels
             #endregion
 
             InitializeUserInputActions();
-
-            CurrentPlayer = new Player("Giuseppe Penna", PlayerClassTypeEnum.Guerriero);
             CurrentWorld = WorldFactory.CreateWorld();
+          
+            CurrentPlayer = SavePlayerService.LoadLastSave();
+            if(CurrentPlayer == null)
+            {
+                CurrentPlayer = new Player("Giuseppe Penna", PlayerClassTypeEnum.Guerriero);
+                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1001));
+                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1002));
+                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1003));
+                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1004));
+                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(4, 5));
+                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1005));
+                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(2001, 3));
+
+                CurrentPlayer.LearnRecipe(RecipeFactory.RecipeByID(1));
+            }
+
             CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
-
-            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1001));
-            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1002));
-            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1003));
-            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1004));
-            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(4, 5));
-            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1005));
-            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(2001, 3));
-
-            CurrentPlayer.LearnRecipe(RecipeFactory.RecipeByID(1));
         }
 
         #region Boolean Controls
@@ -301,7 +305,7 @@ namespace MysticAdventureRPG.ViewModels
                             _messageBroker.RaiseMessage($"   {groupedItem.Quantity} {groupedItem.Item.Name}", GameMessageTypeEnum.Info);
                         }
 
-                        CurrentPlayer.Quests.Add(questStatus);
+                        CurrentPlayer.ObtainQuest(questStatus);
                     }
 
                 }
@@ -328,7 +332,7 @@ namespace MysticAdventureRPG.ViewModels
         {
             foreach (QuestStatus questStatus in CurrentLocation.QuestsAvailableHere)
             {
-                QuestStatus questToComplete = CurrentPlayer.Quests.FirstOrDefault(q => q.Quest.QuestID == questStatus.Quest.QuestID && questStatus.Status == QuestStatusEnum.Completabile);
+                QuestStatus questToComplete = CurrentPlayer.Quests.FirstOrDefault(q => q.Quest.QuestID == questStatus.Quest.QuestID && q.Status == QuestStatusEnum.Completabile);
 
                 if (questToComplete != null)
                 {
@@ -339,7 +343,8 @@ namespace MysticAdventureRPG.ViewModels
                         // Rimuovo gli oggetti della quest dall'inventario del giocatore
                         foreach (GroupedItem groupedItem in questStatus.Quest.ItemsToComplete)
                         {
-                                CurrentPlayer.RemoveItemFromInventory(CurrentPlayer.GroupedInventory.First(i => i.Item.ItemID == groupedItem.Item.ItemID));
+                            //CurrentPlayer.RemoveItemFromInventory(CurrentPlayer.GroupedInventory.First(i => i.Item.ItemID == groupedItem.Item.ItemID));
+                            CurrentPlayer.RemoveItemFromInventory(groupedItem);
                         }
 
                         // Aggiungo le ricompense della queste al giocatore

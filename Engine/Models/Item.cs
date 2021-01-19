@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Engine.Models
 {
@@ -14,10 +15,15 @@ namespace Engine.Models
     {
         #region Public Properties
         public int ItemID { get; }
+        [JsonIgnore]
         public string Name { get; }
+        [JsonIgnore]
         public int Price { get; }
+        [JsonIgnore]
         public ItemTypeEnum Type { get; }
+        [JsonIgnore]
         public bool IsUnique { get; }
+        [JsonIgnore]
         public IAction Action { get; set; }
         #endregion
 

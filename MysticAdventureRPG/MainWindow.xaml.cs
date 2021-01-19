@@ -54,5 +54,10 @@ namespace MysticAdventureRPG
         {
             dtContext.ExecuteFromKeyboard(e.Key, ref PlayerTabControl);
         }
+
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            SavePlayerService.SavePlayer(dtContext.CurrentPlayer);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CommonClasses.BaseClasses;
 using CommonClasses.Enums;
 using CommonClasses.EventArgs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,6 +34,16 @@ namespace Engine.Models
             set
             {
                 _name = value;
+                OnPropertyChanged();
+            }
+        }
+        public PlayerClassTypeEnum Class { get; }
+        public byte Level
+        {
+            get { return _level; }
+            protected set
+            {
+                _level = value;
                 OnPropertyChanged();
             }
         }
@@ -72,16 +83,6 @@ namespace Engine.Models
                 OnPropertyChanged();
             }
         }
-        public byte Level
-        {
-            get { return _level; }
-            protected set
-            {
-                _level = value;
-                OnPropertyChanged();
-            }
-        }
-        public PlayerClassTypeEnum Class { get; }
         public Weapon CurrentWeapon
         {
             get { return _currentWeapon; }
@@ -102,11 +103,16 @@ namespace Engine.Models
                 OnPropertyChanged();
             }
         }
+        [JsonIgnore]
         public bool IsDead => CurrentHitPoints <= 0;
+        [JsonIgnore]
         public ObservableCollection<Item> Inventory { get; set; }
         public ObservableCollection<GroupedItem> GroupedInventory { get; set; }
+        [JsonIgnore]
         public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
+        [JsonIgnore]
         public List<Item> Consumables => GroupedInventory.Where(i => i.Item.Type == ItemTypeEnum.Consumable).Select(s=>s.Item).ToList();
+        [JsonIgnore]
         public bool HasConsumable => Consumables.Any();
         public Item CurrentConsumable
         {

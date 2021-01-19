@@ -19,7 +19,7 @@ namespace Services
 
         public event EventHandler<CombatVictoryEventArgs> OnCombatVictory;
 
-        public BattleService(Player player, Enemy enemy)
+        public BattleService( Player player, Enemy enemy)
         {
             _player = player;
             _enemy = enemy;
@@ -103,7 +103,7 @@ namespace Services
                 _player.AddItemToInventory(drop);
                 foreach (QuestStatus questStatus in _player.Quests)
                 {
-                    if (questStatus.Quest.ItemsToComplete.Exists(e => e.Item.ItemID == drop.Item.ItemID))
+                    if (questStatus.Quest.ItemsToComplete.FirstOrDefault(e => e.Item.ItemID == drop.Item.ItemID)!= null)
                     {
                         if (_player.HasAllTheseItems(questStatus.Quest.ItemsToComplete))
                             questStatus.Status = QuestStatusEnum.Completabile;

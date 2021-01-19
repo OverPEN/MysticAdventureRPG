@@ -11,7 +11,7 @@ using System.Xml;
 
 namespace Engine.Factories
 {
-    internal static class QuestFactory
+    public static class QuestFactory
     {
         private const string GAME_DATA_FILENAME = ".\\GameData\\Quests.xml";
         private static readonly List<Quest> _quests = new List<Quest>();
@@ -53,7 +53,7 @@ namespace Engine.Factories
             }
         }
 
-        internal static Quest GetQuestByID(int id)
+        public static Quest GetQuestByID(int id)
         {
             return _quests.FirstOrDefault(quest => quest.QuestID == id);
         }

@@ -1,4 +1,5 @@
 ﻿using Engine.Factories;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,13 @@ namespace Engine.Models
     public class Recipe
     {
         public int ID { get; }
+        [JsonIgnore]
         public string Name { get; }
+        [JsonIgnore]
         public List<GroupedItem> Ingredients { get; } = new List<GroupedItem>();
+        [JsonIgnore]
         public List<GroupedItem> OutputItems { get; } = new List<GroupedItem>();
-
+        [JsonIgnore]
         public string ToolTipContents =>
             "Ingredienti:" + Environment.NewLine +
             "===========" + Environment.NewLine +

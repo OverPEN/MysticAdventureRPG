@@ -1,4 +1,5 @@
 ﻿using CommonClasses.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,19 @@ namespace Engine.Models
     public class Quest
     {
         public int QuestID { get; }
+        [JsonIgnore]
         public string Name { get; }
+        [JsonIgnore]
         public string Description { get; }
+        [JsonIgnore]
         public List<GroupedItem> ItemsToComplete { get;}
+        [JsonIgnore]
         public int RewardExperiencePoints { get; }
+        [JsonIgnore]
         public int RewardGold { get; }
+        [JsonIgnore]
         public List<GroupedItem> RewardItems { get; }
-
+        [JsonIgnore]
         public string ToolTipContents =>
             Description + Environment.NewLine + Environment.NewLine +
             "Consegnare:" + Environment.NewLine +
