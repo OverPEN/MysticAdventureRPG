@@ -27,15 +27,16 @@ namespace Services
 
         public static Player LoadLastSave()
         {
+            string path = Path.Combine(Environment.CurrentDirectory, "SaveFiles");
             //Se il file di salvataggio del player non esiste ritorno null
-            if (!File.Exists(PLAYER_SAVE_FILE_NAME))
+            if (!File.Exists(Path.Combine(path, PLAYER_SAVE_FILE_NAME)))
             {
                 return null;
             }
 
             try
             {
-                JObject data = JObject.Parse(File.ReadAllText(PLAYER_SAVE_FILE_NAME));
+                JObject data = JObject.Parse(File.ReadAllText(Path.Combine(path, PLAYER_SAVE_FILE_NAME)));
 
                 // Leggo i dati del PLayer dal file
                 Player player = CreatePlayer(data);

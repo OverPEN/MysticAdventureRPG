@@ -1,6 +1,7 @@
 ﻿using CommonClasses.BaseClasses;
 using CommonClasses.Enums;
 using Engine.Factories;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,20 @@ namespace Engine.Models
     public class Location
     {
         public int LocationID { get; }
+        [JsonIgnore]
         public int XCoordinate { get; }
+        [JsonIgnore]
         public int YCoordinate { get; }
+        [JsonIgnore]
         public string Name { get; }
+        [JsonIgnore]
         public string Description { get; }
+        [JsonIgnore]
         public string ImageName { get; }
         public List<QuestStatus> QuestsAvailableHere { get; } = new List<QuestStatus>();
+        [JsonIgnore]
         public List<EnemyEncounter> EnemiesHere { get; } = new List<EnemyEncounter>();
+        [JsonIgnore]
         public Trader TraderHere { get; set; }
 
         public Location(int id, int xCoord, int yCoord, string name, string description, string imageName)

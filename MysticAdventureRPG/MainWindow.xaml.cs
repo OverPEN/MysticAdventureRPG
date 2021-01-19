@@ -58,6 +58,7 @@ namespace MysticAdventureRPG
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
             SavePlayerService.SavePlayer(dtContext.CurrentPlayer);
+            SaveWorldService.SaveWorld(dtContext.CurrentWorld);
         }
     }
 }

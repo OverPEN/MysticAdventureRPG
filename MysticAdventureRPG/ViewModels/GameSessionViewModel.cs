@@ -140,8 +140,9 @@ namespace MysticAdventureRPG.ViewModels
             #endregion
 
             InitializeUserInputActions();
-            CurrentWorld = WorldFactory.CreateWorld();
-          
+            CurrentWorld = SaveWorldService.LoadLastSave();
+            if (CurrentWorld == null)
+                CurrentWorld = WorldFactory.CreateWorld();
             CurrentPlayer = SavePlayerService.LoadLastSave();
             if(CurrentPlayer == null)
             {

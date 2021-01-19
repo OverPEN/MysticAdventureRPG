@@ -18,8 +18,6 @@ namespace Engine.Factories
         {
             World world = new World();
 
-            world.WorldID = 0;
-
             if (File.Exists(GAME_DATA_FILENAME))
             {
                 XmlDocument data = new XmlDocument();
