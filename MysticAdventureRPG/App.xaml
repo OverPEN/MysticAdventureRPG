@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:MysticAdventureRPG"
              xmlns:converters ="clr-namespace:CommonClasses.Converters;assembly=CommonClasses"
              DispatcherUnhandledException="App_OnDispatcherUnhandledException"
+             Startup="OnStartup"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <converters:FileToBitmapConverter x:Key="FileToBitmapConverter"/>

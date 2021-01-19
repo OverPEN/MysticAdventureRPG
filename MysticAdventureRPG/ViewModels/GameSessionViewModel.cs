@@ -16,6 +16,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows;
 using Services;
+using Microsoft.Win32;
 
 namespace MysticAdventureRPG.ViewModels
 {
@@ -113,6 +114,7 @@ namespace MysticAdventureRPG.ViewModels
                 OnPropertyChanged(nameof(HasTrader));
             }
         }
+        public MainWindow GameWindow { get; set; }
         #endregion
 
         #region Commands
@@ -124,6 +126,9 @@ namespace MysticAdventureRPG.ViewModels
         public ICommand ShowTraderScreenCommand { get; set; }
         public ICommand UseCurrentConsumableCommand { get; set; }
         public ICommand SetTabFocusToCommand { get; set; }
+        public ICommand SaveGameCommand { get; set; }
+        public ICommand LoadGameCommand { get; set; }
+        public ICommand NewGameCommand { get; set; }
         #endregion
 
         public GameSessionViewModel()
@@ -137,28 +142,45 @@ namespace MysticAdventureRPG.ViewModels
             ShowTraderScreenCommand = new BaseCommand(ShowTraderScreen);
             UseCurrentConsumableCommand = new BaseCommand(UseCurrentConsumable);
             SetTabFocusToCommand = new BaseCommand(SetTabFocusTo);
+            NewGameCommand = new BaseCommand(StartNewGame);
+            SaveGameCommand = new BaseCommand(SaveGame);
+            LoadGameCommand = new BaseCommand(LoadGame);
             #endregion
 
             InitializeUserInputActions();
-            CurrentWorld = SaveWorldService.LoadLastSave();
-            if (CurrentWorld == null)
-                CurrentWorld = WorldFactory.CreateWorld();
-            CurrentPlayer = SavePlayerService.LoadLastSave();
-            if(CurrentPlayer == null)
-            {
-                CurrentPlayer = new Player("Giuseppe Penna", PlayerClassTypeEnum.Guerriero);
-                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1001));
-                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1002));
-                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1003));
-                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1004));
-                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(4, 5));
-                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1005));
-                CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(2001, 3));
+            TraderFactory.ReloadTraders();
+            CurrentWorld = WorldFactory.CreateWorld();
 
-                CurrentPlayer.LearnRecipe(RecipeFactory.RecipeByID(1));
-            }
+            CurrentPlayer = new Player("Giuseppe Penna", PlayerClassTypeEnum.Guerriero);
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1001));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1005));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(2001, 3));
 
-            CurrentLocation = CurrentWorld.LocationAt(CurrentPlayer.XCoordinate, CurrentPlayer.YCoordinate);
+            CurrentPlayer.LearnRecipe(RecipeFactory.RecipeByID(1));
+
+            RefreshLocation();
+        }
+
+        public GameSessionViewModel(SaveState saveState)
+        {
+            #region Inizializzazione Comandi
+            MoveForwardCommand = new BaseCommand(MoveForward);
+            MoveBackwardsCommand = new BaseCommand(MoveBackwards);
+            MoveRightCommand = new BaseCommand(MoveRight);
+            MoveLeftCommand = new BaseCommand(MoveLeft);
+            AttackEnemyCommand = new BaseCommand(EvaluateBattleTurn);
+            ShowTraderScreenCommand = new BaseCommand(ShowTraderScreen);
+            UseCurrentConsumableCommand = new BaseCommand(UseCurrentConsumable);
+            SetTabFocusToCommand = new BaseCommand(SetTabFocusTo);
+            NewGameCommand = new BaseCommand(StartNewGame);
+            SaveGameCommand = new BaseCommand(SaveGame);
+            LoadGameCommand = new BaseCommand(LoadGame);
+            #endregion
+
+            InitializeUserInputActions();
+            CurrentWorld = saveState.World != null ? saveState.World : WorldFactory.CreateWorld();
+            CurrentPlayer = saveState.Player != null ? saveState.Player : new Player("DefaultName", PlayerClassTypeEnum.Guerriero);
+            RefreshLocation();
         }
 
         #region Boolean Controls
@@ -220,7 +242,7 @@ namespace MysticAdventureRPG.ViewModels
         {
             if(CurrentTrader!= null)
             {
-                TradeScreen tradeScreen = new TradeScreen();
+                TradeScreenView tradeScreen = new TradeScreenView();
                 tradeScreen.DataContext = this;
                 tradeScreen.ShowDialog();
             }
@@ -269,6 +291,52 @@ namespace MysticAdventureRPG.ViewModels
                 }      
                 else
                     _userInputActions[key].Execute(null);
+            }
+        }
+
+        private void SetTabFocusTo(object obj)
+        {
+            Tuple<TabControl, string> parameter = obj as Tuple<TabControl, string>;
+            if (parameter != null)
+            {
+                foreach (object item in parameter.Item1.Items)
+                {
+                    if (item is TabItem tabItem)
+                    {
+                        if (tabItem.Name == parameter.Item2)
+                        {
+                            tabItem.IsSelected = true;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void StartNewGame(object obj)
+        {
+            GameWindow.SetActiveGameSessionTo(new GameSessionViewModel());
+        }
+
+        private void LoadGame(object obj)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog { InitialDirectory = Application.Current.Properties["SAVE_GAME_FILES_FOLDER"].ToString(), Filter = $"Dati salvati (*.{Application.Current.Properties["SAVE_GAME_FILE_EXTENSION"] })|*.{Application.Current.Properties["SAVE_GAME_FILE_EXTENSION"]}" };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                SaveState saveState = SaveStateService.LoadSave(openFileDialog.FileName);
+
+                GameSessionViewModel gameSession = new GameSessionViewModel(saveState);
+                GameWindow.SetActiveGameSessionTo(gameSession);
+            }
+        }
+
+        public void SaveGame(object obj)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog { InitialDirectory = Application.Current.Properties["SAVE_GAME_FILES_FOLDER"].ToString(), Filter = $"Saved games (*.{Application.Current.Properties["SAVE_GAME_FILE_EXTENSION"]})|*.{Application.Current.Properties["SAVE_GAME_FILE_EXTENSION"]}" };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                SaveStateService.SaveState(new SaveState(this.CurrentPlayer, this.CurrentWorld), saveFileDialog.FileName);
             }
         }
         #endregion
@@ -388,23 +456,7 @@ namespace MysticAdventureRPG.ViewModels
             _userInputActions.Add(Key.R, SetTabFocusToCommand);
             _userInputActions.Add(Key.T, ShowTraderScreenCommand);
         }
-
-        private void SetTabFocusTo(object obj)
-        {
-            Tuple<TabControl, string> parameter = obj as Tuple<TabControl, string>;
-            foreach (object item in parameter.Item1.Items)
-            {
-                if (item is TabItem tabItem)
-                {
-                    if (tabItem.Name == parameter.Item2)
-                    {
-                        tabItem.IsSelected = true;
-                        return;
-                    }
-                }
-            }
-        }
-
+   
         #endregion
     }
 }

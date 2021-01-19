@@ -5,43 +5,45 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Hosting;
+using System.Windows;
 
 namespace Services
 {
-    public static class SavePlayerService
+    public static class SaveStateService
     {
-        private const string PLAYER_SAVE_FILE_NAME = "MARPGPG.json";
-
-        public static void SavePlayer(Player player)
-        {
-            string path = Path.Combine(Environment.CurrentDirectory, "SaveFiles");
-            Directory.CreateDirectory(path);
-            File.WriteAllText(Path.Combine(path, PLAYER_SAVE_FILE_NAME), JsonConvert.SerializeObject(player, Formatting.Indented));
+        public static void SaveState(SaveState saveState, string filename)
+        {   
+            Directory.CreateDirectory(Application.Current.Properties["SAVE_GAME_FILES_FOLDER"].ToString());
+            File.WriteAllText(Path.Combine(Application.Current.Properties["SAVE_GAME_FILES_FOLDER"].ToString(), filename), JsonConvert.SerializeObject(saveState, Formatting.Indented));
         }
 
-        public static Player LoadLastSave()
+        public static SaveState LoadSave(string filename)
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "SaveFiles");
-            //Se il file di salvataggio del player non esiste ritorno null
-            if (!File.Exists(Path.Combine(path, PLAYER_SAVE_FILE_NAME)))
+            //Se il file di salvataggio non esiste ritorno null
+            if (!File.Exists(Path.Combine(Application.Current.Properties["SAVE_GAME_FILES_FOLDER"].ToString(), filename)))
             {
                 return null;
             }
 
             try
             {
-                JObject data = JObject.Parse(File.ReadAllText(Path.Combine(path, PLAYER_SAVE_FILE_NAME)));
+                JObject data = JObject.Parse(File.ReadAllText(Path.Combine(Application.Current.Properties["SAVE_GAME_FILES_FOLDER"].ToString(), filename)));
 
-                // Leggo i dati del PLayer dal file
-                Player player = CreatePlayer(data);
+                // Leggo i dati del PLayer e del Mondo di Gioco dal file
+                JObject playerToken = (JObject)data[nameof(Player)];
+                JObject locationsToken = (JObject)data[nameof(World)];
 
-                return player;
+                Player player = CreatePlayer(playerToken);
+                World world = CreateWorld(locationsToken);
+
+                return new SaveState(player, world);
             }
             catch (Exception ex)
             {
@@ -147,6 +149,84 @@ namespace Services
                         player.LearnRecipe(recipe);
                     }
 
+                    break;
+                default:
+                    throw new InvalidDataException($"Versione '{fileVersion}' non riconosciuta!");
+            }
+        }
+
+        private static World CreateWorld(JObject data)
+        {
+            string fileVersion = FileVersion(data);
+
+            World world;
+
+            switch (fileVersion)
+            {
+                case "1.0.0.0":
+                    world = WorldFactory.CreateWorld();
+                    break;
+                default:
+                    throw new InvalidDataException($"Versione '{fileVersion}' non riconosciuta!");
+            }
+
+            //Popolo l'Inventario del Player
+            UpdateWorldQuestStatus(data, world);
+
+            return world;
+        }
+
+        private static void UpdateWorldQuestStatus(JObject data, World world)
+        {
+            string fileVersion = FileVersion(data);
+
+            switch (fileVersion)
+            {
+                case "1.0.0.0":
+                    foreach (JToken location in (JArray)data[nameof(World.Locations)])
+                    {
+                        int locationID = (int)location[nameof(Location.LocationID)];
+
+                        foreach (JToken questStatus in (JArray)location[nameof(Location.QuestsAvailableHere)])
+                        {
+                            int questId = (int)questStatus[nameof(QuestStatus.Quest)][nameof(QuestStatus.Quest.QuestID)];
+                            QuestStatusEnum status = (QuestStatusEnum)(byte)questStatus[nameof(QuestStatus.Status)];
+
+                            world.GetLocationByID(locationID).QuestsAvailableHere.FirstOrDefault(w => w.Quest.QuestID == questId).Status = status;
+                        }
+                    }
+                    break;
+                default:
+                    throw new InvalidDataException($"Versione '{fileVersion}' non riconosciuta!");
+            }
+        }
+
+        private static void UpdateWorldTraderStatus(JObject data, World world)
+        {
+            string fileVersion = FileVersion(data);
+
+            switch (fileVersion)
+            {
+                case "1.0.0.0":
+                    foreach (JToken location in (JArray)data[nameof(World.Locations)])
+                    {
+                        int locationID = (int)location[nameof(Location.LocationID)];
+                        JToken traderStatus = (JObject)location[nameof(Location.TraderHere)];
+
+                        int traderId = (int)traderStatus[nameof(Trader.TraderID)];
+                        ObservableCollection<GroupedItem> groupedInventory = new ObservableCollection<GroupedItem>();
+
+                        foreach (JToken groupedItem in (JArray)data[nameof(Trader.GroupedInventory)])
+                        {
+                            int itemId = (int)groupedItem[nameof(GroupedItem.Item)][nameof(GroupedItem.Item.ItemID)];
+                            byte quantity = (byte)groupedItem[nameof(GroupedItem.Quantity)];
+
+                            groupedInventory.Add(ItemFactory.ObtainItem(itemId, quantity));
+                        }
+
+                        world.GetLocationByID(locationID).TraderHere.GroupedInventory = groupedInventory;
+
+                    }
                     break;
                 default:
                     throw new InvalidDataException($"Versione '{fileVersion}' non riconosciuta!");

@@ -26,7 +26,6 @@ namespace Engine.Models
         public List<QuestStatus> QuestsAvailableHere { get; } = new List<QuestStatus>();
         [JsonIgnore]
         public List<EnemyEncounter> EnemiesHere { get; } = new List<EnemyEncounter>();
-        [JsonIgnore]
         public Trader TraderHere { get; set; }
 
         public Location(int id, int xCoord, int yCoord, string name, string description, string imageName)

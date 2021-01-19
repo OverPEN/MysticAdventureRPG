@@ -35,6 +35,7 @@ namespace MysticAdventureRPG
             InitializeComponent();
 
             dtContext = DataContext as GameSessionViewModel;
+            dtContext.GameWindow = this;
 
             _messageBroker.OnMessageRaised += OnGameMessageRaised;
         }
@@ -57,8 +58,35 @@ namespace MysticAdventureRPG
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
-            SavePlayerService.SavePlayer(dtContext.CurrentPlayer);
-            SaveWorldService.SaveWorld(dtContext.CurrentWorld);
+            YesNoWindow message = new YesNoWindow("Salvataggio Dati di Gioco", "Vuoi salvare i dati di gioco?");
+            message.Owner = GetWindow(this);
+            message.ShowDialog();
+
+            if (message.ClickedYes)
+            {
+                dtContext.SaveGame(null);
+            }
+        }
+
+        internal void SetActiveGameSessionTo(GameSessionViewModel gameSession)
+        {
+            // Unsubscribe di OnMessageRaised per evitare duplicazione messaggi di gioco
+            _messageBroker.OnMessageRaised -= OnGameMessageRaised;
+
+            dtContext = gameSession;
+            DataContext = dtContext;
+
+            // Cancello tutti i game messages precedenti
+            GameMessages.Document.Blocks.Clear();
+
+            _messageBroker.OnMessageRaised += OnGameMessageRaised;
+
+            dtContext.GameWindow = this;
+        }
+
+        private void Exit_OnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

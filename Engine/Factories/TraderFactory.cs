@@ -13,7 +13,7 @@ namespace Engine.Factories
     public static class TraderFactory
     {
         private const string GAME_DATA_FILENAME = ".\\GameData\\Traders.xml";
-        private static readonly List<Trader> _traders = new List<Trader>();
+        private static List<Trader> _traders = new List<Trader>();
 
         static TraderFactory()
         {
@@ -28,15 +28,6 @@ namespace Engine.Factories
             {
                 throw new FileNotFoundException($"Missing data file: {GAME_DATA_FILENAME}");
             }
-
-
-            //Trader susan = new Trader(1, "Susan");
-            //susan.AddItemToInventory(ItemFactory.ObtainItem(1001));
-            //susan.AddItemToInventory(ItemFactory.ObtainItem(5));
-            //susan.AddItemToInventory(ItemFactory.ObtainItem(6));
-            //susan.AddItemToInventory(ItemFactory.ObtainItem(7));
-
-            //AddTraderToList(susan);
         }
 
         #region Functions
@@ -53,6 +44,22 @@ namespace Engine.Factories
                 }
 
                 AddTraderToList(trader);
+            }
+        }
+
+        public static void ReloadTraders()
+        {
+            _traders = new List<Trader>();
+            if (File.Exists(GAME_DATA_FILENAME))
+            {
+                XmlDocument data = new XmlDocument();
+                data.LoadXml(File.ReadAllText(GAME_DATA_FILENAME));
+
+                LoadTradersFromNodes(data.SelectNodes("/Traders/Trader"));
+            }
+            else
+            {
+                throw new FileNotFoundException($"Missing data file: {GAME_DATA_FILENAME}");
             }
         }
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,6 +25,12 @@ namespace MysticAdventureRPG
 
             // TODO: Create a Window to display the exception information.
             MessageBox.Show(exceptionMessageText, "Unhandled Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void OnStartup(object sender, StartupEventArgs e)
+        {
+            this.Properties["SAVE_GAME_FILE_EXTENSION"] = "marpg";
+            this.Properties["SAVE_GAME_FILES_FOLDER"] = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SaveFiles");
         }
     }
 }

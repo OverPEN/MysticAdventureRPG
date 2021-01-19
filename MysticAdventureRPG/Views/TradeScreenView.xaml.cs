@@ -22,11 +22,11 @@ namespace MysticAdventureRPG.Views
     /// <summary>
     /// Logica di interazione per TradeScreen.xaml
     /// </summary>
-    public partial class TradeScreen : Window
+    public partial class TradeScreenView : Window
     {
         public GameSessionViewModel Session => DataContext as GameSessionViewModel;
 
-        public TradeScreen()
+        public TradeScreenView()
         {
             InitializeComponent();
         }
@@ -66,7 +66,6 @@ namespace MysticAdventureRPG.Views
                         groupedItem.Quantity = (byte)QuantityToBuy.Value.GetValueOrDefault();
                         Session.CurrentTrader.RemoveItemFromInventory(groupedItem);
                         Session.CurrentPlayer.AddItemToInventory(groupedItem);
-
                     }
                     else
                     {
