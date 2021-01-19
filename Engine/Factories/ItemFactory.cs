@@ -69,7 +69,11 @@ namespace Engine.Factories
                 {
                     Weapon weapon = new Weapon(node.GetXmlAttributeAsInt(nameof(Weapon.ItemID)), node.GetXmlAttributeAsString(nameof(Weapon.Name)), node.GetXmlAttributeAsInt(nameof(Weapon.Price)), node.GetXmlAttributeAsInt(nameof(Weapon.MinimumDamage)), node.GetXmlAttributeAsInt(nameof(Weapon.MaximumDamage)), node.GetXmlAttributeAsDamageType(nameof(Weapon.DamageType)), node.GetXmlAttributeAsFloat(nameof(Weapon.WeaponSpeed)), node.GetXmlAttributeAsInt(nameof(Weapon.MissRate)));
                     weapon.Action = new AttackWithWeapon(weapon);
-
+                    weapon.UsableBy = new List<PlayerClassTypeEnum>();
+                    foreach(byte element in node.GetXmlAttributeAsByteList(nameof(Weapon.UsableBy)))
+                    {
+                        weapon.UsableBy.Add((PlayerClassTypeEnum)element);
+                    }
                     _standardItems.Add(weapon);
                 }
                 else if (itemType == ItemTypeEnum.Consumable)
@@ -77,7 +81,11 @@ namespace Engine.Factories
                     HealingItem healingItem = new HealingItem(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(HealingItem.Name)), node.GetXmlAttributeAsInt(nameof(HealingItem.Price)), node.GetXmlAttributeAsInt(nameof(HealingItem.HitPointsToHeal)));
 
                     healingItem.Action = new Heal(healingItem);
-
+                    healingItem.UsableBy = new List<PlayerClassTypeEnum>();
+                    foreach (byte element in node.GetXmlAttributeAsByteList(nameof(HealingItem.UsableBy)))
+                    {
+                        healingItem.UsableBy.Add((PlayerClassTypeEnum)element);
+                    }
                     _standardItems.Add(healingItem);
                 }
                 else if(itemType == ItemTypeEnum.Armor)

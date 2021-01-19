@@ -25,7 +25,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassTypeEnum.Guerriero:
                     HitPoints = 35;
                     BaseDamage = 7;
-                    BaseDamageType = WeaponDamageTypeEnum.Schianto;
+                    BaseDamageType = WeaponDamageTypeEnum.Taglio;
                     Speed = 1.0f;
                     Gold = 200;
                 break;
@@ -33,7 +33,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassTypeEnum.Mago:
                     HitPoints = 20;
                     BaseDamage = 7;
-                    BaseDamageType = WeaponDamageTypeEnum.Schianto;
+                    BaseDamageType = WeaponDamageTypeEnum.Magico;
                     Speed = 1.5f;
                     Gold = 150;
                 break;
@@ -49,7 +49,7 @@ namespace CommonClasses.BaseClasses
                 case PlayerClassTypeEnum.Ladro:
                     HitPoints = 25;
                     BaseDamage = 5;
-                    BaseDamageType = WeaponDamageTypeEnum.Schianto;
+                    BaseDamageType = WeaponDamageTypeEnum.Penetrante;
                     Speed = 2.0f;
                     Gold = 100;
                 break;

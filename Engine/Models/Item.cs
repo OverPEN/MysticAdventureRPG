@@ -2,6 +2,7 @@
 using CommonClasses.Enums;
 using Engine.Actions;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Engine.Models
 {
@@ -19,9 +20,11 @@ namespace Engine.Models
         public bool IsUnique { get; }
         [JsonIgnore]
         public IAction Action { get; set; }
+        [JsonIgnore]
+        public List<PlayerClassTypeEnum> UsableBy = new List<PlayerClassTypeEnum>();
         #endregion
 
-        public Item(int itemID, string name, int price, ItemTypeEnum type, bool isUnique = false, IAction action = null)
+        public Item(int itemID, string name, int price, ItemTypeEnum type, bool isUnique = false, IAction action = null, List<PlayerClassTypeEnum> usableBy = null)
         {
             ItemID = itemID;
             Name = name;
@@ -29,6 +32,7 @@ namespace Engine.Models
             Type = type;
             IsUnique = isUnique;
             Action = action;
+            UsableBy = usableBy;
         }
 
         public void PerformAction(LivingEntity actor, LivingEntity target)
@@ -37,7 +41,7 @@ namespace Engine.Models
         }
         public Item Clone()
         {
-            return new Item(ItemID, Name, Price, Type, IsUnique, Action);
+            return new Item(ItemID, Name, Price, Type, IsUnique, Action, UsableBy);
         }
     }
 }

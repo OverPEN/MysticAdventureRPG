@@ -107,9 +107,9 @@ namespace Engine.Models
         public ObservableCollection<Item> Inventory { get; set; }
         public ObservableCollection<GroupedItem> GroupedInventory { get; set; }
         [JsonIgnore]
-        public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
+        public List<Item> Weapons => Inventory.Where(i => i is Weapon && i.UsableBy.Contains(Class)).ToList();
         [JsonIgnore]
-        public List<Item> Consumables => GroupedInventory.Where(i => i.Item.Type == ItemTypeEnum.Consumable).Select(s=>s.Item).ToList();
+        public List<Item> Consumables => GroupedInventory.Where(i => i.Item.Type == ItemTypeEnum.Consumable && i.Item.UsableBy.Contains(Class)).Select(s=>s.Item).ToList();
         [JsonIgnore]
         public bool HasConsumable => Consumables.Any();
         public Item CurrentConsumable

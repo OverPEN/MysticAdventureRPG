@@ -1,6 +1,7 @@
 ﻿using CommonClasses.Enums;
 using Engine.Actions;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Engine.Models
 {
@@ -19,8 +20,8 @@ namespace Engine.Models
         public int MissRate { get; }
         #endregion
 
-        public Weapon(int itemID, string name, int price, int minDamage, int maxDamage, WeaponDamageTypeEnum damageType, float weaponSpeed, int missRate, ItemTypeEnum type = ItemTypeEnum.Weapon, IAction action = null)
-            : base(itemID, name, price, type = ItemTypeEnum.Weapon, true, action)
+        public Weapon(int itemID, string name, int price, int minDamage, int maxDamage, WeaponDamageTypeEnum damageType, float weaponSpeed, int missRate, ItemTypeEnum type = ItemTypeEnum.Weapon, IAction action = null, List<PlayerClassTypeEnum> usableBy = null)
+            : base(itemID, name, price, type = ItemTypeEnum.Weapon, true, action, usableBy)
         {
             MinimumDamage = minDamage;
             MaximumDamage = maxDamage;
@@ -32,7 +33,7 @@ namespace Engine.Models
         #region Functions
         public new Weapon Clone()
         {
-            Weapon clonedWeapon = new Weapon(ItemID, Name, Price, MinimumDamage, MaximumDamage, DamageType, WeaponSpeed, MissRate, ItemTypeEnum.Weapon, Action);
+            Weapon clonedWeapon = new Weapon(ItemID, Name, Price, MinimumDamage, MaximumDamage, DamageType, WeaponSpeed, MissRate, ItemTypeEnum.Weapon, Action, UsableBy);
             clonedWeapon.Action = new AttackWithWeapon(clonedWeapon);
 
             return clonedWeapon;

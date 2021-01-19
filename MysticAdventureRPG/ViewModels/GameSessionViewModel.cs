@@ -142,9 +142,8 @@ namespace MysticAdventureRPG.ViewModels
             #endregion
 
             InitializeUserInputActions();
-            TraderFactory.ReloadTraders();
             CurrentWorld = WorldFactory.CreateWorld();
-
+            TraderFactory.ReloadTraders();
             CurrentPlayer = new Player("Giuseppe Penna", PlayerClassTypeEnum.Guerriero);
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1001));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1005));
