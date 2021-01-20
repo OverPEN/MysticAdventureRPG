@@ -12,13 +12,18 @@ namespace Engine.Models
     public abstract class LivingEntity : BaseNotifyPropertyChanged
     {
         public event EventHandler OnKilled;
-        public event EventHandler<GameMessageEventArgs> OnActionPerformed;
+        public event EventHandler<GameMessageEventArgs> OnBattleActionPerformed;
+        public event EventHandler<GameMessageEventArgs> OnConsumableUsed;
 
         #region Private Properties
         private String _name;
         private int _maximumHitPoints;
         private int _currentHitPoints;
         private float _speed;
+        private int _maximumStamina;
+        private int _maximumMana;
+        private int _currentStamina;
+        private int _currentMana;
         private int _gold;
         private Byte _level;
         private Weapon _currentWeapon;
@@ -72,6 +77,42 @@ namespace Engine.Models
                 OnPropertyChanged();
             }
         }
+        public int MaximumStamina
+        {
+            get { return _maximumStamina; }
+            set
+            {
+                _maximumStamina = value;
+                OnPropertyChanged();
+            }
+        }
+        public int MaximumMana
+        {
+            get { return _maximumMana; }
+            set
+            {
+                _maximumMana = value;
+                OnPropertyChanged();
+            }
+        }
+        public int CurrentStamina
+        {
+            get { return _currentStamina; }
+            set
+            {
+                _currentStamina = value;
+                OnPropertyChanged();
+            }
+        }
+        public int CurrentMana
+        {
+            get { return _currentMana; }
+            set
+            {
+                _currentMana = value;
+                OnPropertyChanged();
+            }
+        }
         public int Gold
         {
             get { return _gold; }
@@ -88,14 +129,14 @@ namespace Engine.Models
             {
                 if (_currentWeapon != null)
                 {
-                    _currentWeapon.Action.OnActionPerformed -= RaiseActionPerformedEvent;
+                    _currentWeapon.Action.OnActionPerformed -= RaiseBattleActionPerformedEvent;
                 }
 
                 _currentWeapon = value;
 
                 if (_currentWeapon != null)
                 {
-                    _currentWeapon.Action.OnActionPerformed += RaiseActionPerformedEvent;
+                    _currentWeapon.Action.OnActionPerformed += RaiseBattleActionPerformedEvent;
                 }
 
                 OnPropertyChanged();
@@ -119,14 +160,14 @@ namespace Engine.Models
             {
                 if (_currentConsumable != null)
                 {
-                    _currentConsumable.Action.OnActionPerformed -= RaiseActionPerformedEvent;
+                    _currentConsumable.Action.OnActionPerformed -= RaiseConsumableUsedEvent;
                 }
 
                 _currentConsumable = value;
 
                 if (_currentConsumable != null)
                 {
-                    _currentConsumable.Action.OnActionPerformed += RaiseActionPerformedEvent;
+                    _currentConsumable.Action.OnActionPerformed += RaiseConsumableUsedEvent;
                 }
 
                 OnPropertyChanged();
@@ -134,12 +175,16 @@ namespace Engine.Models
         }
         #endregion
 
-        protected LivingEntity(string name, int maxHitPoints, int currHitPoints, float speed, int gold, PlayerClassTypeEnum entityClass, byte level = 1, Weapon currentWeapon = null)
+        protected LivingEntity(string name, int maxHitPoints, int currHitPoints, float speed, int gold, PlayerClassTypeEnum entityClass, int maximumStamina, int maximumMana, int currentStamina, int currentMana, byte level = 1, Weapon currentWeapon = null)
         {
             Name = name;
             MaximumHitPoints = maxHitPoints;
             CurrentHitPoints = currHitPoints;
             Speed = speed;
+            MaximumStamina = maximumStamina;
+            CurrentStamina = currentStamina;
+            MaximumMana = maximumMana;
+            CurrentMana = currentMana;
             Gold = gold;
             Class = entityClass;
             Level = level;
@@ -216,19 +261,61 @@ namespace Engine.Models
             OnPropertyChanged(nameof(HasConsumable));
         }
 
-        public void Heal(int hitPointsToHeal)
+        public void Restore(int pointsToRestore, string targetProperty)
         {
-            CurrentHitPoints += hitPointsToHeal;
-
-            if (CurrentHitPoints > MaximumHitPoints)
+            switch (targetProperty)
             {
-                CurrentHitPoints = MaximumHitPoints;
+                case nameof(LivingEntity.CurrentHitPoints):
+                    CurrentHitPoints += pointsToRestore;
+                    if (CurrentHitPoints > MaximumHitPoints)
+                        CurrentHitPoints = MaximumHitPoints;
+                    break;
+                case nameof(LivingEntity.CurrentStamina):
+                    CurrentStamina += pointsToRestore;
+                    if (CurrentStamina > MaximumStamina)
+                        CurrentStamina = MaximumStamina;
+                    break;
+                case nameof(LivingEntity.CurrentMana):
+                    CurrentMana += pointsToRestore;
+                    if (CurrentMana > MaximumMana)
+                        CurrentMana = MaximumMana;
+                    break;
             }
         }
 
-        public void CompletelyHeal()
+        public void CompletelyRestore(string targetProperty)
         {
-            CurrentHitPoints = MaximumHitPoints;
+            switch (targetProperty)
+            {
+                case nameof(LivingEntity.CurrentHitPoints):
+                    CurrentHitPoints = MaximumHitPoints;
+                    break;
+                case nameof(LivingEntity.CurrentStamina):
+                    CurrentStamina = MaximumStamina;
+                    break;
+                case nameof(LivingEntity.CurrentMana):
+                    CurrentMana += MaximumMana;
+                    break;
+                default:
+                    CurrentHitPoints = MaximumHitPoints;
+                    CurrentStamina = MaximumStamina;
+                    CurrentMana += MaximumMana;
+                    break;
+            }           
+        }
+
+        public void LoseStaminaOrMana(int pointsToLose)
+        {
+            if (Class != PlayerClassTypeEnum.Mago)
+            {
+                CurrentStamina -= pointsToLose;
+                CurrentStamina = CurrentStamina < 0 ? 0 : CurrentStamina;
+            }
+            else
+            {
+                CurrentMana -= pointsToLose;
+                CurrentMana = CurrentMana < 0 ? 0 : CurrentMana;
+            }               
         }
 
         public void ReceiveGold(int amountOfGold)
@@ -263,9 +350,14 @@ namespace Engine.Models
             OnKilled?.Invoke(this, new System.EventArgs());
         }
 
-        private void RaiseActionPerformedEvent(object sender, GameMessageEventArgs result)
+        private void RaiseBattleActionPerformedEvent(object sender, GameMessageEventArgs result)
         {
-            OnActionPerformed?.Invoke(this, result);
+            OnBattleActionPerformed?.Invoke(this, result);
+        }
+
+        private void RaiseConsumableUsedEvent(object sender, GameMessageEventArgs result)
+        {
+            OnConsumableUsed?.Invoke(this, result);
         }
 
         public void UseCurrentWeaponOn(LivingEntity target, string attackType = "L")

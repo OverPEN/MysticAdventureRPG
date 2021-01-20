@@ -16,7 +16,7 @@ namespace Engine.Models
         public int RewardExperiencePoints { get; }
         #endregion
         
-        public Enemy(int enemyID, string name, int maximumHitPoints,int rewardExperiencePoints, int rewardGold, float speed, Weapon currWeapon, string imageName) : base(name.Replace('_', ' '),maximumHitPoints, maximumHitPoints, speed, rewardGold, PlayerClassTypeEnum.Enemy, 1, currWeapon)
+        public Enemy(int enemyID, string name, int maximumHitPoints,int rewardExperiencePoints, int rewardGold, float speed, Weapon currWeapon, string imageName) : base(name.Replace('_', ' '),maximumHitPoints, maximumHitPoints, speed, rewardGold, PlayerClassTypeEnum.Enemy, 1, 1, 1, 1, 1, currWeapon)
         {
             EnemyID = enemyID;
             ImageName = imageName;
@@ -34,8 +34,7 @@ namespace Engine.Models
         public Enemy GetNewInstance()
         {
             // Genero una nuova istanza di enemy
-            Enemy enemy =
-                new Enemy(EnemyID, Name, MaximumHitPoints, RewardExperiencePoints, Gold, Speed, CurrentWeapon, ImageName);
+            Enemy enemy = new Enemy(EnemyID, Name, MaximumHitPoints, RewardExperiencePoints, Gold, Speed, CurrentWeapon, ImageName);
 
             foreach (LootItem itemLoot in _lootTable)
             {

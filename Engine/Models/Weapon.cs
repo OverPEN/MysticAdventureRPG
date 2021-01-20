@@ -34,7 +34,7 @@ namespace Engine.Models
         public new Weapon Clone()
         {
             Weapon clonedWeapon = new Weapon(ItemID, Name, Price, MinimumDamage, MaximumDamage, DamageType, WeaponSpeed, MissRate, ItemTypeEnum.Weapon, Action, UsableBy);
-            clonedWeapon.Action = new AttackWithWeapon(clonedWeapon);
+            clonedWeapon.Action = new Attack(clonedWeapon);
 
             return clonedWeapon;
         }

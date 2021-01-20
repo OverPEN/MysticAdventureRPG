@@ -237,18 +237,20 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="130"/>
-                    <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding CurrentPlayer.Weapons}" SelectedItem="{Binding CurrentPlayer.CurrentWeapon}" DisplayMemberPath="Name" Visibility="{Binding HasEnemy, Converter={StaticResource BooleanToVisibility}}"/>
-                <Button Grid.Row="0" Grid.Column="2" Content="Attacco" Command="{Binding AttackEnemyCommand}" CommandParameter="L" Visibility="{Binding HasEnemy, Converter={StaticResource BooleanToVisibility}}"/>
-                <Button Grid.Row="0" Grid.Column="3" Content="Attacco Pesante" Command="{Binding AttackEnemyCommand}" CommandParameter="H" Visibility="{Binding HasEnemy, Converter={StaticResource BooleanToVisibility}}"/>
-                <ComboBox Grid.Row="1" Grid.Column="0" Visibility="{Binding CurrentPlayer.HasConsumable, Converter={StaticResource BooleanToVisibility}}" ItemsSource="{Binding CurrentPlayer.Consumables}" SelectedItem="{Binding CurrentPlayer.CurrentConsumable}" DisplayMemberPath="Name"/>
-                <Button Grid.Row="1" Grid.Column="2" Visibility="{Binding CurrentPlayer.HasConsumable, Converter={StaticResource BooleanToVisibility}}" Content="Usa"  Command="{Binding UseCurrentConsumableCommand}"/>
+                <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Maximum="{Binding CurrentPlayer.MaximumStamina}" Minimum="0" Value="{Binding CurrentPlayer.CurrentStamina}" Visibility="{Binding ShowStamina, Converter={StaticResource BooleanToVisibility}}"/>
+                <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Maximum="{Binding CurrentPlayer.MaximumMana}" Minimum="0" Value="{Binding CurrentPlayer.CurrentMana}" Visibility="{Binding ShowMana, Converter={StaticResource BooleanToVisibility}}" Foreground="#FF063CB0"/>
+                <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding CurrentPlayer.Weapons}" SelectedItem="{Binding CurrentPlayer.CurrentWeapon}" DisplayMemberPath="Name" Visibility="{Binding HasEnemy, Converter={StaticResource BooleanToVisibility}}"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="Attacco" Command="{Binding AttackEnemyCommand}" CommandParameter="L" Visibility="{Binding HasEnemy, Converter={StaticResource BooleanToVisibility}}"/>
+                <Button Grid.Row="1" Grid.Column="2" Content="Attacco Pesante" Command="{Binding AttackEnemyCommand}" CommandParameter="H" Visibility="{Binding HasEnemy, Converter={StaticResource BooleanToVisibility}}"/>
+                <ComboBox Grid.Row="2" Grid.Column="0" Visibility="{Binding CurrentPlayer.HasConsumable, Converter={StaticResource BooleanToVisibility}}" ItemsSource="{Binding CurrentPlayer.Consumables}" SelectedItem="{Binding CurrentPlayer.CurrentConsumable}" DisplayMemberPath="Name"/>
+                <Button Grid.Row="2" Grid.Column="1" Visibility="{Binding CurrentPlayer.HasConsumable, Converter={StaticResource BooleanToVisibility}}" Content="Usa"  Command="{Binding UseCurrentConsumableCommand}"/>
             </Grid>
             <Grid Name="Movements" Grid.Row="0" Grid.Column="1">
                 <Grid.RowDefinitions>

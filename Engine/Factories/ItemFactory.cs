@@ -23,8 +23,7 @@ namespace Engine.Factories
                 data.LoadXml(File.ReadAllText(GAME_DATA_FILENAME));
 
                 LoadItemsFromNodes(data.SelectNodes("/Items/Weapons/Weapon"));
-                LoadItemsFromNodes(data.SelectNodes("/Items/Munitions/Munition"));
-                LoadItemsFromNodes(data.SelectNodes("/Items/HealingItems/HealingItem"));
+                LoadItemsFromNodes(data.SelectNodes("/Items/Consumables/RestoringItem"));
                 LoadItemsFromNodes(data.SelectNodes("/Items/MiscellaneousItems/MiscellaneousItem"));
             }
             else
@@ -68,7 +67,7 @@ namespace Engine.Factories
                 if (itemType == ItemTypeEnum.Weapon)
                 {
                     Weapon weapon = new Weapon(node.GetXmlAttributeAsInt(nameof(Weapon.ItemID)), node.GetXmlAttributeAsString(nameof(Weapon.Name)), node.GetXmlAttributeAsInt(nameof(Weapon.Price)), node.GetXmlAttributeAsInt(nameof(Weapon.MinimumDamage)), node.GetXmlAttributeAsInt(nameof(Weapon.MaximumDamage)), node.GetXmlAttributeAsDamageType(nameof(Weapon.DamageType)), node.GetXmlAttributeAsFloat(nameof(Weapon.WeaponSpeed)), node.GetXmlAttributeAsInt(nameof(Weapon.MissRate)));
-                    weapon.Action = new AttackWithWeapon(weapon);
+                    weapon.Action = new Attack(weapon);
                     weapon.UsableBy = new List<PlayerClassTypeEnum>();
                     foreach(byte element in node.GetXmlAttributeAsByteList(nameof(Weapon.UsableBy)))
                     {
@@ -78,25 +77,19 @@ namespace Engine.Factories
                 }
                 else if (itemType == ItemTypeEnum.Consumable)
                 {
-                    HealingItem healingItem = new HealingItem(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(HealingItem.Name)), node.GetXmlAttributeAsInt(nameof(HealingItem.Price)), node.GetXmlAttributeAsInt(nameof(HealingItem.HitPointsToHeal)));
+                    RestoringItem restoringItem = new RestoringItem(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(RestoringItem.Name)), node.GetXmlAttributeAsInt(nameof(RestoringItem.Price)), node.GetXmlAttributeAsInt(nameof(RestoringItem.PointsToRestore)), node.GetXmlAttributeAsString(nameof(RestoringItem.Target)));
+                    restoringItem.Action = new Restore(restoringItem);
+                    restoringItem.UsableBy = new List<PlayerClassTypeEnum>();
 
-                    healingItem.Action = new Heal(healingItem);
-                    healingItem.UsableBy = new List<PlayerClassTypeEnum>();
-                    foreach (byte element in node.GetXmlAttributeAsByteList(nameof(HealingItem.UsableBy)))
+                    foreach (byte element in node.GetXmlAttributeAsByteList(nameof(RestoringItem.UsableBy)))
                     {
-                        healingItem.UsableBy.Add((PlayerClassTypeEnum)element);
+                        restoringItem.UsableBy.Add((PlayerClassTypeEnum)element);
                     }
-                    _standardItems.Add(healingItem);
+                    _standardItems.Add(restoringItem);
                 }
                 else if(itemType == ItemTypeEnum.Armor)
                 {
 
-                }
-                else if (itemType == ItemTypeEnum.Munition)
-                {
-                    Item item = new Item(node.GetXmlAttributeAsInt(nameof(Item.ItemID)), node.GetXmlAttributeAsString(nameof(Item.Name)), node.GetXmlAttributeAsInt(nameof(Item.Price)), itemType);
-
-                    _standardItems.Add(item);
                 }
                 else if (itemType == ItemTypeEnum.Miscellaneous)
                 {
@@ -111,12 +104,10 @@ namespace Engine.Factories
         {
             switch (itemType)
             {
-                case "Weapon":
+                case nameof(Weapon):
                     return ItemTypeEnum.Weapon;
-                case "HealingItem":
+                case nameof(RestoringItem):
                     return ItemTypeEnum.Consumable;
-                case "Munition":
-                    return ItemTypeEnum.Munition;
                 default:
                     return ItemTypeEnum.Miscellaneous;
             }

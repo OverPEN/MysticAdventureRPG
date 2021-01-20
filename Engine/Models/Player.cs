@@ -73,7 +73,7 @@ namespace Engine.Models
 
         #endregion
 
-        public Player(string name, int maxHitPoints, int currHitPoints, float speed, int gold, int worldID, int xCoord, int yCoord, PlayerClassTypeEnum chosenClass, int baseDamage, byte level = 1, int experience = 0) : base(name, maxHitPoints, currHitPoints, speed, gold, chosenClass, level )
+        public Player(string name, int maxHitPoints, int currHitPoints, float speed, int gold, int worldID, int xCoord, int yCoord, PlayerClassTypeEnum chosenClass, int baseDamage, int maximumStamina, int maximumMana, int currentStamina, int currentMana, byte level = 1, int experience = 0) : base(name, maxHitPoints, currHitPoints, speed, gold, chosenClass, maximumStamina, maximumMana, currentStamina, currentMana, level )
         {
             ClassBaseValues defaultValues = new ClassBaseValues(chosenClass);
 
@@ -88,7 +88,7 @@ namespace Engine.Models
 
         }
 
-        public Player(string name, PlayerClassTypeEnum chosenClass) : base(name, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).Speed, new ClassBaseValues(chosenClass).Gold, chosenClass)
+        public Player(string name, PlayerClassTypeEnum chosenClass) : base(name, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).HitPoints, new ClassBaseValues(chosenClass).Speed, new ClassBaseValues(chosenClass).Gold, chosenClass, new ClassBaseValues(chosenClass).Stamina, new ClassBaseValues(chosenClass).Mana, new ClassBaseValues(chosenClass).Stamina, new ClassBaseValues(chosenClass).Mana)
         {
             ClassBaseValues defaultValues = new ClassBaseValues(chosenClass);
             Level = 1;
@@ -121,6 +121,8 @@ namespace Engine.Models
                 ClassBaseValues classBaseValues = new ClassBaseValues(Class);
                 MaximumHitPoints = (Level * classBaseValues.HitPoints) - ((Level -1) *((classBaseValues.HitPoints / 5)*4));
                 BaseDamage = (Level * classBaseValues.BaseDamage) - ((Level - 1) * ((classBaseValues.BaseDamage / 5) * 4));
+                MaximumStamina = (Level * classBaseValues.Stamina) - ((Level - 1) * ((classBaseValues.Stamina / 5) * 4));
+                MaximumMana = (Level * classBaseValues.Mana) - ((Level - 1) * ((classBaseValues.Mana / 5) * 4));
                 Speed = (Level * classBaseValues.Speed) - ((Level - 1) * ((classBaseValues.Speed / 5) * 4));
                 OnLeveledUp?.Invoke(this, System.EventArgs.Empty);
             }

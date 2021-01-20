@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows;
 using Services;
 using Microsoft.Win32;
+using CommonClasses.EventArgs;
 
 namespace MysticAdventureRPG.ViewModels
 {
@@ -75,6 +76,8 @@ namespace MysticAdventureRPG.ViewModels
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HasEnemy));
+                OnPropertyChanged(nameof(ShowStamina));
+                OnPropertyChanged(nameof(ShowMana));
             }
         }
         public Player CurrentPlayer
@@ -86,6 +89,7 @@ namespace MysticAdventureRPG.ViewModels
                 {
                     _currentPlayer.OnLeveledUp -= OnCurrentPlayerLeveledUp;
                     _currentPlayer.OnKilled -= OnPlayerKilled;
+                    _currentPlayer.OnConsumableUsed -= OnConsumableUsed;
                 }
                 _currentPlayer = value;
 
@@ -93,6 +97,7 @@ namespace MysticAdventureRPG.ViewModels
                 {
                     _currentPlayer.OnLeveledUp += OnCurrentPlayerLeveledUp;
                     _currentPlayer.OnKilled += OnPlayerKilled;
+                    _currentPlayer.OnConsumableUsed += OnConsumableUsed;
                 }
             }
         }
@@ -127,20 +132,7 @@ namespace MysticAdventureRPG.ViewModels
 
         public GameSessionViewModel()
         {
-            #region Inizializzazione Comandi
-            MoveForwardCommand = new BaseCommand(MoveForward);
-            MoveBackwardsCommand = new BaseCommand(MoveBackwards);
-            MoveRightCommand = new BaseCommand(MoveRight);
-            MoveLeftCommand = new BaseCommand(MoveLeft);
-            AttackEnemyCommand = new BaseCommand(EvaluateBattleTurn);
-            ShowTraderScreenCommand = new BaseCommand(ShowTraderScreen);
-            UseCurrentConsumableCommand = new BaseCommand(UseCurrentConsumable);
-            SetTabFocusToCommand = new BaseCommand(SetTabFocusTo);
-            NewGameCommand = new BaseCommand(StartNewGame);
-            SaveGameCommand = new BaseCommand(SaveGame);
-            LoadGameCommand = new BaseCommand(LoadGame);
-            #endregion
-
+            InitializeCommands();
             InitializeUserInputActions();
             CurrentWorld = WorldFactory.CreateWorld();
             TraderFactory.ReloadTraders();
@@ -148,6 +140,8 @@ namespace MysticAdventureRPG.ViewModels
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1001));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(1005));
             CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(2001, 3));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(2002, 3));
+            CurrentPlayer.AddItemToInventory(ItemFactory.ObtainItem(2003, 3));
 
             CurrentPlayer.LearnRecipe(RecipeFactory.RecipeByID(1));
 
@@ -156,20 +150,7 @@ namespace MysticAdventureRPG.ViewModels
 
         public GameSessionViewModel(SaveState saveState)
         {
-            #region Inizializzazione Comandi
-            MoveForwardCommand = new BaseCommand(MoveForward);
-            MoveBackwardsCommand = new BaseCommand(MoveBackwards);
-            MoveRightCommand = new BaseCommand(MoveRight);
-            MoveLeftCommand = new BaseCommand(MoveLeft);
-            AttackEnemyCommand = new BaseCommand(EvaluateBattleTurn);
-            ShowTraderScreenCommand = new BaseCommand(ShowTraderScreen);
-            UseCurrentConsumableCommand = new BaseCommand(UseCurrentConsumable);
-            SetTabFocusToCommand = new BaseCommand(SetTabFocusTo);
-            NewGameCommand = new BaseCommand(StartNewGame);
-            SaveGameCommand = new BaseCommand(SaveGame);
-            LoadGameCommand = new BaseCommand(LoadGame);
-            #endregion
-
+            InitializeCommands();
             InitializeUserInputActions();
             CurrentWorld = saveState.World != null ? saveState.World : WorldFactory.CreateWorld();
             CurrentPlayer = saveState.Player != null ? saveState.Player : new Player("DefaultName", PlayerClassTypeEnum.Guerriero);
@@ -183,6 +164,8 @@ namespace MysticAdventureRPG.ViewModels
         public bool CanMoveLeft => CurrentWorld.LocationAt(CurrentLocation.XCoordinate - 1, CurrentLocation.YCoordinate) != null;
         public bool HasEnemy => CurrentEnemy != null;
         public bool HasTrader => CurrentTrader != null;
+        public bool ShowStamina => (CurrentPlayer.Class != PlayerClassTypeEnum.Mago ? true : false) && HasEnemy;
+        public bool ShowMana => !ShowStamina && HasEnemy;
 
         #endregion
 
@@ -387,7 +370,12 @@ namespace MysticAdventureRPG.ViewModels
                 CurrentLocation = CurrentWorld.GetLocationByID(1); // Player's home
                 CurrentPlayer.XCoordinate = CurrentLocation.XCoordinate;
                 CurrentPlayer.YCoordinate = CurrentLocation.YCoordinate;
-                CurrentPlayer.CompletelyHeal();
+                CurrentPlayer.CompletelyRestore("All");
+        }
+
+        private void OnConsumableUsed(object sender, GameMessageEventArgs eventArgs)
+        {
+            _messageBroker.RaiseMessage(Environment.NewLine + eventArgs.Message, eventArgs.Type);
         }
 
         private void CompleteQuestsAtLocation()
@@ -448,6 +436,21 @@ namespace MysticAdventureRPG.ViewModels
             _userInputActions.Add(Key.Q, SetTabFocusToCommand);
             _userInputActions.Add(Key.R, SetTabFocusToCommand);
             _userInputActions.Add(Key.T, ShowTraderScreenCommand);
+        }
+
+        private void InitializeCommands()
+        {
+            MoveForwardCommand = new BaseCommand(MoveForward);
+            MoveBackwardsCommand = new BaseCommand(MoveBackwards);
+            MoveRightCommand = new BaseCommand(MoveRight);
+            MoveLeftCommand = new BaseCommand(MoveLeft);
+            AttackEnemyCommand = new BaseCommand(EvaluateBattleTurn);
+            ShowTraderScreenCommand = new BaseCommand(ShowTraderScreen);
+            UseCurrentConsumableCommand = new BaseCommand(UseCurrentConsumable);
+            SetTabFocusToCommand = new BaseCommand(SetTabFocusTo);
+            NewGameCommand = new BaseCommand(StartNewGame);
+            SaveGameCommand = new BaseCommand(SaveGame);
+            LoadGameCommand = new BaseCommand(LoadGame);
         }
    
         #endregion

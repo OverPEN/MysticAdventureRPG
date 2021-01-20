@@ -20,10 +20,10 @@ namespace Services
             _player = player;
             _enemy = enemy;
 
-            _player.OnActionPerformed += OnCombatantActionPerformed;
+            _player.OnBattleActionPerformed += OnCombatantActionPerformed;
             _player.OnKilled += OnPlayerKilled;
 
-            _enemy.OnActionPerformed += OnCombatantActionPerformed;
+            _enemy.OnBattleActionPerformed += OnCombatantActionPerformed;
             _enemy.OnKilled += OnCurrentEnemyKilled;
 
             _messageBroker.RaiseMessage("", GameMessageTypeEnum.Info);
@@ -32,10 +32,10 @@ namespace Services
 
         public void Dispose()
         {
-            _player.OnActionPerformed -= OnCombatantActionPerformed;
+            _player.OnBattleActionPerformed -= OnCombatantActionPerformed;
             _player.OnKilled -= OnPlayerKilled;
 
-            _enemy.OnActionPerformed -= OnCombatantActionPerformed;
+            _enemy.OnBattleActionPerformed -= OnCombatantActionPerformed;
             _enemy.OnKilled -= OnCurrentEnemyKilled;
         }
 
@@ -62,6 +62,10 @@ namespace Services
                     EvaluatePlayerTurn(attackType);
                 }
             }
+            if (_player.Class != PlayerClassTypeEnum.Mago)
+                _player.Restore(_player.MaximumStamina / 15, nameof(Player.CurrentStamina));
+            else
+                _player.Restore(_player.MaximumMana / 15, nameof(Player.CurrentMana));
         }
 
         private void EvaluatePlayerTurn(string attackType)
@@ -73,7 +77,7 @@ namespace Services
             {
                 _messageBroker.RaiseMessage("Non avendo equipaggiato un'arma ti scagli sul nemico a mani nude.", GameMessageTypeEnum.BattleInfo);
                 damageToEnemy = _player.BaseDamage;
-                _messageBroker.RaiseMessage($"Hai colpito {_enemy.Name} causando {damageToEnemy} danni!", GameMessageTypeEnum.BattlePositive);
+                _messageBroker.RaiseMessage($"Hai colpito {_enemy.Name} causando {damageToEnemy} dann{(damageToEnemy > 1 ? "i" : "o")}!", GameMessageTypeEnum.BattlePositive);
                 _enemy.TakeDamage(damageToEnemy);
             }
             else

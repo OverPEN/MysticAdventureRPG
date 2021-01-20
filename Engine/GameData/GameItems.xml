@@ -7,11 +7,11 @@
     <Weapon ItemID="1005" Name="Spada Grezza" Price="10" MinimumDamage="9" MaximumDamage="9" DamageType="Taglio" WeaponSpeed="1,0" MissRate="20" UsableBy="1,2,4,5"/>
     <Weapon ItemID="1006" Name="Denti" Price="0" MinimumDamage="1" MaximumDamage="4" DamageType="Penetrante" WeaponSpeed="1,2" MissRate="50" UsableBy="1"/>
   </Weapons>
-  <Munitions>
-  </Munitions>
-  <HealingItems>
-    <HealingItem ItemID="2001" Name="Pane" Price="4" HitPointsToHeal="5" UsableBy="1,2,3,4,5"/>
-  </HealingItems>
+  <Consumables>
+    <RestoringItem ItemID="2001" Name="Pane" Price="4" PointsToRestore="5" Target="CurrentHitPoints" UsableBy="1,2,3,4,5"/>
+    <RestoringItem ItemID="2002" Name="Pozione" Price="4" PointsToRestore="5" Target="CurrentMana" UsableBy="1,3"/>
+    <RestoringItem ItemID="2003" Name="Tonico" Price="4" PointsToRestore="5" Target="CurrentStamina" UsableBy="1,2,4,5"/>
+  </Consumables>
   <MiscellaneousItems>
     <MiscellaneousItem ItemID="1" Name="Denti di Serpente" Price="1"/>
     <MiscellaneousItem ItemID="2" Name="Pelle di Serpente" Price="1"/>

@@ -65,6 +65,10 @@ namespace Services
                                         (int)data[nameof(Player.YCoordinate)], 
                                         (PlayerClassTypeEnum)(byte)data[nameof(Player.Class)],
                                         (int)data[nameof(Player.BaseDamage)],
+                                        (int)data[nameof(Player.MaximumStamina)],
+                                        (int)data[nameof(Player.MaximumMana)],
+                                        (int)data[nameof(Player.CurrentStamina)],
+                                        (int)data[nameof(Player.CurrentMana)],
                                         (byte)data[nameof(Player.Level)], 
                                         (int)data[nameof(Player.Experience)]);
 
